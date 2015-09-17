@@ -1,5 +1,4 @@
-PORT = 8081;
-
+config = require('./config')[process.env.NODE_ENV || 'development']
 express = require 'express' 
 global.app = express()
 path = require 'path'
@@ -42,8 +41,8 @@ bundle_up app, __dirname + '/assets' ,
   minifyJs: true
   
 
-global.server = app.listen PORT, ->
-  console.log "Listening on port: #{PORT}"
+global.server = app.listen config.port, ->
+  console.log "Listening on port: #{config.port}"
   
 #reading apps
 for file in fs.readdirSync './apps'
