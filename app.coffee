@@ -44,13 +44,18 @@ bundle_up app, __dirname + '/assets' ,
 global.server = app.listen config.port, ->
   console.log "Listening on port: #{config.port}"
   
+app.use require './routes/member'
+app.use '/mamieo', require './routes/mamieo'
+app.use require './routes/handler'
+
+
 #reading apps
-for file in fs.readdirSync './apps'
-  continue if file.search(/\.bak|\.disabled|^\./) > -1
-  if file.search(/\.coffee/) < 0
-    for file_sub in fs.readdirSync './apps/' + file
-      continue if file_sub.search(/\.bak|\.disabled|^\./) > -1
-      require("./apps/#{file}/#{file_sub}")(app)
-  else
-    require("./apps/#{file}")(app)
+# for file in fs.readdirSync './apps'
+#   continue if file.search(/\.bak|\.disabled|^\./) > -1
+#   if file.search(/\.coffee/) < 0
+#     for file_sub in fs.readdirSync './apps/' + file
+#       continue if file_sub.search(/\.bak|\.disabled|^\./) > -1
+#       require("./apps/#{file}/#{file_sub}")(app)
+#   else
+#     require("./apps/#{file}")(app)
 
