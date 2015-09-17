@@ -1,0 +1,13 @@
+html
+  head
+    != renderStyles()
+  body
+    != renderJs()
+    form(action='/login' method='post')
+      a username 
+      input(name='username')
+      br
+      a password 
+      input(name='password')
+      br
+      input(type='submit')

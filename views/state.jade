@@ -1,0 +1,24 @@
+html
+  head
+  body
+    != renderJs()
+    script(src="https://code.jquery.com/jquery-2.1.3.min.js")
+    textarea(id="editor" cols="100" rows="20" disabled)
+    script.
+      function timeoutLoop(fn, delay){
+        console.log(delay)
+        setTimeout(function(){
+          resp++
+          if(resp != state.length){
+            fn()
+            timeoutLoop(fn, state[resp]['delay'])
+          }
+        },delay)
+      }
+      state =!{JSON.stringify(data)}
+      resp = 0
+      editor = $("#editor")
+      timeoutLoop(function(){
+        editor.val(state[resp]['word'])
+      }, 0, 0);
+
