@@ -45,7 +45,12 @@ global.server = app.listen config.port, ->
   console.log "Listening on port: #{config.port}"
   
 app.use require './routes/member'
+app.use require './routes/tutor'
+
+# dev zone
 app.use '/mamieo', require './routes/mamieo'
+# end dev zone
+
 app.use require './routes/handler'
 
 
