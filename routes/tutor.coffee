@@ -1,6 +1,5 @@
 exec = require("child_process").exec
 fs = require 'fs'
-express = require 'express'
 router = express.Router()
 
 router.get '/compiler', (req, res) ->
@@ -9,9 +8,9 @@ router.get '/compiler', (req, res) ->
 router.post '/compiler', (req, res) ->
   command = req.body.command
   # command = "for i in [0..11]\n  console.log i"
-  fs.writeFile 'uploads/random1.coffee', command, (err)->
+  fs.writeFile 'public/uploads/random1.py', command, (err)->
     return res.send err if err  
-    ls = exec 'coffee uploads/random1.coffee', (err, stdout, stderr)->
+    ls = exec 'python public/uploads/random1.py', (err, stdout, stderr)->
       output = ""
       if !err?
         console.log 'case normal'

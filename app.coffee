@@ -1,6 +1,7 @@
 config = require('./config')[process.env.NODE_ENV || 'development']
-express = require 'express' 
+global.express = require 'express' 
 global.app = express()
+global.colors = require 'colors'
 path = require 'path'
 bundle_up = require 'bundle-up3'
 fs = require 'fs'
@@ -44,13 +45,16 @@ bundle_up app, __dirname + '/assets' ,
 global.server = app.listen config.port, ->
   console.log "Listening on port: #{config.port}"
   
+app.use require './routes/compiler'
 app.use require './routes/member'
 app.use require './routes/tutor'
+app.use require './routes/util'
 
 # dev zone
 app.use '/mamieo', require './routes/mamieo'
 # end dev zone
 
+#this must be the last one
 app.use require './routes/handler'
 
 

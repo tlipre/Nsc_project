@@ -1,6 +1,4 @@
-express = require 'express'
 router = express.Router()
-colors = require 'colors'
 
 router.get '/login',(req,res) ->
   res.render 'test'
@@ -20,4 +18,5 @@ router.get '/',(req,res) ->
 router.get '/logout', (req, res)->
   req.logout()
   res.redirect '/'
+
 module.exports = router
