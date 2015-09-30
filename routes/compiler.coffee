@@ -58,5 +58,3 @@ router.get '/compile/:language', (req, res) ->
         res.send 'success'
 
 module.exports = router
-
-sdf
