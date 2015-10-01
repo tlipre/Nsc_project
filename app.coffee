@@ -10,6 +10,11 @@ cookie_parser = require 'cookie-parser'
 session = require 'express-session'
 RedisStore = require('connect-redis')(session)
 morgan = require 'morgan'
+
+
+server = require('http').createServer(app)
+global.io = require('socket.io')(server)
+
 global.passport = require './libs/passport'
 
 app.set 'views', path.join __dirname, 'views'
@@ -42,13 +47,14 @@ bundle_up app, __dirname + '/assets' ,
   minifyJs: true
   
 
-global.server = app.listen config.port, ->
+server.listen config.port, ->
   console.log "Listening on port: #{config.port}"
   
 app.use require './routes/compiler'
 app.use require './routes/member'
 app.use require './routes/tutor'
 app.use require './routes/util'
+app.use require './routes/terminal'
 
 # dev zone
 app.use '/mamieo', require './routes/mamieo'
