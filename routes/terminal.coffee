@@ -12,9 +12,9 @@ commandDocker = (command)->
 container.start (err, data)->
   container.attach {stream: true, stdin:true, stdout:true, stderr:false}, (err, stream)->
     docker_stream = stream
-    docker_stream.on 'data', (message)->
-      message = message.toString()
-      io.emit 'terminal', message
+    # docker_stream.on 'data', (message)->
+    #   message = message.toString()
+    #   io.emit 'terminal', message
 
 router.get '/terminal', (req, res) ->
   res.render 'terminal'

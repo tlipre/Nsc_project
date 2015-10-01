@@ -14,9 +14,16 @@ header {
   padding-top: 10px;
 }
 .problem {
-  width: 50;
+  width: 50%;
   height: 400px;
-  border-color: 1% solid #000;
+  background-color: #f00;
+  display: block;
+  float: left;
+}
+.codding {
+  width: 50%;
+  height: 400px;
+  background-color: #ff0;
   display: block;
   float: left;
 }
