@@ -24,6 +24,7 @@ app.use body_parser.json()
 app.use body_parser.urlencoded {extended: true}
 app.use morgan 'dev'
 app.use cookie_parser()
+
 app.use session
   secret: "bookmamieo"
   store : new RedisStore
@@ -42,9 +43,9 @@ app.use passport.session()
 bundle_up app, __dirname + '/assets' ,
   staticRoot: __dirname + '/public/'
   staticUrlRoot: '/'
-  bundle: true
-  minifyCss: true
-  minifyJs: true
+  bundle: config.bundle_up.bundle
+  minifyCss: config.bundle_up.minifyCss
+  minifyJs: config.bundle_up.minifyJs
   
 
 server.listen config.port, ->

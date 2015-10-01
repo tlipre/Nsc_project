@@ -1,1 +1,0 @@
-(function(){$("#terminal").html("test")}).call(this)

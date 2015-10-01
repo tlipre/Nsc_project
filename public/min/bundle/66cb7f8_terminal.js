@@ -1,1 +1,0 @@
-(function(){$(function(){var a;return a=io(),$(document).keypress(function(a){var b,c;if(a.which===13)return c=$("#terminal"),b=$("#result")})})}).call(this)

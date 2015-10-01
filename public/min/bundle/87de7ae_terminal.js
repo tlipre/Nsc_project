@@ -1,1 +1,0 @@
-(function(){$("#terminal").val("test"),alert("test")}).call(this)
