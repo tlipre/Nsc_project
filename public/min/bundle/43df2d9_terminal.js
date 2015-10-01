@@ -1,0 +1,1 @@
+(function(){$(function(){var a;return a=io(),$(document).keypress(function(b){var c,d;c=$("#result");if(b.which===13){d=$("#terminal");if(d.is(":focus"))return a.emit("terminal",d.val()),d.val("")}}),a.on("terminal",function(a){return result.append("<li>"+a+"</li>")})})}).call(this)

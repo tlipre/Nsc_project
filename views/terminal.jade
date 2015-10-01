@@ -1,0 +1,11 @@
+html
+  head
+    != renderStyles()
+  body
+    != renderJs()
+    != renderJs('terminal')
+    != renderJs('socket')
+    ul(id='result' style='list-style-type:none;background:black;color:white;')
+      
+    input(id='terminal' style='width:100%;background:black;color:white;')
+    br
