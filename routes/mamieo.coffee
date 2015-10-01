@@ -1,6 +1,6 @@
 router = express.Router()
 
 router.get '/',(req,res) ->
-  res.render 'test'
+  res.render 'index'
 
 module.exports = router
