@@ -1,1 +1,0 @@
-(function(){var a;a=function(a,b,c){if(b>0)return setTimeout(function(){return alert("Hello")},3e3)},a(function(){return alert("Hi")},5,5e3)}).call(this)

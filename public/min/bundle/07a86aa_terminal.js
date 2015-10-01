@@ -1,1 +1,0 @@
-(function(){$(function(){return $(document).keypress(function(a){if(a.which===13)return console.log($("#terminal").is(":focus"))})})}).call(this)

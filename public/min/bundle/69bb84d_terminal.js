@@ -1,1 +1,0 @@
-(function(){$(function(){return $(document).keypress(function(a){var b,c;if(a.which===13){c=$("#terminal"),b=$("#result");if(c.is(":focus"))return b.append("<li>test</li>")}}),socket.on("broadcast",function(a){})})}).call(this)

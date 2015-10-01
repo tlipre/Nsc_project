@@ -8,7 +8,8 @@ container = docker.getContainer CONTAINER_ID
 
 commandDocker = (command)->
   docker_stream.write "#{command}\n"
-
+  
+#TODO: finish pipe with textarea
 container.start (err, data)->
   container.attach {stream: true, stdin:true, stdout:true, stderr:false}, (err, stream)->
     docker_stream = stream

@@ -1,1 +1,0 @@
-(function(){$("#terminal").val("test"),console.log($("#terminal"))}).call(this)

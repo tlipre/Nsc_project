@@ -1,1 +1,0 @@
-(function(){$(function(){return $(document).keypress(function(a){var b,c;if(a.which===13){c=$("#terminal"),b=$("#result");if(c.is(":focus"))return socket.emit("terminal",c.val())}}),socket.on("terminal",function(a){return result.append("<li>test</li>")})})}).call(this)
