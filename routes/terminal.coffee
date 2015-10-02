@@ -1,5 +1,8 @@
 CONTAINER_ID = '5e7b822bd765'
 docker_stream = null
+output_stream = null
+
+ansi = require('ansi-html-stream')
 
 Docker = require 'dockerode'
 docker = new Docker()
@@ -13,8 +16,10 @@ commandDocker = (command)->
 container.start (err, data)->
   container.attach {stream: true, stdin:true, stdout:true, stderr:false}, (err, stream)->
     docker_stream = stream
-    docker_stream.on 'data', (message)->
-      message = message.toString()
+    output_stream = ansi({ chunked: false })
+    stream.pipe output_stream
+    output_stream.on 'data', (message)->
+      message = message
       io.emit 'terminal', message
 
 router.get '/terminal', (req, res) ->

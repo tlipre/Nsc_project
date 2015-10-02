@@ -4,10 +4,10 @@ exec = require("child_process").exec
 fs = require 'fs'
 router = express.Router()
 
-router.get '/compiler', (req, res) ->
+router.get '/compile', (req, res) ->
   res.render 'text'
 
-router.post '/compiler', (req, res) ->
+router.post '/compile', (req, res) ->
   command = req.body.command
   # command = "for i in [0..11]\n  console.log i"
   fs.writeFile 'public/uploads/random1.py', command, (err)->

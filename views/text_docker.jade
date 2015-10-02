@@ -4,7 +4,11 @@ html
   body
     block body
 
-    form(action='/compile' method='post')
+    form(action='/compile_docker' method='post')
       textarea(name='command' cols="100" rows="20")
+      br
+      select(name='language')
+        option python
+        option node
       br
       input(type='submit' value='Compile!')
