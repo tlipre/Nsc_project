@@ -21,6 +21,9 @@ container.start (err, data)->
     output_stream.on 'data', (message)->
       message = message
       io.emit 'terminal', message
+    # docker_stream.on 'data', (message)->
+    #   message = message.toString()
+    #   io.emit 'terminal', message
 
 router.get '/terminal', (req, res) ->
   res.render 'terminal'
