@@ -1,17 +1,22 @@
 $ ->
-  socket = io()
-  result = $('#result')
-  regexBr = /\n/g
-  $(document).keypress (e) ->
-    if e.which == 13
-      terminal = $('#terminal') 
-      if terminal.is(":focus")
-        socket.emit 'terminal', terminal.val()
-        terminal.val('')
-  socket.on 'terminal', (message)->
-    message = message.replace "]0;","\n"
-    message = message.replace regexBr,"<br>"
-    #message = message.substr(0,message.lastIndexOf(']0;'))
-    result.append "#{message}"
 
-
+  socket = io();
+  socket.on 'connect', ()-> 
+    term = new Terminal {
+      cols: 80,
+      rows: 24,
+      useStyle: true,
+      screenKeys: true,
+      cursorBlink: true
+    }
+    socket.emit 'data', "\n"
+    term.on 'data', (data)->
+      socket.emit 'data', data
+    term.on 'title', (title) ->
+      document.title = title;
+    term.open($('#result').get(0))
+    term.write '\x1b[31mWelcome to term.js!\x1b[m\r\n'
+    socket.on 'data', (data)->
+      term.write data
+    socket.on 'disconnect', ()->
+      term.destroy()

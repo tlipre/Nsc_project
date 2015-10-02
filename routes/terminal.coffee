@@ -1,36 +1,35 @@
-CONTAINER_ID = '5e7b822bd765'
-docker_stream = null
-output_stream = null
+term = require('term.js');
+app.use(term.middleware());
 
 ansi = require('ansi-html-stream')
+pty = require('pty.js');
 
-Docker = require 'dockerode'
-docker = new Docker()
+term = pty.spawn 'docker', ["run", "-it","8251da35e7a7"], 
+  name: 'xterm-color',
+  cols: 80,
+  rows: 30,
+  cwd: process.env.HOME,
+  env: process.env
+
 router = express.Router()
-container = docker.getContainer CONTAINER_ID
-
-commandDocker = (command)->
-  docker_stream.write "#{command}\n"
-  
-#TODO: finish pipe with textarea
-container.start (err, data)->
-  container.attach {stream: true, stdin:true, stdout:true, stderr:false}, (err, stream)->
-    docker_stream = stream
-    output_stream = ansi({ chunked: false })
-    stream.pipe output_stream
-    output_stream.on 'data', (message)->
-      message = message
-      io.emit 'terminal', message
-    # docker_stream.on 'data', (message)->
-    #   message = message.toString()
-    #   io.emit 'terminal', message
 
 router.get '/terminal', (req, res) ->
   res.render 'terminal'
 
 io.on 'connection', (socket)->
+
+
   console.log('Have connection')
-  socket.on 'terminal', (command)->
-    commandDocker command
+
+  term.on 'data', (data) -> 
+    socket.emit('data',data)
+
+  socket.on 'data', (command) ->
+    #
+    term.write command
+
+  socket.on 'disconnect', () ->
+    #TODO: destroy
+    console.log "Disconect"
 
 module.exports = router
