@@ -1,7 +1,9 @@
 html
   head
     !=renderStyles('test')
+    meta(charset='UTF-8')
     block title
   body 
-    header header 
-    block content
+    header
+    .container
+      block content

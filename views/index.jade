@@ -4,10 +4,21 @@ block title
 
 block content
   .problem
-    .number 1
-    p Jonh have 5 pencils and matt have 10 pencils.
-    p Jonh bought new pencil in this morning about 2 pencils and put it in him bag.
-    p Matt put all of him pencil into Jonh's bag.
-    p So how many pencil in Jonh's bag?
+    span Problem 3
+    .text
+      p หนูนามีปากกาทั้งหมด 6 ด้าม
+      p หนูนาซื้อปากกามาเพิ่มอีก 2 โหลครึ่ง ราคาโหลละ 180 บาท
+      p หนูนาเปิดร้านขายปากกา โดยนำปากกาที่มีทั้งหมดมาขาย
+      p หนูนาขายปากกาแท่งละ 20 บาท
+      p หนูนาได้กำไรทั้งหมดกี่บาท
+    input.form-control.next(type='button',value='Next') 
+    
+    .progress
+      .progress-bar.progress-bar-info(role='progressbar' aria-valuenow='50' aria-valuemin='0' aria-valuemax='100') 50%
+
   .codding
+    .window 
+      textarea(cols='66' rows='15')
+    input.form-control.compile(type='button',value='Compile') 
+    .result ผลลัพธ์ 
 
