@@ -17,15 +17,12 @@ router.get '/terminal', (req, res) ->
   res.render 'terminal'
 
 io.on 'connection', (socket)->
-
-
-  console.log('Have connection')
+  console.log 'Have connection'
 
   term.on 'data', (data) -> 
-    socket.emit('data',data)
+    socket.emit 'data',data
 
   socket.on 'data', (command) ->
-    #
     term.write command
 
   socket.on 'disconnect', () ->

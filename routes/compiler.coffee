@@ -31,7 +31,7 @@ compileInDocker = (command, path_to_file, result_file, callback)->
     flag = null
     flagInterval = setInterval ()->
       flag = docker_stream.read()
-      if(flag != null)
+      if flag != null
         if flag.toString().indexOf(":/")>-1
           callback()
           clearInterval flagInterval
