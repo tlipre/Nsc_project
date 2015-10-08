@@ -1,4 +1,8 @@
 
+@font-face
+    font-family supermarket
+    src url('static/bootstrap/fonts/supermarket.ttf')
+
 body
 	margin 0px
 	padding 0px
@@ -6,14 +10,52 @@ body
 
 header
 	width 100%
-	height 25px
-	background-color #424242
-	color #585858
-	display block
+	height 50px
+	background-color #FAFAFA
+	font-size 16px
+	color #424242
+
+
+header nav li
+	display inline-block
+	padding 1% 0 0 6%
+	margin-top 6px
 	text-align center
-	vertical-align middle
-	font-size 12px
-	padding-top 10px
+
+
+header nav ul.menu
+	float right 
+	width 80%
+	text-align right
+
+header nav ul.logo
+	float left 
+	text-align left 
+	width 20%
+	padding 6px 0 6px 0
+
+header nav ul.menu .dropdown ul
+	margin-top 12px
+header nav ul.menu .dropdown li
+	display block
+	margin 0%
+	padding 5px 0px
+
+header nav ul.menu .dropdown li:hover
+	background-color #f2f2f2
+	cursor pointer
+
+header nav ul.menu li.line
+	padding 0 6% 0 6%
+header nav ul.menu li.please
+	border-left 2px solid #BDBDBD
+	padding 6px 0 6px 5%
+
+header nav ul.menu li a:hover
+	text-decoration none
+header nav ul.logo li
+	float left 
+	padding 0px
 	
 .container 
 	width 100%
@@ -28,7 +70,7 @@ header
 	float left
 	padding 2%
 	
-.problem 	
+.problem
 	background-color #E6E6E6
 	margin-right 0.5%
 	position relative
@@ -50,7 +92,7 @@ header
 	color white
 	
 .result
-	background-color white
+	background-color red
 	width 100%
 	height 80px
 	display block

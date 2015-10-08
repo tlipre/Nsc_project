@@ -1,9 +1,22 @@
 html
   head
-    !=renderStyles('test')
+    != renderStyles()
     meta(charset='UTF-8')
     block title
   body 
     header
+      nav.container
+        ul.logo
+          li.img-logo
+            a < ! > Logo
+        ul.menu
+          li
+            a Course
+          li
+            a E-Classroom
+          li
+            a.line Support
+          li
+            a.please Please Login
     .container
       block content
