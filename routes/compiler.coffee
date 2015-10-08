@@ -1,22 +1,23 @@
-CONTAINER_ID = '5e7b822bd765'
+CONTAINER_ID = '6c57d3d50745'
 docker_stream = null
 
 fs = require 'fs'
 Docker = require 'dockerode'
+shortid = require 'shortid'
 docker = new Docker()
 exec = require("child_process").exec
 router = express.Router()
 
-pushFileToDocker = (path_to_file, destination, container_id, callback) ->
-  command = "docker cp #{path_to_file} #{container_id}:#{destination}"
+push_file = (path, destination, container_id, callback) ->
+  command = "docker cp #{path} #{container_id}:#{destination}"
   exec command, (err, stdout, stderr)->
     if err?
       callback(stderr)
     else
       callback()
 
-pullFileFromDocker = (path_to_file, destination, container_id, callback) ->
-  command = "docker cp #{container_id}:#{path_to_file} #{destination} "
+pull_file = (path, destination, container_id, callback) ->
+  command = "docker cp #{container_id}:#{path} #{destination}"
   exec command, (err, stdout, stderr)->
     if err?
       callback(stderr)
@@ -24,9 +25,19 @@ pullFileFromDocker = (path_to_file, destination, container_id, callback) ->
       callback()
 
 #TODO: finish this function
-compileInDocker = (command, path_to_file, result_file)->
-  docker_stream.write "#{command} #{path_to_file} > #{result_file}\n", ()->
-  
+compile = (command, path, result_file, callback)->
+  docker_stream.write "#{command} #{path} > #{result_file} 2>&1\n", ()->
+    flag = null
+    flag_interval = setInterval ()->
+      flag = docker_stream.read()
+      if flag != null
+        if flag.toString().indexOf(":/")>-1
+          callback()
+          clearInterval flag_interval
+    ,100
+
+    
+
 
 container = docker.getContainer CONTAINER_ID
 container.start (err, data)->
@@ -34,27 +45,34 @@ container.start (err, data)->
     # stream.pipe process.stdout
     docker_stream = stream
 
-fileTypes = {'python': 'py'} #TODO: add some filetype(s) here
 
-router.get '/compile/:language', (req, res) ->
-  code = "for i in range(10):\n    print '1'+str(i)" #TODO: use code that send from ajax
-  language = req.params.language
-  fileType = fileTypes[language]
-  return res.send "Our system not supports #{language}" if !fileType?
+router.get '/compile_docker', (req, res) ->
+  res.render 'text_docker'
 
-  fileName = "random"
-  rawFile = "#{fileName}.#{fileType}"
-  resultFile = "#{fileName}.result"
+file_types = {'python': 'py', 'node': 'js'} #TODO: add some file_type(s) here
+
+router.post '/compile_docker', (req, res) ->
+  # code = "for i in range(10):\n    print '1'+str(i)" #TODO: use code that send from ajax
+  code = req.body.command
+  language = req.body.language
+  file_type = file_types[language]
+  return res.send "Our system not supports #{language}" if !file_type?
+
+  file_name = shortid.generate()
+  raw_file = "#{file_name}.#{file_type}"
+  result_file = "#{file_name}.txt"
   destination = "/home"
-  parentPath = "#{process.cwd()}/public/uploads/"
-  pathToFile = "#{process.cwd()}/public/uploads/#{fileName}.#{fileType}"
-  fs.writeFile pathToFile, code, (err)->
+  parent_path = "#{process.cwd()}/public/uploads"
+  path = "#{process.cwd()}/public/uploads/#{file_name}.#{file_type}"
+  fs.writeFile path, code, (err)->
     return res.send err if err?
-    pushFileToDocker pathToFile, destination, CONTAINER_ID, (err)->
+    push_file path, destination, CONTAINER_ID, (err)->
       return res.send err if err?
-      compileInDocker "python", "/home/#{rawFile}", resultFile
-      pullFileFromDocker "#{destination}/#{resultFile}", "#{parentPath}/#{resultFile}", CONTAINER_ID, (err)->
-        return res.send err if err?
-        res.send 'success'
+      #TODO: To something with how to compile 
+      compile "python3", "/home/#{raw_file}", "/home/#{result_file}", ()->
+        pull_file "#{destination}/#{result_file}", "#{parent_path}/#{result_file}", CONTAINER_ID, (err)->
+          return res.send err if err?
+          fs.readFile "#{parent_path}/#{result_file}", (err, data)->
+            res.json {data : data.toString()}
 
 module.exports = router

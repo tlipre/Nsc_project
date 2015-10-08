@@ -1,0 +1,12 @@
+html
+  head
+    != renderStyles()
+    script(src="../term.js")
+  body
+    != renderJs()
+    != renderJs('terminal')
+    != renderJs('socket')
+    textarea(id="editor" cols="100" rows="20")
+    button(id="save") Save
+    div(id='result')
+      

@@ -10,6 +10,6 @@ config =
     bundle_up:
       bundle: true
       minify_css: true
-      minify_js: false
+      minify_js: true
 
 module.exports = config
