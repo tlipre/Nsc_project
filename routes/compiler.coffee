@@ -1,4 +1,4 @@
-CONTAINER_ID = '5e7b822bd765'
+CONTAINER_ID = '6c57d3d50745'
 docker_stream = null
 
 fs = require 'fs'

@@ -3,7 +3,7 @@ term = require('term.js');
 fs = require 'fs'
 pty = require('pty.js');
 exec = require("child_process").exec
-app.use(term.middleware());
+app.use term.middleware()
 
 pushFileToDocker = (path_to_file, destination, container_id, callback) ->
   command = "docker cp #{path_to_file} #{container_id}:#{destination}"
@@ -22,12 +22,19 @@ term = pty.spawn 'docker', ["attach", CONTAINER_ID],
 
 router = express.Router()
 
+router.get '/create', (req, res)->
+  res.render 'e_classroom_create'
+
+router.post '/create', (req, res)->
+  res.json req.body
+  # res.send 'ok'
+
 router.get '/terminal', (req, res) ->
   res.render 'terminal'
 
 router.post '/terminal', (req, res) ->
   code = req.body.code
-  fileName = 'test'
+  fileName = req.body.fileName
   fileType = 'py'
   destination = '/home'
   pathToFile = "#{process.cwd()}/public/uploads/#{fileName}.#{fileType}"

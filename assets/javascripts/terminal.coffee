@@ -23,5 +23,9 @@ $ ->
       term.destroy()
   $('#save').click ()->
     #TODO: handler error(s)
-    $.post  "/terminal", { code: editor.val() }
+    fileName = prompt 'Enter file name.', 'untitled'
+    while fileName == ''
+      fileName = prompt 'Enter file name again.', 'untitled'
+    $.post  "/terminal", { code: editor.val(), fileName: fileName}
+
     
