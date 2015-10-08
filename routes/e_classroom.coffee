@@ -5,7 +5,7 @@ pty = require('pty.js');
 exec = require("child_process").exec
 app.use term.middleware()
 
-pushFileToDocker = (path_to_file, destination, container_id, callback) ->
+push_file = (path_to_file, destination, container_id, callback) ->
   command = "docker cp #{path_to_file} #{container_id}:#{destination}"
   exec command, (err, stdout, stderr)->
     if err?
@@ -29,26 +29,27 @@ router.post '/create', (req, res)->
   res.json req.body
   # res.send 'ok'
 
-router.get '/terminal', (req, res) ->
-  res.render 'terminal'
+router.get '/teacher', (req, res)->
+  res.render 'e_classroom_teacher'
 
-router.post '/terminal', (req, res) ->
+router.get '/student', (req, res) ->
+  res.render 'e_classroom_student'
+
+router.post '/student', (req, res) ->
   code = req.body.code
-  fileName = req.body.fileName
-  fileType = 'py'
+  file_name = req.body.file_name
+  file_type = 'py'
   destination = '/home'
-  pathToFile = "#{process.cwd()}/public/uploads/#{fileName}.#{fileType}"
-  fs.writeFile pathToFile, code, (err)->
+  path = "#{process.cwd()}/public/uploads/#{file_name}.#{file_type}"
+  fs.writeFile path, code, (err)->
     res.send err if err
-    pushFileToDocker pathToFile, destination, CONTAINER_ID, (err)->
+    pushFileToDocker path, destination, CONTAINER_ID, (err)->
       res.send err if err
       res.send 'ok'
       
 
 
 io.on 'connection', (socket)->
-  console.log 'Have connection'
-
   term.on 'data', (data) -> 
     socket.emit 'data',data
 

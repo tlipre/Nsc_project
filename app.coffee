@@ -54,7 +54,7 @@ server.listen config.port, ->
 app.use require './routes/compiler'
 app.use require './routes/member'
 app.use require './routes/util'
-app.use '/e_classroom', require './routes/e_classroom'
+app.use '/e-classroom', require './routes/e_classroom'
 
 # dev zone
 app.use '/mamieo', require './routes/mamieo'
