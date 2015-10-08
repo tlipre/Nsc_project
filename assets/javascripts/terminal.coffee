@@ -1,5 +1,6 @@
 $ ->
-
+  editor = $('#editor')
+  editor.focus()
   socket = io();
   socket.on 'connect', ()-> 
     term = new Terminal {
@@ -20,3 +21,7 @@ $ ->
       term.write data
     socket.on 'disconnect', ()->
       term.destroy()
+  $('#save').click ()->
+    #TODO: handler error(s)
+    $.post  "/terminal", { code: editor.val() }
+    
