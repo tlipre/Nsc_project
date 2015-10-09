@@ -56,7 +56,7 @@ router.post '/student', (req, res) ->
   path = "#{process.cwd()}/public/uploads/#{file_name}.#{file_type}"
   fs.writeFile path, code, (err)->
     res.send err if err
-    pushFileToDocker path, destination, CONTAINER_ID, (err)->
+    push_file path, destination, CONTAINER_ID, (err)->
       res.send err if err
       res.send 'ok'
       
