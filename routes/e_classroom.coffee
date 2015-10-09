@@ -38,11 +38,12 @@ router.post '/create', (req, res)->
   e_classroom.key = key
   e_classroom.containers.push {container_id: "something", owner: "null"}
   e_classroom.save()
-  res.json req.body
+  res.redirect "teacher/#{key}"
   # res.send 'ok'
 
-router.get '/teacher', (req, res)->
-  res.render 'e_classroom_teacher'
+router.get '/teacher/:key', (req, res)->
+  key = req.params.key
+  res.render 'e_classroom_teacher', {key: key}
 
 router.get '/student', (req, res) ->
   res.render 'e_classroom_student'

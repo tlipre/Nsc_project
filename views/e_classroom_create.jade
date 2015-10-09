@@ -3,6 +3,9 @@ html
   body
     form(action='/e-classroom/create' method='post')
       h1 CREATE E-CLASSROOM
+      |Name of this E-Classroom: 
+      input(name="name")
+      br
       |Langauge: 
       select(name='langauge')
         option python
@@ -10,5 +13,16 @@ html
       br
       |Number of students(between 1 and 50): 
       input(type="number" name="student_count" min="1" max="50")
+      br
+      input(type="radio" name="aaa")
+      |Use existing docker.
+      select(name='bbb')
+        option docker A
+        option docker B
+      br
+      input(type="radio" name="aaa") 
+      |Upload your Dockerfile 
+      input(type="file")
+      br
       br
       input(type='submit')
