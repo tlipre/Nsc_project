@@ -4,7 +4,7 @@ module.exports = (assets) ->
   assets.addJs '/public/javascripts/socket.io-1.2.0.js', 'socket'
 
   assets.addJs '/assets/javascripts/state.coffee'
-  # assets.addCss '/public/stylesheets/bootstrap/css/bootstrap.css','test'
+  assets.addCss '/public/stylesheets/bootstrap/css/bootstrap.css'
   assets.addCss '/assets/stylesheets/style.styl'
 
   # assets.addCss '/assets/stylesheets/style.css','test'
