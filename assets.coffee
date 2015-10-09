@@ -5,7 +5,7 @@ module.exports = (assets) ->
   
   assets.addJs '/assets/javascripts/terminal.coffee', 'terminal'
   assets.addJs '/public/javascripts/socket.io-1.2.0.js', 'socket'
-  # assets.addCss '/public/stylesheets/bootstrap/css/bootstrap.css','test'
 
-  # assets.addCss '/assets/stylesheets/style.css','test'
+  assets.addCss '/public/stylesheets/bootstrap/css/bootstrap.css'
+  assets.addCss '/assets/stylesheets/style.styl'
   

@@ -1,8 +1,11 @@
 CONTAINER_ID = '6c57d3d50745'
-term = require('term.js');
+term = require 'term.js'
 fs = require 'fs'
-pty = require('pty.js');
+pty = require 'pty.js'
+shortid = require 'shortid'
 exec = require("child_process").exec
+EClassroom = mongoose.model 'EClassroom'
+
 app.use term.middleware()
 
 push_file = (path_to_file, destination, container_id, callback) ->
@@ -26,6 +29,15 @@ router.get '/create', (req, res)->
   res.render 'e_classroom_create'
 
 router.post '/create', (req, res)->
+  student_count = req.body.student_count
+  name = req.body.name
+  key = shortid.generate()
+  e_classroom = new EClassroom()
+  e_classroom.student_count = student_count
+  e_classroom.name = name
+  e_classroom.key = key
+  e_classroom.containers.push {container_id: "something", owner: "null"}
+  e_classroom.save()
   res.json req.body
   # res.send 'ok'
 

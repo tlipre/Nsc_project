@@ -1,7 +1,7 @@
 html
   head
   body
-    form(action='/e_classroom/create' method='post')
+    form(action='/e-classroom/create' method='post')
       h1 CREATE E-CLASSROOM
       |Langauge: 
       select(name='langauge')
@@ -9,6 +9,6 @@ html
         option node.js
       br
       |Number of students(between 1 and 50): 
-      input(type="number" name="number" min="1" max="50")
+      input(type="number" name="student_count" min="1" max="50")
       br
       input(type='submit')

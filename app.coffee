@@ -2,6 +2,9 @@ config = require('./config')[process.env.NODE_ENV || 'development']
 global.express = require 'express' 
 global.app = express()
 global.colors = require 'colors'
+global.mongoose = require 'mongoose'
+global.Schema = mongoose.Schema
+
 path = require 'path'
 bundle_up = require 'bundle-up3'
 fs = require 'fs'
@@ -10,6 +13,10 @@ cookie_parser = require 'cookie-parser'
 session = require 'express-session'
 RedisStore = require('connect-redis')(session)
 morgan = require 'morgan'
+
+mongoose.connect 'mongodb://localhost/senior_project'
+mongoose.connection.on 'error', (err) ->
+  console.log "Mongoose error: #{err}".red
 
 
 server = require('http').createServer(app)
@@ -38,6 +45,14 @@ app.use session
 app.use passport.initialize()
 app.use passport.session()
 
+for file in fs.readdirSync './models'
+  continue if file.search(/\.bak|\.disabled|^\./) > -1
+  if file.search(/\.coffee/) < 0
+    for file_sub in fs.readdirSync './models/' + file
+      continue if file_sub.search(/\.bak|\.disabled|^\./) > -1
+      require("./models/#{file}/#{file_sub}")
+  else
+    require("./models/#{file}")
 #==================================================#
 #bundle_up css and js
 bundle_up app, __dirname + '/assets' ,
@@ -48,8 +63,6 @@ bundle_up app, __dirname + '/assets' ,
   minifyJs: config.bundle_up.minifyJs
   
 
-server.listen config.port, ->
-  console.log "Listening on port: #{config.port}"
   
 app.use require './routes/compiler'
 app.use require './routes/member'
@@ -74,3 +87,5 @@ app.use require './routes/handler'
 #   else
 #     require("./apps/#{file}")(app)
 
+server.listen config.port, ->
+  console.log "Listening on port: #{config.port}"
