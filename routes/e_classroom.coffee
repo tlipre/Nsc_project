@@ -2,8 +2,11 @@ CONTAINER_ID = '6c57d3d50745'
 term = require 'term.js'
 fs = require 'fs'
 pty = require 'pty.js'
+Docker = require 'dockerode'
+docker = new Docker()
 shortid = require 'shortid'
 exec = require("child_process").exec
+async = require 'async'
 EClassroom = mongoose.model 'EClassroom'
 
 app.use term.middleware()
@@ -23,6 +26,11 @@ term = pty.spawn 'docker', ["attach", CONTAINER_ID],
   cwd: process.env.HOME,
   env: process.env
 
+
+#docker rm $(docker ps -a -q --filter 'exited=0')
+
+
+
 router = express.Router()
 
 router.get '/create', (req, res)->
@@ -36,9 +44,20 @@ router.post '/create', (req, res)->
   e_classroom.student_count = student_count
   e_classroom.name = name
   e_classroom.key = key
-  e_classroom.containers.push {container_id: "something", owner: "null"}
-  e_classroom.save()
-  res.redirect "teacher/#{key}"
+  q = async.queue (task, callback) ->
+    docker.createContainer {Image: task.image, Cmd: ['/bin/bash']}, (err, container)->
+      console.log q
+      return callback err if err
+      callback null, container.id
+    , 2
+
+  q.push [{image:'ubuntu'}, {image:'ubuntu'}, {image:'ubuntu'}, {image:'ubuntu'}], (err, container_id)-> 
+    return console.log err if err
+    e_classroom.containers.push {container_id: container_id, owner: "null"}
+    console.log "Finish create: " + container_id.green
+  q.drain = ()->
+    e_classroom.save()
+    res.redirect "teacher/#{key}"
   # res.send 'ok'
 
 router.get '/teacher/:key', (req, res)->
@@ -60,8 +79,6 @@ router.post '/student', (req, res) ->
       res.send err if err
       res.send 'ok'
       
-
-
 io.on 'connection', (socket)->
   term.on 'data', (data) -> 
     socket.emit 'data',data
