@@ -8,7 +8,7 @@ shortid = require 'shortid'
 exec = require("child_process").exec
 async = require 'async'
 EClassroom = mongoose.model 'EClassroom'
-
+Container = mongoose.model 'Container'
 app.use term.middleware()
 
 push_file = (path_to_file, destination, container_id, callback) ->
@@ -28,10 +28,13 @@ term = pty.spawn 'docker', ["attach", CONTAINER_ID],
 
 
 #docker rm $(docker ps -a -q --filter 'exited=0')
-
-
-
 router = express.Router()
+
+q = async.queue (task, callback) ->
+  docker.createContainer {Image: task.image, Cmd: ['/bin/bash']}, (err, container)->
+    return callback err if err
+    callback null, container.id
+  , 2
 
 router.get '/create', (req, res)->
   res.render 'e_classroom_create'
@@ -44,16 +47,13 @@ router.post '/create', (req, res)->
   e_classroom.student_count = student_count
   e_classroom.name = name
   e_classroom.key = key
-  q = async.queue (task, callback) ->
-    docker.createContainer {Image: task.image, Cmd: ['/bin/bash']}, (err, container)->
-      console.log q
-      return callback err if err
-      callback null, container.id
-    , 2
-
-  q.push [{image:'ubuntu'}, {image:'ubuntu'}, {image:'ubuntu'}, {image:'ubuntu'}], (err, container_id)-> 
+  items = []
+  for i in [1..student_count]
+    items.push {image: 'ubuntu'}
+  q.push items, (err, container_id)-> 
     return console.log err if err
-    e_classroom.containers.push {container_id: container_id, owner: "null"}
+    container = new Container({container_id: container_id})
+    container.save()
     console.log "Finish create: " + container_id.green
   q.drain = ()->
     e_classroom.save()
