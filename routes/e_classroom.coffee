@@ -9,6 +9,7 @@ exec = require("child_process").exec
 async = require 'async'
 EClassroom = mongoose.model 'EClassroom'
 Container = mongoose.model 'Container'
+
 app.use term.middleware()
 
 push_file = (path_to_file, destination, container_id, callback) ->
@@ -36,8 +37,23 @@ q = async.queue (task, callback) ->
     callback null, container.id
   , 2
 
-router.get '/create', (req, res)->
+router.get '/create', helper.check_role, (req, res)->
   res.render 'e_classroom_create'
+
+router.get '/booking_container/:container_id', helper.check_auth,  (req, res)->
+  container_id = req.params.container_id
+  Container.findOne {"container_id":container_id}, (err, container)->
+    username = req.session.passport.user.username
+    if !container?
+      res.send 'This container is not existed.'
+    else if container.owner? and container.owner isnt username
+      res.send 'This container has owner already.'
+    else if container.owner is username
+      res.send 'This container belongs to you.'
+    else
+      container.owner = username
+      container.save()
+      res.send 'Complete booking.'
 
 router.post '/create', (req, res)->
   student_count = req.body.student_count
@@ -52,13 +68,12 @@ router.post '/create', (req, res)->
     items.push {image: 'ubuntu'}
   q.push items, (err, container_id)-> 
     return console.log err if err
-    container = new Container({container_id: container_id})
+    container = new Container({container_id: container_id, e_classroom_id: e_classroom._id})
     container.save()
     console.log "Finish create: " + container_id.green
   q.drain = ()->
     e_classroom.save()
     res.redirect "teacher/#{key}"
-  # res.send 'ok'
 
 router.get '/teacher/:key', (req, res)->
   key = req.params.key

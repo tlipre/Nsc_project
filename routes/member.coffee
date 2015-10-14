@@ -3,26 +3,26 @@ User = mongoose.model 'User'
 fs = require 'fs'
 
 router.get '/login', (req, res) ->
-  console.log req.flash()
-  res.render 'login'
+  flash = req.flash()
+  if _.isEmpty flash
+    res.render 'login'
+  else
+    res.render 'login', { message: flash.error[0] }
 
 router.post '/login', passport.authenticate('local',{successRedirect: '/', failureRedirect: '/login', failureFlash: true})
 
 router.get '/',(req, res) ->
-  if Object.keys(req.session.passport).length != 0
-    current_user = req.session.passport.user
-  else
-    console.log "plz login".red
-  if current_user?
-    res.send current_user
-  else
+  if _.isEmpty req.session.passport
     res.send '<a href="/login">login</a>'
+  else
+    res.json req.session.passport.user
 
 router.get '/check', (req, res)->
   console.log req.session
   res.send 'ok'
-router.get '/create', (req, res)->
-  user = new User(username: 'book', password: 'book')
+
+router.get '/create/:role', (req, res)->
+  user = new User(username: 'mabook', password: 'mabook', role: req.params.role)
   user.save()
   res.json user
 

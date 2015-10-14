@@ -3,6 +3,8 @@ html
     != renderStyles()
   body
     != renderJs()
+    if message
+      h1 #{message}
     form(action='/login' method='post')
       a username 
       input(name='username')

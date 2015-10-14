@@ -52,7 +52,6 @@ router.get '/compile_docker', (req, res) ->
 file_types = {'python': 'py', 'node': 'js'} #TODO: add some file_type(s) here
 
 router.post '/compile_docker', (req, res) ->
-  # code = "for i in range(10):\n    print '1'+str(i)" #TODO: use code that send from ajax
   code = req.body.command
   language = req.body.language
   file_type = file_types[language]
@@ -68,9 +67,10 @@ router.post '/compile_docker', (req, res) ->
     return res.send err if err?
     push_file path, destination, CONTAINER_ID, (err)->
       return res.send err if err?
-      #TODO: To something with how to compile 
+      #TODO: Do something with how to compile 
       compile "python3", "/home/#{raw_file}", "/home/#{result_file}", ()->
         pull_file "#{destination}/#{result_file}", "#{parent_path}/#{result_file}", CONTAINER_ID, (err)->
+          console.log 'whattt'
           return res.send err if err?
           fs.readFile "#{parent_path}/#{result_file}", (err, data)->
             res.json {data : data.toString()}

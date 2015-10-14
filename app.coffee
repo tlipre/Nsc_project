@@ -4,8 +4,10 @@ global.app = express()
 global.colors = require 'colors'
 global.mongoose = require 'mongoose'
 global.Schema = mongoose.Schema
+global._ = require 'lodash'
 flash = require 'connect-flash'
 path = require 'path'
+
 bundle_up = require 'bundle-up3'
 fs = require 'fs'
 body_parser = require 'body-parser'
@@ -33,6 +35,7 @@ for file in fs.readdirSync './models'
 
 #this global is makesense
 global.passport = require './libs/passport'
+global.helper = require './libs/helper'
 
 app.set 'views', path.join __dirname, 'views'
 app.set 'view engine', 'jade' 
