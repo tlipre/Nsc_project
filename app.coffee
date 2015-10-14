@@ -1,11 +1,13 @@
-config = require('./config')[process.env.NODE_ENV || 'development']
+global.config = require('./config')[process.env.NODE_ENV || 'development']
 global.express = require 'express' 
 global.app = express()
 global.colors = require 'colors'
 global.mongoose = require 'mongoose'
 global.Schema = mongoose.Schema
-
+global._ = require 'lodash'
+flash = require 'connect-flash'
 path = require 'path'
+
 bundle_up = require 'bundle-up3'
 fs = require 'fs'
 body_parser = require 'body-parser'
@@ -22,7 +24,18 @@ mongoose.connection.on 'error', (err) ->
 server = require('http').createServer(app)
 global.io = require('socket.io')(server)
 
+for file in fs.readdirSync './models'
+  continue if file.search(/\.bak|\.disabled|^\./) > -1
+  if file.search(/\.coffee/) < 0
+    for file_sub in fs.readdirSync './models/' + file
+      continue if file_sub.search(/\.bak|\.disabled|^\./) > -1
+      require("./models/#{file}/#{file_sub}")
+  else
+    require("./models/#{file}")
+
+#this global is makesense
 global.passport = require './libs/passport'
+global.helper = require './libs/helper'
 
 app.set 'views', path.join __dirname, 'views'
 app.set 'view engine', 'jade' 
@@ -31,7 +44,7 @@ app.use body_parser.json()
 app.use body_parser.urlencoded {extended: true}
 app.use morgan 'dev'
 app.use cookie_parser()
-
+app.use flash()
 app.use session
   secret: "bookmamieo"
   store : new RedisStore
@@ -45,15 +58,8 @@ app.use session
 app.use passport.initialize()
 app.use passport.session()
 
-for file in fs.readdirSync './models'
-  continue if file.search(/\.bak|\.disabled|^\./) > -1
-  if file.search(/\.coffee/) < 0
-    for file_sub in fs.readdirSync './models/' + file
-      continue if file_sub.search(/\.bak|\.disabled|^\./) > -1
-      require("./models/#{file}/#{file_sub}")
-  else
-    require("./models/#{file}")
-#==================================================#
+
+
 #bundle_up css and js
 bundle_up app, __dirname + '/assets' ,
   staticRoot: __dirname + '/public/'

@@ -1,15 +1,17 @@
 passport = require 'passport'
 LocalStrategy = require('passport-local').Strategy
+User = mongoose.model 'User'
 
 passport.use new LocalStrategy (username, password, done) ->
-  if username == 'book' && password == 'book'
-    user = {'username':'book'}
-  else
-    user = false
-  if !user
-    return done null, false, { message: 'Incorrect username or password.' }
-  else
-    return done null, user
+  User.findOne {'username': username, 'password': password}, (err, user)->
+    if err
+      console.log 'Database error from query user'.red
+      done "Can't connect to database."
+    if user
+      done null, user
+    else
+      console.log 'wrong username or password'.red
+      done null, false, {message: 'Incorrect username or password.'}
 
 passport.serializeUser (user, done) ->
   done(null, user)

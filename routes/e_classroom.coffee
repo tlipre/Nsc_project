@@ -8,6 +8,7 @@ shortid = require 'shortid'
 exec = require("child_process").exec
 async = require 'async'
 EClassroom = mongoose.model 'EClassroom'
+Container = mongoose.model 'Container'
 
 app.use term.middleware()
 
@@ -28,13 +29,31 @@ term = pty.spawn 'docker', ["attach", CONTAINER_ID],
 
 
 #docker rm $(docker ps -a -q --filter 'exited=0')
-
-
-
 router = express.Router()
 
-router.get '/create', (req, res)->
+q = async.queue (task, callback) ->
+  docker.createContainer {Image: task.image, Cmd: ['/bin/bash']}, (err, container)->
+    return callback err if err
+    callback null, container.id
+  , 2
+
+router.get '/create', helper.check_role, (req, res)->
   res.render 'e_classroom_create'
+
+router.get '/booking_container/:container_id', helper.check_auth,  (req, res)->
+  container_id = req.params.container_id
+  Container.findOne {"container_id":container_id}, (err, container)->
+    username = req.session.passport.user.username
+    if !container?
+      res.send 'This container is not existed.'
+    else if container.owner? and container.owner isnt username
+      res.send 'This container has owner already.'
+    else if container.owner is username
+      res.send 'This container belongs to you.'
+    else
+      container.owner = username
+      container.save()
+      res.send 'Complete booking.'
 
 router.post '/create', (req, res)->
   student_count = req.body.student_count
@@ -44,21 +63,17 @@ router.post '/create', (req, res)->
   e_classroom.student_count = student_count
   e_classroom.name = name
   e_classroom.key = key
-  q = async.queue (task, callback) ->
-    docker.createContainer {Image: task.image, Cmd: ['/bin/bash']}, (err, container)->
-      console.log q
-      return callback err if err
-      callback null, container.id
-    , 2
-
-  q.push [{image:'ubuntu'}, {image:'ubuntu'}, {image:'ubuntu'}, {image:'ubuntu'}], (err, container_id)-> 
+  items = []
+  for i in [1..student_count]
+    items.push {image: 'ubuntu'}
+  q.push items, (err, container_id)-> 
     return console.log err if err
-    e_classroom.containers.push {container_id: container_id, owner: "null"}
+    container = new Container({container_id: container_id, e_classroom_id: e_classroom._id})
+    container.save()
     console.log "Finish create: " + container_id.green
   q.drain = ()->
     e_classroom.save()
     res.redirect "teacher/#{key}"
-  # res.send 'ok'
 
 router.get '/teacher/:key', (req, res)->
   key = req.params.key
