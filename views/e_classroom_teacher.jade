@@ -3,23 +3,78 @@ block title
 	title e_classroom_teacher
 block content
 	.e_classroom
-		.row.intro
-			.col-md-3.topic ระบบ E-Classroom
-			.col-md-6
-				p ชื่อห้อง SOA KMITL
-					span |
-					a(href="") ยกเลิกคลาส
-				p Key of this E-Classroom: #{key}
-				p คลาสนี้จะสอนเกี่ยวกับ Service-oriented architecture
-			.col-md-3.num_student จำนวนนักเรียนในห้อง : 6 คน
-		.window
-			.code
-			//- .result
-		.sidebar
-			.teacher
-				.docker.active
-			.student
-				.docker
-				.docker
-				.docker
-				.docker
+
+		.content-classroom
+			.window
+				.header-window
+					.name-active
+						img.circle(src='/images/mamieo.jpg')
+						.username Chaowanee Rungruchimek
+				.code
+					.terminal
+
+				.footer-window
+					input(type='button' class='form-control btn btn-success' value='Save & Submit')
+					input(type='button' class='form-control btn btn-success' value='Reset code')
+
+			.sidebar
+				.topic
+					p ระบบ E-Classroom	
+				.intro
+					p ชื่อห้อง SOA KMITL
+						span  |
+						a(href="") ยกเลิกคลาส
+					p Key of this E-Classroom: #{key}
+
+				.topic-sub
+					p Your view
+				.teacher
+					.docker
+						img(src="/images/sublime2.png")
+						.name Napat Rungruchimek
+						.clear
+
+				.topic-sub
+					p Student view
+						span.num_student จำนวนนักเรียน 6 คน
+				.student
+					.docker
+						img(src="/images/sublime2.png")
+						.name 
+							p Chaowanee Janthong
+							p.type typing ...
+						.clear
+					.docker
+						img(src="/images/sublime2.png")
+						.name
+							p Chaowanee Janthong
+							p.type typing ... 
+						.clear
+					.docker
+						img(src="/images/sublime2.png")
+						.name
+							p Chaowanee Janthong
+							p.type typing ... 
+						.clear
+					.docker
+						img(src="/images/sublime2.png")
+						.name 
+							p Chaowanee Janthong
+							p.type typing ...
+						.clear
+					.docker
+						img(src="/images/sublime2.png")
+						.name
+							p Chaowanee Janthong
+							p.type typing ... 
+						.clear
+					.docker
+						img(src="/images/sublime2.png")
+						.name
+							p Chaowanee Janthong
+							p.type typing ... 
+						.clear
+				
+				.footer-side
+					a.see See all students
+			.clear
