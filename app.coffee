@@ -1,4 +1,4 @@
-config = require('./config')[process.env.NODE_ENV || 'development']
+global.config = require('./config')[process.env.NODE_ENV || 'development']
 global.express = require 'express' 
 global.app = express()
 global.colors = require 'colors'

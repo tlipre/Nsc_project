@@ -1,4 +1,3 @@
-CONTAINER_ID = '6c57d3d50745'
 docker_stream = null
 
 fs = require 'fs'
@@ -7,6 +6,7 @@ shortid = require 'shortid'
 docker = new Docker()
 exec = require("child_process").exec
 router = express.Router()
+timeout = require 'connect-timeout'
 
 push_file = (path, destination, container_id, callback) ->
   command = "docker cp #{path} #{container_id}:#{destination}"
@@ -39,7 +39,7 @@ compile = (command, path, result_file, callback)->
     
 
 
-container = docker.getContainer CONTAINER_ID
+container = docker.getContainer config.container_id
 container.start (err, data)->
   container.attach {stream: true, stdin:true, stdout:true, stderr:false}, (err, stream)->
     # stream.pipe process.stdout
@@ -51,11 +51,11 @@ router.get '/compile_docker', (req, res) ->
 
 file_types = {'python': 'py', 'node': 'js'} #TODO: add some file_type(s) here
 
-router.post '/compile_docker', (req, res) ->
+router.post '/compile_docker', timeout('1s'), (req, res) ->
   code = req.body.command
   language = req.body.language
   file_type = file_types[language]
-  return res.send "Our system not supports #{language}" if !file_type?
+  return res.send "Our system not supports #{language}" if !file_type? and !req.timedout
 
   file_name = shortid.generate()
   raw_file = "#{file_name}.#{file_type}"
@@ -64,15 +64,14 @@ router.post '/compile_docker', (req, res) ->
   parent_path = "#{process.cwd()}/public/uploads"
   path = "#{process.cwd()}/public/uploads/#{file_name}.#{file_type}"
   fs.writeFile path, code, (err)->
-    return res.send err if err?
-    push_file path, destination, CONTAINER_ID, (err)->
-      return res.send err if err?
+    return res.send err if err? and !req.timedout
+    push_file path, destination, config.container_id, (err)->
+      return res.send err if err? and !req.timedout
       #TODO: Do something with how to compile 
       compile "python3", "/home/#{raw_file}", "/home/#{result_file}", ()->
-        pull_file "#{destination}/#{result_file}", "#{parent_path}/#{result_file}", CONTAINER_ID, (err)->
-          console.log 'whattt'
-          return res.send err if err?
+        pull_file "#{destination}/#{result_file}", "#{parent_path}/#{result_file}", config.container_id, (err)->
+          return res.send err if err? and !req.timedout
           fs.readFile "#{parent_path}/#{result_file}", (err, data)->
-            res.json {data : data.toString()}
+            res.json {data : data.toString()} if !req.timedout
 
 module.exports = router
