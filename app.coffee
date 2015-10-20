@@ -5,8 +5,10 @@ global.colors = require 'colors'
 global.mongoose = require 'mongoose'
 global.Schema = mongoose.Schema
 global._ = require 'lodash'
+global.dev = require './libs/dev'
 flash = require 'connect-flash'
 path = require 'path'
+
 
 bundle_up = require 'bundle-up3'
 fs = require 'fs'
@@ -45,12 +47,13 @@ app.use body_parser.urlencoded {extended: true}
 app.use morgan 'dev'
 app.use cookie_parser()
 app.use flash()
-app.use session
-  secret: "bookmamieo"
-  store : new RedisStore
+global.redis_store = new RedisStore
     host : 'localhost'
     port : '6379'
     pass : ''
+app.use session
+  secret: "bookmamieo"
+  store : redis_store
   cookie :
     maxAge : 604800 
   resave: true
