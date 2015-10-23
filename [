@@ -8,4 +8,3 @@ module.exports = (assets) ->
   assets.addCss '/public/stylesheets/bootstrap/css/bootstrap.css'
   assets.addCss '/assets/stylesheets/style.styl'
   
-

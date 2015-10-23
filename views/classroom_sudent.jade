@@ -1,0 +1,53 @@
+extends layout
+block title
+	title e_classroom_teacher
+block content
+	.e_classroom
+
+		.content-classroom
+			.window.classroom-student 
+				.header-window
+					.class-name
+						p ชื่อห้อง SOA KMITL 
+							span  |
+							a(href="") ออกจากคลาส
+					.name-teacher
+						span อาจารย์ผู้สอน :
+						.name-active
+							img.circle(src='/images/mamieo.jpg')
+							.username Chaowanee Rungruchimek
+							
+					.time
+						p อยู่ในระบบเป็นเวลา 20 นาที 20 วินาที
+				.code
+					.window-teacher
+					.terminal
+
+				.footer-window
+					input(type='button' class='form-control btn btn-success' value='Save & Submit')
+					input(type='button' class='form-control btn btn-success' value='Reset code')
+					.techer-window
+						p ดูหน้าต่างผู้สอน
+					.chat
+						.textbox
+							.type
+								.input-group
+									input(type="text" class="form-control" id="exampleInputAmount" placeholder="Message")
+									.input-group-addon hide
+						.content
+							.header 
+								p ห้องสนทนา SOA
+							.long-content
+								.story
+								-for (var x = 1; x < 10; x++)
+									p
+										span.name Napat :
+										span  ต้องกรอกข้อมูลก่อนเข้าห้องหรือเปล้าครับ
+									p
+										span.name Chaowanee :
+										span  อ่าวกำ หนูไม่ได้กรอก TT
+									p
+										span.name Napat :
+										span  ต้องกรอกข้อมูลก่อนเข้าห้องหรือเปล้าครับ
+						
+
