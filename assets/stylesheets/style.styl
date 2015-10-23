@@ -86,16 +86,22 @@ header a
 	// background-color #9B9B9B
 
 .window
-	width 75%
+	width 78%
 	float right
 	background-color #272722
 	padding 0
 	height 100%
 
+.window.classroom-student
+	width 100%
+
 .window .header-window
 	background-color #9B9B9B
 	width 100%
 	height 60px
+
+.window.classroom-student .header-window
+	background-color #f2f2f2
 
 .window .header-window .name-active
 	position relative
@@ -110,7 +116,6 @@ header a
 	top 4px
 	z-index 2
 	
-
 .window .header-window .username
 	display inline
 	padding 8px 30px 10px 40px
@@ -121,6 +126,45 @@ header a
 	top 10px
 	left 20px
 
+.window.classroom-student .header-window
+	font-size 14px
+	position relative
+	background-color white
+
+.window.classroom-student .header-window .class-name p a
+	color #31B989
+	text-decoration underline
+	padding-left 5px
+
+.window.classroom-student .header-window .class-name,
+.window.classroom-student .name-teacher
+	padding-top 20px
+	margin-left 4%
+	float left
+
+.window.classroom-student .header-window .time
+	float right
+	margin-right 4%
+	padding-top 20px
+	color #848484
+	
+.window.classroom-student .header-window .username
+	position relative
+	background-color #f2f2f2
+
+.window.classroom-student .name-teacher
+	float left
+
+.window.classroom-student img.circle
+	top -3px
+	
+.window.classroom-student .name-active
+	display block
+	float left
+	margin-left 95px
+	position absolute
+	top 8px
+	
 .window .code
 	width 100%
 	padding 20px
@@ -134,8 +178,17 @@ header a
 	position fixed
 	right 3%
 
+.window .code .window-teacher
+	width 120px
+	height 80px
+	background-color black
+	border 1px solid #848484
+	position fixed
+	left 45%
+	bottom 60px
+
 .sidebar
-	width 25%
+	width 22%
 	height 100%
 	float left
 	background-color white
@@ -209,6 +262,7 @@ header a
 	color #848484
 	font-size 12px
 
+
 .clear 
 	clear both
 
@@ -226,6 +280,42 @@ header a
 	margin 10px 0 0 2%
 	background-color #31B989
 
+.footer-window .chat .content,
+.footer-window .chat .textbox
+	width 380px
+	height 50px
+	background-color white
+	position fixed
+	right 3%
+	bottom 0
+
+.footer-window .chat .type .input-group-addon:hover
+	cursor pointer
+
+.footer-window .chat .type
+	padding 10px
+
+.footer-window .chat .long-content,
+.footer-window .chat .content
+	background-color white
+	bottom 60px
+	// padding 15px 10px 10px 10px
+	height 250px
+	border-radius 5px
+
+.footer-window .chat .content .header
+	height 35px
+	background-color #f2f2f2
+	padding-top 8px	
+	text-align center
+
+.footer-window .chat .long-content
+	overflow scroll
+	padding 18px 15px 0 15px
+	height 200px
+
+.footer-window .chat .content span.name 
+	color #31B989
 
 .footer-side
 	padding-top 10px

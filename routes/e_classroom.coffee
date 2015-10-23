@@ -83,6 +83,10 @@ router.get '/teacher/:key', (req, res)->
 router.get '/student', (req, res) ->
   res.render 'e_classroom_student'
 
+# classroom_student
+router.get '/student-test', (req, res) ->
+  res.render 'classroom_sudent'
+
 router.post '/student', (req, res) ->
   code = req.body.code
   file_name = req.body.file_name
