@@ -98,7 +98,7 @@ router.post '/student', (req, res) ->
 router.get '/session', (req, res) ->
   redis_store.get '1moAk3Uys0G16Q7HcCZRXLJZ3j0uE4rB', (err, session)->
     console.log session
-  res.send 'ok'
+    res.send 'ok'
 
 tmn = io.of('/terminal')
 
@@ -106,7 +106,7 @@ tmn.use (socket, next) ->
   cookie = cookie_parser socket.request.headers.cookie
   dev.highlight cookie
   next()
-
+  
 tmn.on 'connection', (socket)->
   term.on 'data', (data) -> 
     socket.emit 'data',data
