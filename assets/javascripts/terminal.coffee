@@ -1,7 +1,7 @@
 $ ->
   editor = $('#editor')
   editor.focus()
-  socket = io();
+  socket = io('/terminal');
   socket.on 'connect', ()-> 
     term = new Terminal {
       cols: 80,
@@ -10,13 +10,12 @@ $ ->
       screenKeys: true,
       cursorBlink: true
     }
-    socket.emit 'data', "\n"
     term.on 'data', (data)->
       socket.emit 'data', data
     term.on 'title', (title) ->
       document.title = title;
     term.open($('#result').get(0))
-    term.write '\x1b[31mWelcome to term.js!\x1b[m\r\n'
+    socket.emit 'data', "\n"
     socket.on 'data', (data)->
       term.write data
     socket.on 'disconnect', ()->

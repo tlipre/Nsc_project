@@ -1,4 +1,3 @@
-CONTAINER_ID = '6c57d3d50745'
 term = require 'term.js'
 fs = require 'fs'
 pty = require 'pty.js'
@@ -7,6 +6,8 @@ docker = new Docker()
 shortid = require 'shortid'
 exec = require("child_process").exec
 async = require 'async'
+cookie_parser = require('cookie').parse
+
 EClassroom = mongoose.model 'EClassroom'
 Container = mongoose.model 'Container'
 
@@ -20,7 +21,7 @@ push_file = (path_to_file, destination, container_id, callback) ->
     else
       callback()
 
-term = pty.spawn 'docker', ["attach", CONTAINER_ID], 
+term = pty.spawn 'docker', ["attach", config.container_id], 
   name: 'xterm-color',
   cols: 80,
   rows: 30,
@@ -94,11 +95,23 @@ router.post '/student', (req, res) ->
   path = "#{process.cwd()}/public/uploads/#{file_name}.#{file_type}"
   fs.writeFile path, code, (err)->
     res.send err if err
-    push_file path, destination, CONTAINER_ID, (err)->
+    push_file path, destination, config.container_id, (err)->
       res.send err if err
       res.send 'ok'
-      
-io.on 'connection', (socket)->
+
+router.get '/session', (req, res) ->
+  redis_store.get '1moAk3Uys0G16Q7HcCZRXLJZ3j0uE4rB', (err, session)->
+    console.log session
+  res.send 'ok'
+
+tmn = io.of('/terminal')
+
+tmn.use (socket, next) ->
+  cookie = cookie_parser socket.request.headers.cookie
+  dev.highlight cookie
+  next()
+
+tmn.on 'connection', (socket)->
   term.on 'data', (data) -> 
     socket.emit 'data',data
 
