@@ -3,7 +3,6 @@ block title
 	title e_classroom_teacher
 block content
 	.e_classroom
-
 		.content-classroom
 			.window.classroom-student 
 				.header-window
@@ -33,22 +32,17 @@ block content
 						.textbox
 							.type
 								.input-group
-									input(type="text" class="form-control" id="exampleInputAmount" placeholder="Message")
+									input(class="form-control" id="typing-box" placeholder="Message")
 									.input-group-addon hide
 						.content
 							.header 
 								p ห้องสนทนา SOA
-							.long-content
+							.chat-box
 								.story
-								-for (var x = 1; x < 10; x++)
-									p
-										span.name Napat :
-										span  ต้องกรอกข้อมูลก่อนเข้าห้องหรือเปล้าครับ
-									p
-										span.name Chaowanee :
-										span  อ่าวกำ หนูไม่ได้กรอก TT
-									p
-										span.name Napat :
-										span  ต้องกรอกข้อมูลก่อนเข้าห้องหรือเปล้าครับ
-						
-
+									each val, index in chat
+										p
+											span.name #{val.sender} :
+											span #{val.message}
+	!= renderJs()
+	!= renderJs('chat')
+	!= renderJs('socket')

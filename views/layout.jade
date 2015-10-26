@@ -16,5 +16,9 @@ html
             a E-Classroom
           li.line
             a Support
-          li.please Please Login
+          if username
+            li.please Please Login
+          else
+            li#username #{username}
+
     block content

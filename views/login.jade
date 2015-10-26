@@ -6,10 +6,11 @@ html
     if message
       h1 #{message}
     form(action='/login' method='post')
-      a username 
-      input(name='username')
+      input(type="radio" name="username" value="Book") 
+      | Book
       br
-      a password 
-      input(name='password')
+      input(type="radio" name="username" value="Mamieo") 
+      | Mamieo
+      input(type="hidden" name="password" value="password")
       br
       input(type='submit')

@@ -22,7 +22,7 @@ router.get '/check', (req, res)->
   res.send 'ok'
 
 router.get '/create/:role', (req, res)->
-  user = new User(username: 'mabook', password: 'mabook', role: req.params.role)
+  user = new User(username: 'Mamieo', password: 'password', role: req.params.role)
   user.save()
   res.json user
 

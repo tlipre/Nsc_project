@@ -8,6 +8,7 @@ exec = require("child_process").exec
 async = require 'async'
 cookie_parser = require('cookie').parse
 
+Chat_log = mongoose.model 'Chat_log'
 EClassroom = mongoose.model 'EClassroom'
 Container = mongoose.model 'Container'
 
@@ -84,8 +85,16 @@ router.get '/student', (req, res) ->
   res.render 'e_classroom_student'
 
 # classroom_student
-router.get '/student-test', (req, res) ->
-  res.render 'classroom_sudent'
+router.get '/student-test', helper.check_auth, (req, res) ->
+  Chat_log.find {}, (err, data)->
+    #TODO: clean this code
+    new_chat = []
+    i = data.length - 1
+    while i != -1
+      new_chat.push data[i]
+      i--
+    render_data = _.assign req.session.passport.user, chat: new_chat
+    res.render 'e_classroom_student_test', render_data
 
 router.post '/student', (req, res) ->
   code = req.body.code
@@ -99,16 +108,27 @@ router.post '/student', (req, res) ->
       res.send err if err
       res.send 'ok'
 
-router.get '/session', (req, res) ->
-  redis_store.get '1moAk3Uys0G16Q7HcCZRXLJZ3j0uE4rB', (err, session)->
-    console.log session
-    res.send 'ok'
+router.get '/session/:id', (req, res)->
+  redis_store.get req.params.id, (err, session)->
+    dev.highlight session
+    res.send req.session
+
+chat_channel = io.of('/chat')
+
+#TODO: AUTH!!
+chat_channel.on 'connection', (socket)->
+  socket.on 'message', (data)->
+    chat = new Chat_log(data)
+    chat.save()
+    data = {message: chat.message, sender: chat.sender, timestamp: chat.timestamp}
+    chat_channel.emit 'message', data
+
 
 tmn = io.of('/terminal')
 
 tmn.use (socket, next) ->
   cookie = cookie_parser socket.request.headers.cookie
-  dev.highlight cookie
+  # dev.highlight cookie
   next()
   
 tmn.on 'connection', (socket)->
