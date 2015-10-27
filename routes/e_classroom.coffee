@@ -77,9 +77,11 @@ router.post '/create', (req, res)->
     e_classroom.save()
     res.redirect "teacher/#{key}"
 
-router.get '/teacher/:key', (req, res)->
+router.get '/teacher/:key', helper.check_role, (req, res)->
   key = req.params.key
-  res.render 'e_classroom_teacher', {key: key}
+  Chat_log.find {}, (err, data)->
+    render_data = _.assign req.session.passport.user, chat: data, key: key
+    res.render 'e_classroom_teacher', render_data
 
 router.get '/student', (req, res) ->
   res.render 'e_classroom_student'
@@ -88,12 +90,12 @@ router.get '/student', (req, res) ->
 router.get '/student-test', helper.check_auth, (req, res) ->
   Chat_log.find {}, (err, data)->
     #TODO: clean this code
-    new_chat = []
-    i = data.length - 1
-    while i != -1
-      new_chat.push data[i]
-      i--
-    render_data = _.assign req.session.passport.user, chat: new_chat
+    # new_chat = []
+    # i = data.length - 1
+    # while i != -1
+    #   new_chat.push data[i]
+    #   i--
+    render_data = _.assign req.session.passport.user, chat: data
     res.render 'e_classroom_student_test', render_data
 
 router.post '/student', (req, res) ->
@@ -118,10 +120,21 @@ chat_channel = io.of('/chat')
 #TODO: AUTH!!
 chat_channel.on 'connection', (socket)->
   socket.on 'message', (data)->
+    console.log data
     chat = new Chat_log(data)
+    # console.log chat
     chat.save()
     data = {message: chat.message, sender: chat.sender, timestamp: chat.timestamp}
     chat_channel.emit 'message', data
+
+editor_channel = io.of('/editor')
+
+#TODO: AUTH!!
+editor_channel.on 'connection', (socket)->
+  socket.on 'message', (data)->
+    editor_channel.emit 'student', data
+  socket.on 'request', (data)->
+    editor_channel.emit 'request1', data
 
 
 tmn = io.of('/terminal')

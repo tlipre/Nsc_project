@@ -2,12 +2,12 @@ module.exports =
   check_role: (req, res, next)->
     if _.isEmpty req.session.passport
       #login first
-      req.flash 'error', 'Please login as a teacher to create e-classroom'
+      req.flash 'error', 'Please login as a teacher to access this'
       res.redirect '/login'
     else
       if req.session.passport.user.role is 'student'
         #logged in as a student
-        req.flash 'error', 'Please login as a teacher to create e-classroom'
+        req.flash 'error', 'Please login as a teacher to access this'
         res.redirect '/login'
       else
         #logged in as a teacher

@@ -2,7 +2,6 @@ $ ->
   typing_box = $('#typing-box')
   chat_box = $('.chat-box')
   socket = io('/chat');
-
       
   typing_box.bind 'keypress', (e)->
     if e.keyCode == 13

@@ -9,7 +9,7 @@ block content
 				.header-window
 					.name-active
 						img.circle(src='/images/mamieo.jpg')
-						.username Chaowanee Rungruchimek
+						.username AjJoob
 				.code
 					textarea.editor(type='textarea' cols='130' rows='25')
 					.terminal
@@ -21,23 +21,17 @@ block content
 						.textbox
 							.type
 								.input-group
-									input(type="text" class="form-control" id="exampleInputAmount" placeholder="Message")
+									input(type="text" class="form-control" id="typing-box" placeholder="Message")
 									.input-group-addon hide
 						.content
 							.header 
 								p ห้องสนทนา SOA
 							.chat-box
 								.story
-								-for (var x = 1; x < 10; x++)
+								each val, index in chat
 									p
-										span.name Napat :
-										span  ต้องกรอกข้อมูลก่อนเข้าห้องหรือเปล้าครับ
-									p
-										span.name Chaowanee :
-										span  อ่าวกำ หนูไม่ได้กรอก TT
-									p
-										span.name Napat :
-										span  ต้องกรอกข้อมูลก่อนเข้าห้องหรือเปล้าครับ
+										span.name #{val.sender} :
+										span #{val.message}
 			.sidebar
 				.topic
 					p ระบบ E-Classroom	
@@ -50,52 +44,56 @@ block content
 				.topic-sub
 					p Your view
 				.teacher
-					.docker
+					.docker(id="aj")
 						img(src="/images/sublime2.png")
-						.name Napat Rungruchimek
+						.name AjJoob
 						.clear
 
 				.topic-sub
 					p Student view
 						span.num_student จำนวนนักเรียน 6 คน
 				.student
-					.docker
-						img(src="/images/sublime2.png")
-						.name 
-							p Chaowanee Janthong
-							p.type typing ...
-						.clear
-					.docker
+					//- .docker
+					//- 	img(src="/images/sublime2.png")
+					//- 	.name 
+					//- 		p Chaowanee Janthong
+					//- 		p.type typing ...
+					//- 	.clear
+					//- .docker
+					//- 	img(src="/images/sublime2.png")
+					//- 	.name
+					//- 		p Chaowanee Janthong
+					//- 		p.type typing ... 
+					//- 	.clear
+					//- .docker
+					//- 	img(src="/images/sublime2.png")
+					//- 	.name
+					//- 		p Chaowanee Janthong
+					//- 		p.type typing ... 
+					//- 	.clear
+					//- .docker
+					//- 	img(src="/images/sublime2.png")
+					//- 	.name 
+					//- 		p Chaowanee Janthong
+					//- 		p.type typing ...
+					//- 	.clear
+					//- .docker
+					//- 	img(src="/images/sublime2.png")
+					//- 	.name
+					//- 		p Chaowanee Janthong
+					//- 		p.type typing ... 
+					//- 	.clear
+					.docker(id="book")
 						img(src="/images/sublime2.png")
 						.name
-							p Chaowanee Janthong
-							p.type typing ... 
-						.clear
-					.docker
-						img(src="/images/sublime2.png")
-						.name
-							p Chaowanee Janthong
-							p.type typing ... 
-						.clear
-					.docker
-						img(src="/images/sublime2.png")
-						.name 
-							p Chaowanee Janthong
-							p.type typing ...
-						.clear
-					.docker
-						img(src="/images/sublime2.png")
-						.name
-							p Chaowanee Janthong
-							p.type typing ... 
-						.clear
-					.docker
-						img(src="/images/sublime2.png")
-						.name
-							p Chaowanee Janthong
+							p Book
 							p.type typing ... 
 						.clear
 				
 				.footer-side
 					a.see See all students
 			.clear
+	!= renderJs()
+	!= renderJs('socket')
+	!= renderJs('chat')
+	!= renderJs('editor_teacher')

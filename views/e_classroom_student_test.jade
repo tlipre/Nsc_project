@@ -14,7 +14,7 @@ block content
 						span อาจารย์ผู้สอน :
 						.name-active
 							img.circle(src='/images/mamieo.jpg')
-							.username Chaowanee Rungruchimek
+							.username AjJoob
 							
 					.time
 						p อยู่ในระบบเป็นเวลา 20 นาที 20 วินาที
@@ -39,10 +39,11 @@ block content
 								p ห้องสนทนา SOA
 							.chat-box
 								.story
-									each val, index in chat
-										p
-											span.name #{val.sender} :
-											span #{val.message}
+								each val, index in chat
+									p
+										span.name #{val.sender} :
+										span #{val.message}
 	!= renderJs()
-	!= renderJs('chat')
 	!= renderJs('socket')
+	!= renderJs('chat')
+	!= renderJs('editor')
