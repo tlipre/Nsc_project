@@ -51,13 +51,14 @@ global.redis_store = new RedisStore
     host : 'localhost'
     port : '6379'
     pass : ''
-app.use session
+global.session_middleware = session
   secret: "bookmamieo"
   store : redis_store
   cookie :
     maxAge : 6048000
   resave: true
   saveUninitialized: true
+app.use session_middleware
 app.use passport.initialize()
 app.use passport.session()
 

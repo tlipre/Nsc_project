@@ -29,7 +29,6 @@ term = pty.spawn 'docker', ["attach", config.container_id],
   cwd: process.env.HOME,
   env: process.env
 
-
 #docker rm $(docker ps -a -q --filter 'exited=0')
 router = express.Router()
 
@@ -79,8 +78,9 @@ router.post '/create', (req, res)->
 
 router.get '/teacher/:key', helper.check_role, (req, res)->
   key = req.params.key
-  Chat_log.find {}, (err, data)->
-    render_data = _.assign req.session.passport.user, chat: data, key: key
+  Chat_log.find {}, (err, chat_log)->
+    username = req.session.passport.user.username
+    render_data = _.assign username: username, chat: chat_log, key: key
     res.render 'e_classroom_teacher', render_data
 
 router.get '/student', (req, res) ->
@@ -88,14 +88,9 @@ router.get '/student', (req, res) ->
 
 # classroom_student
 router.get '/student-test', helper.check_auth, (req, res) ->
-  Chat_log.find {}, (err, data)->
-    #TODO: clean this code
-    # new_chat = []
-    # i = data.length - 1
-    # while i != -1
-    #   new_chat.push data[i]
-    #   i--
-    render_data = _.assign req.session.passport.user, chat: data
+  Chat_log.find {}, (err, chat_log)->
+    username = req.session.passport.user.username
+    render_data = _.assign username: username, chat: chat_log
     res.render 'e_classroom_student_test', render_data
 
 router.post '/student', (req, res) ->
@@ -115,36 +110,36 @@ router.get '/session/:id', (req, res)->
     dev.highlight session
     res.send req.session
 
-chat_channel = io.of('/chat')
+io.use (socket, next)->
+  session_middleware(socket.request, socket.request.res, next)
 
-#TODO: AUTH!!
-chat_channel.on 'connection', (socket)->
+chat_room = io.of('/chat')
+editor_room = io.of('/editor')
+terminal_room = io.of('/terminal')
+
+chat_room.use (socket, next)->
+  session = socket.request.session
+  #TODO: AUTH STUFF HERE
+  if false
+  # if true
+    console.log "AUTH FAILED"
+  else
+    next()
+
+chat_room.on 'connection', (socket)->
   socket.on 'message', (data)->
-    console.log data
     chat = new Chat_log(data)
-    # console.log chat
     chat.save()
     data = {message: chat.message, sender: chat.sender, timestamp: chat.timestamp}
-    chat_channel.emit 'message', data
+    chat_room.emit 'message', data
 
-editor_channel = io.of('/editor')
-
-#TODO: AUTH!!
-editor_channel.on 'connection', (socket)->
+editor_room.on 'connection', (socket)->
   socket.on 'message', (data)->
-    editor_channel.emit 'student', data
+    editor_room.emit 'student', data
   socket.on 'request', (data)->
-    editor_channel.emit 'request1', data
-
-
-tmn = io.of('/terminal')
-
-tmn.use (socket, next) ->
-  cookie = cookie_parser socket.request.headers.cookie
-  # dev.highlight cookie
-  next()
+    editor_room.emit 'request1', data
   
-tmn.on 'connection', (socket)->
+terminal_room.on 'connection', (socket)->
   term.on 'data', (data) -> 
     socket.emit 'data',data
 

@@ -15,6 +15,7 @@ router.get '/',(req, res) ->
   if _.isEmpty req.session.passport
     res.send '<a href="/login">login</a>'
   else
+    console.log req.session.passport
     res.json req.session.passport.user
 
 router.get '/check', (req, res)->
