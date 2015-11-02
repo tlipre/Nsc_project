@@ -3,8 +3,11 @@ html
   body
     form(action='/e-classroom/create' method='post')
       h1 CREATE E-CLASSROOM
-      |Name of this E-Classroom: 
-      input(name="name")
+      |Name: 
+      input(id="raw_name" name="raw_name")
+      br
+      |Genarated Name
+      input(id="name" disabled)
       br
       |Langauge: 
       select(name='langauge')
@@ -26,3 +29,5 @@ html
       br
       br
       input(type='submit')
+  != renderJs()
+  != renderJs('e_classroom_create')

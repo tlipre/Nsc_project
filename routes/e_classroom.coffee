@@ -70,6 +70,10 @@ router.get '/:name/teacher', helper.check_role('teacher'), (req, res)->
 router.get '/student', (req, res) ->
   res.render 'e_classroom_student'
 
+
+router.get '/all-class', (req, res) ->
+  res.render 'e_classroom_all'
+
 router.get '/:name/student-test', helper.check_role('student'), (req, res) ->
   Chat_log.find {}, (err, chat_log)->
     username = req.session.passport.user.username
