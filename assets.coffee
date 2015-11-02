@@ -7,6 +7,7 @@ module.exports = (assets) ->
   assets.addJs '/assets/javascripts/chat.coffee', 'chat'
   assets.addJs '/assets/javascripts/editor.coffee', 'editor'
   assets.addJs '/assets/javascripts/editor_teacher.coffee', 'editor_teacher'
+  assets.addJs '/assets/javascripts/e_classroom_create.coffee', 'e_classroom_create'
   assets.addCss '/public/stylesheets/bootstrap/css/bootstrap.css'
   assets.addCss '/assets/stylesheets/style.styl'
   

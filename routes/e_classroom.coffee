@@ -3,7 +3,6 @@ fs = require 'fs'
 pty = require 'pty.js'
 Docker = require 'dockerode'
 docker = new Docker()
-shortid = require 'shortid'
 exec = require("child_process").exec
 async = require 'async'
 cookie_parser = require('cookie').parse
@@ -32,16 +31,8 @@ term = pty.spawn 'docker', ["attach", config.container_id],
 #docker rm $(docker ps -a -q --filter 'exited=0')
 router = express.Router()
 
-q = async.queue (task, callback) ->
-  docker.createContainer {Image: task.image, Cmd: ['/bin/bash']}, (err, container)->
-    return callback err if err
-    callback null, container.id
-  , 2
 
-router.get '/create', helper.check_role, (req, res)->
-  res.render 'e_classroom_create'
-
-router.get '/booking_container/:container_id', helper.check_auth,  (req, res)->
+router.get '/booking_container/:container_id', helper.check_role('student'),  (req, res)->
   container_id = req.params.container_id
   Container.findOne {"container_id":container_id}, (err, container)->
     username = req.session.passport.user.username
@@ -56,38 +47,30 @@ router.get '/booking_container/:container_id', helper.check_auth,  (req, res)->
       container.save()
       res.send 'Complete booking.'
 
-router.post '/create', (req, res)->
-  student_count = req.body.student_count
-  name = req.body.name
-  key = shortid.generate()
-  e_classroom = new EClassroom()
-  e_classroom.student_count = student_count
-  e_classroom.name = name
-  e_classroom.key = key
-  items = []
-  for i in [1..student_count]
-    items.push {image: 'ubuntu'}
-  q.push items, (err, container_id)-> 
-    return console.log err if err
-    container = new Container({container_id: container_id, e_classroom_id: e_classroom._id})
-    container.save()
-    console.log "Finish create: " + container_id.green
-  q.drain = ()->
-    e_classroom.save()
-    res.redirect "teacher/#{key}"
+router.get '/create', helper.check_role('teacher'), (req, res)->
+  res.render 'e_classroom_create'
 
-router.get '/teacher/:key', helper.check_role, (req, res)->
-  key = req.params.key
+router.post '/create', (req, res)->
+  e_classroom = new EClassroom()
+  e_classroom.student_count = req.body.student_count
+  e_classroom.raw_name = req.body.raw_name
+  e_classroom.save (err)->
+    #TODO: Handle error
+    if err
+      console.log err
+    res.redirect "#{e_classroom.name}/teacher"
+
+router.get '/:name/teacher', helper.check_role('teacher'), (req, res)->
+  name = req.params.name
   Chat_log.find {}, (err, chat_log)->
     username = req.session.passport.user.username
-    render_data = _.assign username: username, chat: chat_log, key: key
+    render_data = _.assign username: username, chat: chat_log, key: 'test'
     res.render 'e_classroom_teacher', render_data
 
 router.get '/student', (req, res) ->
   res.render 'e_classroom_student'
 
-# classroom_student
-router.get '/student-test', helper.check_auth, (req, res) ->
+router.get '/:name/student-test', helper.check_role('student'), (req, res) ->
   Chat_log.find {}, (err, chat_log)->
     username = req.session.passport.user.username
     render_data = _.assign username: username, chat: chat_log
@@ -128,6 +111,8 @@ chat_room.use (socket, next)->
 
 chat_room.on 'connection', (socket)->
   socket.on 'message', (data)->
+    #TODO: AUTH AGAIN
+    # session = socket.request.session
     chat = new Chat_log(data)
     chat.save()
     data = {message: chat.message, sender: chat.sender, timestamp: chat.timestamp}
