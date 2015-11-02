@@ -86,6 +86,9 @@ router.get '/teacher/:key', helper.check_role, (req, res)->
 router.get '/student', (req, res) ->
   res.render 'e_classroom_student'
 
+router.get '/all-class', (req, res) ->
+  res.render 'all_e_classroom'
+
 # classroom_student
 router.get '/student-test', helper.check_auth, (req, res) ->
   Chat_log.find {}, (err, chat_log)->
