@@ -104,23 +104,20 @@ chat_room = io.of('/chat')
 editor_room = io.of('/editor')
 terminal_room = io.of('/terminal')
 
-chat_room.use (socket, next)->
-  session = socket.request.session
-  #TODO: AUTH STUFF HERE
-  if false
-  # if true
-    console.log "AUTH FAILED"
-  else
-    next()
-
 chat_room.on 'connection', (socket)->
+  socket.on 'join room', (data)->
+    #TODO: AUTH by session
+    session = socket.request.session
+    socket.verified = true
+    socket.room = data
+    socket.join data
+
   socket.on 'message', (data)->
-    #TODO: AUTH AGAIN
-    # session = socket.request.session
-    chat = new Chat_log(data)
-    chat.save()
-    data = {message: chat.message, sender: chat.sender, timestamp: chat.timestamp}
-    chat_room.emit 'message', data
+    if socket.verified
+      chat = new Chat_log(data)
+      chat.save()
+      data = {message: chat.message, sender: chat.sender, timestamp: chat.timestamp}
+      chat_room.to(socket.room).emit('message', data)
 
 editor_room.on 'connection', (socket)->
   socket.on 'message', (data)->
