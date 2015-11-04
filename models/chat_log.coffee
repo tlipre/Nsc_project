@@ -1,5 +1,5 @@
 chat_log_schema = mongoose.Schema
-  e_classroom_id: type: String
+  classroom_id: type: String
   message: type: String
   sender: type: String, default: null
   timestamp: type: String, default: moment()

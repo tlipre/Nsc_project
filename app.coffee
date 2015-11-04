@@ -26,14 +26,18 @@ mongoose.connection.on 'error', (err) ->
 server = require('http').createServer(app)
 global.io = require('socket.io')(server)
 
-for file in fs.readdirSync './models'
-  continue if file.search(/\.bak|\.disabled|^\./) > -1
-  if file.search(/\.coffee/) < 0
-    for file_sub in fs.readdirSync './models/' + file
-      continue if file_sub.search(/\.bak|\.disabled|^\./) > -1
-      require("./models/#{file}/#{file_sub}")
-  else
-    require("./models/#{file}")
+require './models/chat_log.coffee'
+require './models/container.coffee'
+require './models/user.coffee'
+require './models/classroom.coffee'
+# for file in fs.readdirSync './models'
+#   continue if file.search(/\.bak|\.disabled|^\./) > -1
+#   if file.search(/\.coffee/) < 0
+#     for file_sub in fs.readdirSync './models/' + file
+#       continue if file_sub.search(/\.bak|\.disabled|^\./) > -1
+#       require("./models/#{file}/#{file_sub}")
+#   else
+#     require("./models/#{file}")
 
 #this global is makesense
 global.passport = require './libs/passport'

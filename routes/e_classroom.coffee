@@ -8,10 +8,11 @@ async = require 'async'
 cookie_parser = require('cookie').parse
 
 Chat_log = mongoose.model 'Chat_log'
-EClassroom = mongoose.model 'EClassroom'
+Classroom = mongoose.model 'Classroom'
 Container = mongoose.model 'Container'
 
 app.use term.middleware()
+
 
 push_file = (path_to_file, destination, container_id, callback) ->
   command = "docker cp #{path_to_file} #{container_id}:#{destination}"
@@ -51,21 +52,25 @@ router.get '/create', helper.check_role('teacher'), (req, res)->
   res.render 'e_classroom_create'
 
 router.post '/create', (req, res)->
-  e_classroom = new EClassroom()
-  e_classroom.student_count = req.body.student_count
-  e_classroom.raw_name = req.body.raw_name
-  e_classroom.save (err)->
-    #TODO: Handle error
+  classroom = new Classroom()
+  classroom.student_count = req.body.student_count
+  classroom.raw_name = req.body.raw_name
+  classroom.save (err)->
     if err
-      console.log err
-    res.redirect "#{e_classroom.name}/teacher"
+      res.send err.message
+    else
+      res.redirect "#{classroom.name}/teacher"
 
 router.get '/:name/teacher', helper.check_role('teacher'), (req, res)->
   name = req.params.name
-  Chat_log.find {}, (err, chat_log)->
-    username = req.session.passport.user.username
-    render_data = _.assign username: username, chat: chat_log, key: 'test'
-    res.render 'e_classroom_teacher', render_data
+  Classroom.findOne {name: name}, (err, classroom)->
+    if classroom?
+      Chat_log.find {}, (err, chat_log)->
+        username = req.session.passport.user.username
+        render_data = _.assign username: username, chat: chat_log, key: 'test'
+        res.render 'e_classroom_teacher', render_data
+    else
+      res.send '404'
 
 router.get '/student', (req, res) ->
   res.render 'e_classroom_student'
@@ -108,9 +113,10 @@ chat_room.on 'connection', (socket)->
   socket.on 'join room', (data)->
     #TODO: AUTH by session
     session = socket.request.session
-    socket.verified = true
-    socket.room = data
-    socket.join data
+    if true
+      socket.verified = true
+      socket.room = data
+      socket.join data
 
   socket.on 'message', (data)->
     if socket.verified
@@ -118,6 +124,8 @@ chat_room.on 'connection', (socket)->
       chat.save()
       data = {message: chat.message, sender: chat.sender, timestamp: chat.timestamp}
       chat_room.to(socket.room).emit('message', data)
+    else
+      console.log 'someone try to hack'
 
 editor_room.on 'connection', (socket)->
   socket.on 'message', (data)->
