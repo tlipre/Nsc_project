@@ -70,7 +70,8 @@ router.get '/:name/teacher', helper.check_role('teacher'), (req, res)->
         render_data = _.assign username: username, chat: chat_log, key: 'test'
         res.render 'e_classroom_teacher', render_data
     else
-      res.send '404'
+      #for 404
+      res.sendFile "#{process.cwd()}/public/html/404.html"
 
 router.get '/student', (req, res) ->
   res.render 'e_classroom_student'
