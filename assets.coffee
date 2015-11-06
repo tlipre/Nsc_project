@@ -11,5 +11,6 @@ module.exports = (assets) ->
   assets.addJs '/assets/javascripts/e_classroom_create.coffee', 'e_classroom_create'
   assets.addCss '/public/stylesheets/bootstrap/css/bootstrap.css'
   assets.addCss '/assets/stylesheets/style.styl'
+  assets.addCss '/assets/stylesheets/e_classroom.styl', 'e_classroom'
   
 

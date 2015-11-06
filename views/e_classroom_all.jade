@@ -1,0 +1,56 @@
+extends layout
+block title
+	title e_classroom overall
+block content
+	.overall
+		.banner
+		.container
+			.filter
+				form.form-inline
+					span E-Classroom
+					select.form-control
+						option(value="overall") ค้นหาห้องเรียนทั้งหมด
+						option(value="byname") ค้นหาห้องเรียนจากชื่อห้อง
+					input.form-control(type="text" placeholder="กรอกชื่อห้อง" disabled="disabled")
+					button.btn.btn-success(type="submit") ค้นหา
+			hr
+
+			.list-class
+				.col-md-4
+					article
+						img.circle.img-badge(src='/images/class1.jpg')
+						p.topic Web Programming
+						p.sub-topic มีผู้เรียนในห้องนี้ 
+							span 35/40 คน
+
+				.col-md-4
+					article
+						img.circle.img-badge(src='/images/class1.jpg')
+						p.topic SOA
+						p.sub-topic มีผู้เรียนในห้องนี้ 
+							span.full เต็มแล้ว
+				.col-md-4
+					article
+						img.circle.img-badge(src='/images/class1.jpg')
+						p.topic Andriod 
+						p.sub-topic มีผู้เรียนในห้องนี้ 
+							span 35/40 คน
+				.col-md-4
+					article
+						img.circle.img-badge(src='/images/class1.jpg')
+						p.topic ios
+						p.sub-topic มีผู้เรียนในห้องนี้ 
+							span 35/40 คน
+		
+
+
+
+
+
+
+
+
+
+
+
+	!= renderStyles('e_classroom')
