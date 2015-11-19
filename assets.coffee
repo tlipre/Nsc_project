@@ -1,6 +1,8 @@
 module.exports = (assets) ->
   assets.root = __dirname
   assets.addJs '/public/javascripts/jquery-1.11.3.js'
+  assets.addJs '/public/stylesheets/bootstrap/js/bootstrap.js'
+
   assets.addJs '/assets/javascripts/e_classroom.coffee', 'e_classroom'
   
   assets.addJs '/assets/javascripts/terminal.coffee', 'terminal'
