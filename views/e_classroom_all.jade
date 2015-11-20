@@ -14,54 +14,18 @@ block content
 					input.form-control(type="text" placeholder="กรอกชื่อห้อง" disabled="disabled")
 					button.btn(type="submit") ค้นหา
 			hr
-
 			.list-class
-				.col-md-4
-					article
-						img.circle.img-badge(src='/images/class1.jpg')
-						p.topic Web Programming
-						p.sub-topic มีผู้เรียนในห้องนี้ 
-							span 35/40 คน
-						//- p.duration สร้างห้องเมื่อ 20 นาทีที่แล้ว
-						button.btn(type="submit") เข้าห้องเรียน
-						.name-teacher
-							img.circle.img-teacher(src='/images/mamieo.jpg')
-							span เชาวนี จันทร์ทอง เป็นผู้สอน
-
-				.col-md-4
-					article
-						img.circle.img-badge(src='/images/class1.jpg')
-						p.topic SOA
-						p.sub-topic มีผู้เรียนในห้องนี้ 
-							span.full เต็มแล้ว
-						//- p.duration สร้างห้องเมื่อ 20 นาทีที่แล้ว
-						button.btn(type="submit") เข้าห้องเรียน
-						.name-teacher
-							img.circle.img-teacher(src='/images/mamieo.jpg')
-							span เชาวนี จันทร์ทอง เป็นผู้สอน
-
-				.col-md-4
-					article
-						img.circle.img-badge(src='/images/class1.jpg')
-						p.topic Andriod 
-						p.sub-topic มีผู้เรียนในห้องนี้ 
-							span 35/40 คน
-						//- p.duration สร้างห้องเมื่อ 20 นาทีที่แล้ว
-						button.btn(type="submit") เข้าห้องเรียน
-						.name-teacher
-							img.circle.img-teacher(src='/images/mamieo.jpg')
-							span เชาวนี จันทร์ทอง เป็นผู้สอน
-				.col-md-4
-					article
-						img.circle.img-badge(src='/images/class1.jpg')
-						p.topic ios
-						p.sub-topic มีผู้เรียนในห้องนี้ 
-							span 35/40 คน
-						//- p.duration สร้างห้องเมื่อ 20 นาทีที่แล้ว
-						button.btn(type="button" data-toggle="modal" data-target="#myModal") เข้าห้องเรียน
-						.name-teacher
-							img.circle.img-teacher(src='/images/mamieo.jpg')
-							span เชาวนี จันทร์ทอง เป็นผู้สอน
+				each classroom in classrooms
+					.col-md-4
+						article
+							img.circle.img-badge(src='/images/class1.jpg')
+							p.topic #{classroom.raw_name}
+							p.sub-topic มีผู้เรียนในห้องนี้ 
+								span 35/40 คน
+							button.btn(type="button" data-toggle="modal" data-target="#myModal") เข้าห้องเรียน
+							.name-teacher
+								img.circle.img-teacher(src='/images/mamieo.jpg')
+								span #{classroom.teacher.username}
 
 				.modal.fade(id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel")
 					.modal-dialog(role="document")
@@ -70,9 +34,9 @@ block content
 								button(type="button" class="close" data-dismiss="modal" aria-label="Close") x
 							.modal-body
 								.form-inline
-									//- span กรอกรหัส
-									input.form-control(type="text" placeholder="กรอกรหัสเข้าห้อง")
-									button.form-control.btn.btn-success(type="button") ตกลง
+									form(method='post' action='enroll')
+										input.form-control(name="key" placeholder="กรอกรหัสเข้าห้อง")
+										button.form-control.btn.btn-success(type="submit") ตกลง
 
  
 		

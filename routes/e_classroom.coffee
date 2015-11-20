@@ -51,10 +51,11 @@ router.get '/booking_container/:container_id', helper.check_role('student'),  (r
 router.get '/create', helper.check_role('teacher'), (req, res)->
   res.render 'e_classroom_create'
 
-router.post '/create', (req, res)->
+router.post '/create', helper.check_role('teacher'), (req, res)->
   classroom = new Classroom()
-  classroom.student_count = req.body.student_count
+  classroom.max_student = req.body.max_student
   classroom.raw_name = req.body.raw_name
+  classroom.teacher = req.session.passport.user
   classroom.save (err)->
     if err
       res.send err.message
@@ -65,26 +66,69 @@ router.get '/:name/teacher', helper.check_role('teacher'), (req, res)->
   name = req.params.name
   Classroom.findOne {name: name}, (err, classroom)->
     if classroom?
-      Chat_log.find {}, (err, chat_log)->
+      Chat_log.find {classroom_name: classroom.name}, (err, chat_log)->
         username = req.session.passport.user.username
-        render_data = _.assign username: username, chat: chat_log, key: 'test'
+        render_data = _.assign username: username, chat: chat_log, classroom: classroom
+        console.log classroom
         res.render 'e_classroom_teacher', render_data
     else
       #for 404
       res.sendFile "#{process.cwd()}/public/html/404.html"
 
+router.get '/:name/student-test', helper.check_role('student'), (req, res) ->
+  name = req.params.name
+  Classroom.findOne {name: name}, (err, classroom)->
+    if classroom?
+      Chat_log.find {classroom_name: classroom.name}, (err, chat_log)->
+        username = req.session.passport.user.username
+        render_data = _.assign username: username, chat: chat_log, classroom: classroom
+        res.render 'e_classroom_student_test', render_data
+    else
+      #for 404
+      res.sendFile "#{process.cwd()}/public/html/404.html"
+  # name = req.params.name
+  # Classroom.findOne {name: name}, (err, classroom)->
+  #   if classroom?
+  #     Chat_log.find {classroom_name: classroom.name}, (err, chat_log)->
+  #       username = req.session.passport.user.username
+  #       render_data = _.assign username: username, chat: chat_log
+  #       res.render 'e_classroom_student_test', render_data
+
 router.get '/student', (req, res) ->
   res.render 'e_classroom_student'
 
 
-router.get '/all-class', (req, res) ->
-  res.render 'e_classroom_all'
-
-router.get '/:name/student-test', helper.check_role('student'), (req, res) ->
-  Chat_log.find {}, (err, chat_log)->
+router.get '/', (req, res) ->
+  Classroom.find {}, (err, classrooms)->
     username = req.session.passport.user.username
-    render_data = _.assign username: username, chat: chat_log
-    res.render 'e_classroom_student_test', render_data
+    render_data = _.assign username: username, classrooms: classrooms
+    res.render 'e_classroom_all', render_data
+
+router.post '/enroll', (req, res) ->
+  #TODO: prevent from someone that enrolled
+
+  #get classroom name from modal
+  classroom_name = 'soa2'
+  key = req.body.key
+
+  Classroom.findOne {raw_name: classroom_name, key: key}, (err, classroom) ->
+    if !classroom?
+      res.send 'wrong password'
+    else
+      Container.findOne {classroom_id: classroom.id, owner: null}, (err, container) ->
+        if !container?
+          res.send 'this classroom is full'
+        else
+          container.owner = req.session.passport.user.username
+          # container.save()
+
+          user = _.cloneDeep req.session.passport.user
+          user.container_id = container.id
+          console.log classroom
+          classroom.students.push user
+          classroom.save()
+
+          res.redirect "#{classroom.name}/student-test"
 
 router.post '/student', (req, res) ->
   code = req.body.code
@@ -121,6 +165,7 @@ chat_room.on 'connection', (socket)->
 
   socket.on 'message', (data)->
     if socket.verified
+      data.classroom_name = socket.room
       chat = new Chat_log(data)
       chat.save()
       data = {message: chat.message, sender: chat.sender, timestamp: chat.timestamp}

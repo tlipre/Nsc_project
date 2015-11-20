@@ -7,8 +7,11 @@ shortid = require 'shortid'
 classroom_schema = mongoose.Schema
   raw_name: String
   key: String
-  student_count: Number
   name: String
+  max_student: Number
+  student_count: Number
+  students: type: mongoose.Schema.Types.Mixed, default: []
+  teacher: mongoose.Schema.Types.Mixed
   # check_result : mongoose.Schema.Types.Mixed
 ,
   versionKey: false
@@ -31,10 +34,10 @@ classroom_schema.pre 'save', (next)->
       next(new Error('Name must be unique'))
     else
       items = []
-      for i in [1..self.student_count]
+      for i in [1..self.max_student]
         items.push {image: 'ubuntu'}
       q.push items, (err, container_id)-> 
-        container = new Container({container_id: container_id, classroom_id: this._id})
+        container = new Container({container_id: container_id, classroom_id: self._id})
         container.save()
         console.log "Finish create: " + container_id.green
       q.drain = ()->

@@ -1,12 +1,13 @@
 module.exports = 
   check_role: (role)->
     return (req, res, next)->
-      req.session.prev_url = req.originalUrl
       if _.isEmpty req.session.passport
+        req.session.prev_url = req.originalUrl
         req.flash 'error', "You don't have permission to access this"
         res.redirect '/login'
       else
         if req.session.passport.user.role isnt role
+          req.session.prev_url = req.originalUrl
           req.flash 'error', "You don't have permission to access this"
           res.redirect '/login'
         else

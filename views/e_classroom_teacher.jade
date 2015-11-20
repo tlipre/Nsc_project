@@ -3,13 +3,12 @@ block title
 	title e_classroom_teacher
 block content
 	.e_classroom
-
 		.content-classroom
 			.window.classroom-teacher
 				.header-window
 					.name-active
 						img.circle(src='/images/mamieo.jpg')
-						.username AjJoob
+						.username #{classroom.teacher.username}
 				.code
 					textarea.editor(type='textarea' cols='130' rows='25')
 					.terminal
@@ -25,7 +24,7 @@ block content
 									.input-group-addon hide
 						.content
 							.header 
-								p ห้องสนทนา SOA
+								p ห้องสนทนา
 							.chat-box
 								.story
 								each val, index in chat
@@ -36,10 +35,10 @@ block content
 				.topic
 					p ระบบ E-Classroom	
 				.intro
-					p ชื่อห้อง SOA KMITL
+					p Name: #{classroom.raw_name}
 						span  |
 						a(href="") ยกเลิกคลาส
-					p Key of this E-Classroom: #{key}
+					p Key of this E-Classroom: #{classroom.key}
 
 				.topic-sub
 					p Your view
@@ -53,36 +52,6 @@ block content
 					p Student view
 						span.num_student จำนวนนักเรียน 6 คน
 				.student
-					//- .docker
-					//- 	img(src="/images/sublime2.png")
-					//- 	.name 
-					//- 		p Chaowanee Janthong
-					//- 		p.type typing ...
-					//- 	.clear
-					//- .docker
-					//- 	img(src="/images/sublime2.png")
-					//- 	.name
-					//- 		p Chaowanee Janthong
-					//- 		p.type typing ... 
-					//- 	.clear
-					//- .docker
-					//- 	img(src="/images/sublime2.png")
-					//- 	.name
-					//- 		p Chaowanee Janthong
-					//- 		p.type typing ... 
-					//- 	.clear
-					//- .docker
-					//- 	img(src="/images/sublime2.png")
-					//- 	.name 
-					//- 		p Chaowanee Janthong
-					//- 		p.type typing ...
-					//- 	.clear
-					//- .docker
-					//- 	img(src="/images/sublime2.png")
-					//- 	.name
-					//- 		p Chaowanee Janthong
-					//- 		p.type typing ... 
-					//- 	.clear
 					.docker(id="book")
 						img(src="/images/sublime2.png")
 						.name
