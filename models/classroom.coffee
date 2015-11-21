@@ -9,8 +9,8 @@ classroom_schema = mongoose.Schema
   key: String
   name: String
   max_student: Number
-  student_count: Number
-  students: type: mongoose.Schema.Types.Mixed, default: []
+  student_count: type: Number, default: 0
+  students: type: Array, default: []
   teacher: mongoose.Schema.Types.Mixed
   # check_result : mongoose.Schema.Types.Mixed
 ,
@@ -25,13 +25,13 @@ q = async.queue ((task, callback) ->
       callback null, container.id
 ), 2
   
-classroom_schema.pre 'save', (next)->
+classroom_schema.methods.create_container = (callback)->
   self = this
   self.name = _.kebabCase self.raw_name
   self.key = shortid.generate()
   mongoose.models["Classroom"].findOne {raw_name: self.raw_name}, (err, data)->
     if data
-      next(new Error('Name must be unique'))
+      callback(new Error('Name must be unique'))
     else
       items = []
       for i in [1..self.max_student]
@@ -41,6 +41,6 @@ classroom_schema.pre 'save', (next)->
         container.save()
         console.log "Finish create: " + container_id.green
       q.drain = ()->
-        next()
+        callback()
 
 Classroom = mongoose.model 'Classroom', classroom_schema

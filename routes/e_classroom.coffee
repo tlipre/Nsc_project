@@ -56,10 +56,11 @@ router.post '/create', helper.check_role('teacher'), (req, res)->
   classroom.max_student = req.body.max_student
   classroom.raw_name = req.body.raw_name
   classroom.teacher = req.session.passport.user
-  classroom.save (err)->
+  classroom.create_container (err)->
     if err
       res.send err.message
     else
+      classroom.save()
       res.redirect "#{classroom.name}/teacher"
 
 router.get '/:name/teacher', helper.check_role('teacher'), (req, res)->
@@ -69,7 +70,6 @@ router.get '/:name/teacher', helper.check_role('teacher'), (req, res)->
       Chat_log.find {classroom_name: classroom.name}, (err, chat_log)->
         username = req.session.passport.user.username
         render_data = _.assign username: username, chat: chat_log, classroom: classroom
-        console.log classroom
         res.render 'e_classroom_teacher', render_data
     else
       #for 404
@@ -100,7 +100,9 @@ router.get '/student', (req, res) ->
 
 router.get '/', (req, res) ->
   Classroom.find {}, (err, classrooms)->
-    username = req.session.passport.user.username
+    username = undefined
+    if !_.isEmpty req.session.passport
+      username = req.session.passport.user.username
     render_data = _.assign username: username, classrooms: classrooms
     res.render 'e_classroom_all', render_data
 
@@ -120,12 +122,12 @@ router.post '/enroll', (req, res) ->
           res.send 'this classroom is full'
         else
           container.owner = req.session.passport.user.username
-          # container.save()
+          container.save()
 
           user = _.cloneDeep req.session.passport.user
           user.container_id = container.id
-          console.log classroom
           classroom.students.push user
+          classroom.student_count++
           classroom.save()
 
           res.redirect "#{classroom.name}/student-test"
