@@ -125,7 +125,7 @@ router.post '/enroll', (req, res) ->
           container.save()
 
           user = _.cloneDeep req.session.passport.user
-          user.container_id = container.id
+          user.container_id = container.container_id
           classroom.students.push user
           classroom.student_count++
           classroom.save()
@@ -156,8 +156,40 @@ chat_room = io.of('/chat')
 editor_room = io.of('/editor')
 terminal_room = io.of('/terminal')
 
+editor_room.on 'connection', (socket)->
+  socket.on 'request_container_teacher', (data)->
+    #TODO: AUTH teacher
+    Container.findOne {container_id: data, status: 'running'}, (err, container)->
+      socket.room = container.container_id
+      socket.join socket.room
+      editor_room.to(socket.room).emit('type', container.text)
+
+  socket.on 'request_container', (data)->
+    session = socket.request.session
+    Container.findOne {owner: session.passport.user.username, status: 'running'}, (err, container)->
+      if container?
+        socket.verified = true
+        socket.room = container.container_id
+        socket.join socket.room
+
+  socket.on 'type', (data)->
+    session = socket.request.session
+    Container.findOne {owner: session.passport.user.username, status: 'running'}, (err, container)->
+      if container?
+        container.text = data
+        container.save()
+        editor_room.to(socket.room).emit('type', data)
+
+  socket.on 'type_teacher', (data)->
+    session = socket.request.session
+    Container.findOne {container_id: socket.room, status: 'running'}, (err, container)->
+      if container?
+        container.text = data
+        container.save()
+      editor_room.to(socket.room).emit('type', data)
+
 chat_room.on 'connection', (socket)->
-  socket.on 'join room', (data)->
+  socket.on 'join_room', (data)->
     #TODO: AUTH by session
     session = socket.request.session
     if true
@@ -175,11 +207,6 @@ chat_room.on 'connection', (socket)->
     else
       console.log 'someone try to hack'
 
-editor_room.on 'connection', (socket)->
-  socket.on 'message', (data)->
-    editor_room.emit 'student', data
-  socket.on 'request', (data)->
-    editor_room.emit 'request1', data
   
 terminal_room.on 'connection', (socket)->
   term.on 'data', (data) -> 

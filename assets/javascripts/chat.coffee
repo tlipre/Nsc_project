@@ -13,7 +13,7 @@ $ ->
   room_name = current_url.slice(start_index, end_index)
 
   socket.on 'connect', ()->
-    socket.emit 'join room', room_name
+    socket.emit 'join_room', room_name
 
   #bind enter key
   typing_box.bind 'keypress', (e)->

@@ -1,10 +1,12 @@
 $ ->
+  socket = io('/editor')
   editor = $('.editor')
-  student = $('.docker')
 
-  socket = io('/editor');
+  socket.on 'connect', ()->
+    socket.emit 'request_container'
+
   editor.keyup ()->
-    socket.emit 'message', editor.val()
-  socket.on 'request1', (data)->
-    socket.emit 'message', editor.val()
+    socket.emit 'type', editor.val()
 
+  socket.on 'type', (data)->
+    editor.val(data)

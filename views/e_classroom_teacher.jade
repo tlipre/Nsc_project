@@ -8,7 +8,7 @@ block content
 				.header-window
 					.name-active
 						img.circle(src='/images/mamieo.jpg')
-						.username #{classroom.teacher.username}
+						.username(id="current_view") #{classroom.teacher.username}
 				.code
 					textarea.editor(type='textarea' cols='130' rows='25')
 					.terminal
@@ -27,7 +27,7 @@ block content
 								p ห้องสนทนา
 							.chat-box
 								.story
-								each val, index in chat
+								each val in chat
 									p
 										span.name #{val.sender}: 
 										span #{val.message}
@@ -43,21 +43,22 @@ block content
 				.topic-sub
 					p Your view
 				.teacher
-					.docker(id="aj")
+					.docker(data-id="#{classroom.teacher.container_id}" data-owner="#{classroom.teacher.username}")
 						img(src="/images/sublime2.png")
-						.name AjJoob
+						.name #{classroom.teacher.username}
 						.clear
 
 				.topic-sub
 					p Student view
 						span.num_student จำนวนนักเรียน 6 คน
 				.student
-					.docker(id="book")
-						img(src="/images/sublime2.png")
-						.name
-							p Book
-							p.type typing ... 
-						.clear
+					each val in classroom.students
+						.docker(data-id="#{val.container_id}" data-owner="#{val.username}")
+							img(src="/images/sublime2.png")
+							.name
+								p #{val.username}
+								//- p.type typing ... 
+							.clear
 				
 				.footer-side
 					a.see See all students

@@ -34,13 +34,18 @@ classroom_schema.methods.create_container = (callback)->
       callback(new Error('Name must be unique'))
     else
       items = []
-      for i in [1..self.max_student]
+      for i in [1..self.max_student+1]
         items.push {image: 'ubuntu'}
       q.push items, (err, container_id)-> 
         container = new Container({container_id: container_id, classroom_id: self._id})
         container.save()
         console.log "Finish create: " + container_id.green
       q.drain = ()->
-        callback()
+        #container for teacher
+        Container.findOne {classroom_id: self._id}, (err, container)->
+          container.owner = self.teacher.username
+          container.save()
+          self.teacher.container_id = container.container_id
+          callback()
 
 Classroom = mongoose.model 'Classroom', classroom_schema

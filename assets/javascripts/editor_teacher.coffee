@@ -1,23 +1,23 @@
 $ ->
-  is_teacher_view = true
-  editor = $('.editor')
-  student = $('.docker')
   socket = io('/editor')
-  book = $('#book')
-  username = $('.username')
-  aj = $('#aj')
+  docker = $('.docker')
+  editor = $('.editor')
+  current_view = $("#current_view")
 
-  aj.click ()->
-    username.text('AjJoob')
-    editor.val("")
-    is_teacher_view = true
-  book.click ()->
-    username.text('Book')
-    is_teacher_view = false
-  student.click ()->
-    socket.emit 'request', 'student'
-  socket.on 'student', (data)->
-    if !is_teacher_view
-      editor.val(data)
+  socket.on 'connect', ()->
+    socket.emit 'request_container'
+
+  docker.click ()->
+    container_id = $(this).data('id')
+    container_owner = $(this).data('owner')
+    socket.emit 'request_container_teacher', container_id    
+    current_view.text container_owner
+
+  socket.on 'type', (data)->
+    editor.val(data)
+
+  editor.keyup ()->
+    socket.emit 'type_teacher', editor.val()
+  
 
 
