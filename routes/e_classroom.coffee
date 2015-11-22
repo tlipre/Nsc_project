@@ -109,11 +109,10 @@ router.get '/', (req, res) ->
 router.post '/enroll', (req, res) ->
   #TODO: prevent from someone that enrolled
 
-  #get classroom name from modal
-  classroom_name = 'soa2'
+  classroom_name = req.body.name
   key = req.body.key
 
-  Classroom.findOne {raw_name: classroom_name, key: key}, (err, classroom) ->
+  Classroom.findOne {name: classroom_name, key: key}, (err, classroom) ->
     if !classroom?
       res.send 'wrong password'
     else
@@ -157,13 +156,6 @@ editor_room = io.of('/editor')
 terminal_room = io.of('/terminal')
 
 editor_room.on 'connection', (socket)->
-  socket.on 'request_container_teacher', (data)->
-    #TODO: AUTH teacher
-    Container.findOne {container_id: data, status: 'running'}, (err, container)->
-      socket.room = container.container_id
-      socket.join socket.room
-      editor_room.to(socket.room).emit('type', container.text)
-
   socket.on 'request_container', (data)->
     session = socket.request.session
     Container.findOne {owner: session.passport.user.username, status: 'running'}, (err, container)->
@@ -171,22 +163,31 @@ editor_room.on 'connection', (socket)->
         socket.verified = true
         socket.room = container.container_id
         socket.join socket.room
+        editor_room.to(socket.room).emit('init', container.text)
 
-  socket.on 'type', (data)->
+  socket.on 'request_container_teacher', (data)->
+    #TODO: AUTH teacher
+    Container.findOne {container_id: data, status: 'running'}, (err, container)->
+      socket.room = container.container_id
+      socket.join socket.room
+      editor_room.to(socket.room).emit('type_student', container.text)
+
+  socket.on 'type_student', (data)->
     session = socket.request.session
     Container.findOne {owner: session.passport.user.username, status: 'running'}, (err, container)->
       if container?
         container.text = data
         container.save()
-        editor_room.to(socket.room).emit('type', data)
+        editor_room.to(socket.room).emit('type_student', data)
 
   socket.on 'type_teacher', (data)->
+    #TODO: AUTH teacher
     session = socket.request.session
     Container.findOne {container_id: socket.room, status: 'running'}, (err, container)->
       if container?
         container.text = data
         container.save()
-      editor_room.to(socket.room).emit('type', data)
+      editor_room.to(socket.room).emit('type_teacher', data)
 
 chat_room.on 'connection', (socket)->
   socket.on 'join_room', (data)->

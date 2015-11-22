@@ -21,32 +21,21 @@ block content
 							img.circle.img-badge(src='/images/class1.jpg')
 							p.topic #{classroom.raw_name}
 							p.sub-topic มีผู้เรียนในห้องนี้ 
-								span 35/40 คน
-							button.btn(type="button" data-toggle="modal" data-target="#myModal") เข้าห้องเรียน
+								span #{classroom.student_count}/#{classroom.max_student} คน
+							button.btn(type="button" data-toggle="modal" data-target="##{classroom.name}") เข้าห้องเรียน
 							.name-teacher
 								img.circle.img-teacher(src='/images/mamieo.jpg')
 								span #{classroom.teacher.username}
-
-				.modal.fade(id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel")
-					.modal-dialog(role="document")
-						.modal-content
-							.modal-header
-								button(type="button" class="close" data-dismiss="modal" aria-label="Close") x
-							.modal-body
-								.form-inline
-									form(method='post' action='enroll')
-										input.form-control(name="key" placeholder="กรอกรหัสเข้าห้อง")
-										button.form-control.btn.btn-success(type="submit") ตกลง
-
- 
-		
-
-
-
-
-
-
-
-
+					.modal.fade(id="#{classroom.name}" tabindex="-1")
+						.modal-dialog(role="document")
+							.modal-content
+								.modal-header
+									button(type="button" class="close" data-dismiss="modal" aria-label="Close") x
+								.modal-body
+									.form-inline
+										form(method='post' action='enroll')
+											input.form-control(name="key" placeholder="กรอกรหัสเข้าห้อง")
+											input(name="name" type="hidden" value="#{classroom.name}")
+											button.form-control.btn.btn-success(type="submit") ตกลง
 	!= renderJs()
 	!= renderStyles('e_classroom')

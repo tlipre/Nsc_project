@@ -6,7 +6,10 @@ $ ->
     socket.emit 'request_container'
 
   editor.keyup ()->
-    socket.emit 'type', editor.val()
+    socket.emit 'type_student', editor.val()
 
-  socket.on 'type', (data)->
-    editor.val(data)
+  socket.on 'type_teacher', (data)->
+    editor.val data
+    
+  socket.on 'init', (data)->
+    editor.val data

@@ -50,7 +50,7 @@ block content
 
 				.topic-sub
 					p Student view
-						span.num_student จำนวนนักเรียน 6 คน
+						span.num_student จำนวนนักเรียน #{classroom.student_count} คน
 				.student
 					each val in classroom.students
 						.docker(data-id="#{val.container_id}" data-owner="#{val.username}")
@@ -59,7 +59,6 @@ block content
 								p #{val.username}
 								//- p.type typing ... 
 							.clear
-				
 				.footer-side
 					a.see See all students
 			.clear
