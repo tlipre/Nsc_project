@@ -31,12 +31,13 @@ router.get '/check', (req, res)->
 router.get '/remove', (req, res)->
   #TODO: remove data from db
   res.json 'success'
-#end dev zone
-
+  
 router.get '/create/:role', (req, res)->
-  user = new User(username: 'Mamieo', password: 'password', role: req.params.role)
+  user = new User(username: 'Mix', password: 'password', role: req.params.role)
   user.save()
   res.json user
+#end dev zone
+
 
 router.get '/logout', (req, res)->
   req.logout()
