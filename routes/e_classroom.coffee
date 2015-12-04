@@ -33,6 +33,8 @@ term = pty.spawn 'docker', ["attach", config.container_id],
 router = express.Router()
 
 
+
+
 router.get '/booking_container/:container_id', helper.check_role('student'),  (req, res)->
   container_id = req.params.container_id
   Container.findOne {"container_id":container_id}, (err, container)->
@@ -97,8 +99,10 @@ router.get '/:name/student-test', helper.check_role('student'), (req, res) ->
 router.get '/student', (req, res) ->
   res.render 'e_classroom_student'
 
+router.get '/', (req, res)->
+  res.render 'index'
 
-router.get '/', (req, res) ->
+router.get '/overall', (req, res) ->
   Classroom.find {}, (err, classrooms)->
     username = undefined
     if !_.isEmpty req.session.passport

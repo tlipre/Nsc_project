@@ -18,14 +18,18 @@ block content
 				each classroom in classrooms
 					.col-md-4
 						article
-							img.circle.img-badge(src='/images/class1.jpg')
-							p.topic #{classroom.raw_name}
+							.class-header
+								p.topic #{classroom.raw_name}
 							p.sub-topic มีผู้เรียนในห้องนี้ 
-								span #{classroom.student_count}/#{classroom.max_student} คน
-							button.btn(type="button" data-toggle="modal" data-target="##{classroom.name}") เข้าห้องเรียน
-							.name-teacher
+								span.amount #{classroom.student_count}/#{classroom.max_student} 
+								span คน
+							p.duration สร้างห้องเมื่อ 20 นาทีที่แล้ว
+							p
 								img.circle.img-teacher(src='/images/mamieo.jpg')
 								span #{classroom.teacher.username}
+							button.btn(type="button" data-toggle="modal" data-target="##{classroom.name}") เข้าห้องเรียน
+							
+							
 					.modal.fade(id="#{classroom.name}" tabindex="-1")
 						.modal-dialog(role="document")
 							.modal-content
@@ -36,6 +40,7 @@ block content
 										form(method='post' action='enroll')
 											input.form-control(name="key" placeholder="กรอกรหัสเข้าห้อง")
 											input(name="name" type="hidden" value="#{classroom.name}")
-											button.form-control.btn.btn-success(type="submit") ตกลง
+											button.form-control.btn(type="submit") ตกลง
 	!= renderJs()
+	!= renderJs('style')
 	!= renderStyles('e_classroom')
