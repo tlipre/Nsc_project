@@ -3,6 +3,7 @@ Docker = require 'dockerode'
 docker = new Docker()
 async = require 'async'
 shortid = require 'shortid'
+pty = require 'pty.js'
 
 classroom_schema = mongoose.Schema
   raw_name: String
@@ -18,11 +19,12 @@ classroom_schema = mongoose.Schema
 
 
 q = async.queue ((task, callback) ->
-  docker.createContainer {Image: task.image, Cmd: ['/bin/bash']}, (err, container)->
-    if err
-      callback err 
-    else
-      callback null, container.id
+  docker.createContainer {OpenStdin:true, Tty:true, Cmd: ['/bin/bash'], Image: task.image}, (err, container)->
+    container.start (err, data) ->
+      if err
+        callback err 
+      else
+        callback null, container.id
 ), 2
   
 classroom_schema.methods.create_container = (callback)->
@@ -36,7 +38,21 @@ classroom_schema.methods.create_container = (callback)->
       items = []
       for i in [1..self.max_student+1]
         items.push {image: 'ubuntu'}
-      q.push items, (err, container_id)-> 
+      q.push items, (err, container_id)->
+        # term = pty.spawn 'docker', ["attach", container_id], 
+        #   name: 'xterm-color',
+        #   cols: 80,
+        #   rows: 30,
+        #   cwd: process.env.HOME,
+        #   env: process.env
+        # docker_socket[container_id] = pty.spawn 'docker', ["attach", container_id], 
+        #   name: 'xterm-color',
+        #   cols: 80,
+        #   rows: 30,
+        #   cwd: process.env.HOME,
+        #   env: process.env
+        # docker_socket[container_id].on 'data', (data)->
+        #   event_emitter.emit 'message', container_id, data
         container = new Container({container_id: container_id, classroom_id: self._id})
         container.save()
         console.log "Finish create: " + container_id.green

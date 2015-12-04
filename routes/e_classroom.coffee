@@ -22,16 +22,11 @@ push_file = (path_to_file, destination, container_id, callback) ->
     else
       callback()
 
-term = pty.spawn 'docker', ["attach", config.container_id], 
-  name: 'xterm-color',
-  cols: 80,
-  rows: 30,
-  cwd: process.env.HOME,
-  env: process.env
 
 #docker rm $(docker ps -a -q --filter 'exited=0')
 router = express.Router()
 
+global.docker_socket = {}
 
 router.get '/booking_container/:container_id', helper.check_role('student'),  (req, res)->
   container_id = req.params.container_id
@@ -79,20 +74,18 @@ router.get '/:name/student-test', helper.check_role('student'), (req, res) ->
   name = req.params.name
   Classroom.findOne {name: name}, (err, classroom)->
     if classroom?
-      Chat_log.find {classroom_name: classroom.name}, (err, chat_log)->
-        username = req.session.passport.user.username
-        render_data = _.assign username: username, chat: chat_log, classroom: classroom
-        res.render 'e_classroom_student_test', render_data
+      Container.findOne {classroom_id: classroom.id, owner: req.session.passport.user.username}, (err, container)->
+        if container?
+          container.create_stream()
+          Chat_log.find {classroom_name: classroom.name}, (err, chat_log)->
+            username = req.session.passport.user.username
+            render_data = _.assign username: username, chat: chat_log, classroom: classroom, container_id: container.container_id
+            res.render 'e_classroom_student_test', render_data
+        else
+          res.send 'you have to enroll first'
     else
       #for 404
       res.sendFile "#{process.cwd()}/public/html/404.html"
-  # name = req.params.name
-  # Classroom.findOne {name: name}, (err, classroom)->
-  #   if classroom?
-  #     Chat_log.find {classroom_name: classroom.name}, (err, chat_log)->
-  #       username = req.session.passport.user.username
-  #       render_data = _.assign username: username, chat: chat_log
-  #       res.render 'e_classroom_student_test', render_data
 
 router.get '/student', (req, res) ->
   res.render 'e_classroom_student'
@@ -208,16 +201,22 @@ chat_room.on 'connection', (socket)->
     else
       console.log 'someone try to hack'
 
-  
+
+
+
+router.get '/test', (req, res)->
+  console.log Object.keys(docker_socket)
+
 terminal_room.on 'connection', (socket)->
-  term.on 'data', (data) -> 
-    socket.emit 'data',data
+  event_emitter.on 'text_terminal', (container_id, data)->
+    socket.emit('data', data)
+    # socket.to(container_id).emit('data', data)
 
-  socket.on 'data', (data) ->
-    term.write data
+  socket.on 'data', (container_id, data) ->
+    docker_socket[container_id].write data
 
-  socket.on 'disconnect', () ->
-    #TODO: destroy
-    console.log "Disconect"
+  # socket.on 'disconnect', () ->
+  #   #TODO: destroy
+  #   console.log "Disconect"
 
 module.exports = router
