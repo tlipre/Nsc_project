@@ -92,10 +92,7 @@ router.get '/:name/student-test', helper.check_role('student'), (req, res) ->
 router.get '/student', (req, res) ->
   res.render 'e_classroom_student'
 
-router.get '/', (req, res)->
-  res.render 'index'
-
-router.get '/overall', (req, res) ->
+router.get '/', (req, res) ->
   Classroom.find {}, (err, classrooms)->
     username = undefined
     if !_.isEmpty req.session.passport
