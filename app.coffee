@@ -9,6 +9,7 @@ global.moment = require 'moment'
 global.dev = require './libs/dev'
 flash = require 'connect-flash'
 path = require 'path'
+events = require 'events'
 
 bundle_up = require 'bundle-up3'
 fs = require 'fs'
@@ -21,7 +22,7 @@ morgan = require 'morgan'
 mongoose.connect 'mongodb://localhost/senior_project'
 mongoose.connection.on 'error', (err) ->
   console.log "Mongoose error: #{err}".red
-
+global.event_emitter = new events.EventEmitter()
 
 server = require('http').createServer(app)
 global.io = require('socket.io')(server)
@@ -78,7 +79,7 @@ bundle_up app, __dirname + '/assets' ,
   
 
   
-app.use require './routes/compiler'
+# app.use require './routes/compiler'
 app.use require './routes/member'
 app.use require './routes/util'
 app.use '/api', require './routes/api'

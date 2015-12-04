@@ -2,6 +2,7 @@ $ ->
   editor = $('#editor')
   editor.focus()
   socket = io('/terminal');
+  container_id = $("#result").data("container-id")
   socket.on 'connect', ()-> 
     term = new Terminal {
       cols: 80,
@@ -11,15 +12,15 @@ $ ->
       cursorBlink: true
     }
     term.on 'data', (data)->
-      socket.emit 'data', data
+      socket.emit 'data', container_id, data
     term.on 'title', (title) ->
       document.title = title;
     term.open($('#result').get(0))
-    socket.emit 'data', "\n"
+    socket.emit 'data', container_id, "\n"
     socket.on 'data', (data)->
       term.write data
-    socket.on 'disconnect', ()->
-      term.destroy()
+    # socket.on 'disconnect', ()->
+    #   term.destroy()
   $('#save').click ()->
     #TODO: handler error(s)
     file_name = prompt 'Enter file name.', 'untitled'
