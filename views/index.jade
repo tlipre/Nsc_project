@@ -3,3 +3,58 @@ block title
 	title home
 block content
 	.home
+		section.intro
+			.container
+				p.topic สอนเขียนโปรแกรมโดยกูรูผู้มีความเชี่ยวชาญอันดับต้นๆของประเทศ
+				.intro-video
+					p เป็นเว็บไซต์เดียวที่สอนเขียนโปรแกรมเป็นภาษาไทย
+					p เพื่อให้คนไทยที่ต้องการเรียนรู้สามารถ 
+						span เข้าใจได้ง่าย ใช้ได้จริง
+					article
+						video(poster="/images/inside_out2.png" width="400" controls="controls")
+							source(src="/images/inside_out.mp4" type="video/mp4")
+
+					button.btn.start START COURSE
+
+				.intro-login
+					.box
+						ul.nav.nav-tabs(role="tablist")
+							li.active(role="presentation")
+								a(href="#login" aria-controls="login" data-toggle="tab") Login
+							li(role="presentation")
+								a(href="#register" aria-controls="register" role="tab" data-toggle="tab") Register
+						.tab-content
+							.tab-pane.active(role="tabpanel" id="login") 
+								form(action="home.html" method="post")
+									input(type="text" class="form-control" placeholder="Email")
+									input(type="text" class="form-control" placeholder="Password")
+
+									input(type="checkbox", name="remember")
+									จดจำฉันในระบบ
+
+									button.btn Login
+									p Or Login with
+
+									a(href="home.html")
+										img.face(src="/images/button_facebook.png" width="50%")
+									a(href="home.html")
+										img(src="/images/button_google.png" width="50%")
+
+							.tab-pane(role="tabpanel" id="register")
+								form(action="home.html" method="post")
+									input(type="text" class="form-control" placeholder="Email")
+									input(type="text" class="form-control" placeholder="Password")
+									input(type="text" class="form-control" placeholder="Repassword")
+
+									button.btn Register
+									p Or register with
+
+									a(href="home.html")
+										img.face(src="/images/button_facebook.png" width="50%")
+									a(href="home.html")
+										img(src="/images/button_google.png" width="50%")
+
+				.clear
+
+	!= renderJs()
+	!= renderStyles('style')

@@ -48,6 +48,9 @@ router.get '/booking_container/:container_id', helper.check_role('student'),  (r
 router.get '/create', helper.check_role('teacher'), (req, res)->
   res.render 'e_classroom_create'
 
+router.get '/home', (req, res) ->
+  res.render 'index'
+
 router.post '/create', helper.check_role('teacher'), (req, res)->
   classroom = new Classroom()
   classroom.max_student = req.body.max_student
