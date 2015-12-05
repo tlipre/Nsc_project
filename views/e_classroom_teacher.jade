@@ -1,6 +1,7 @@
 extends layout_e_classroom
 block title
 	title e_classroom_teacher
+	script(src="../../term.js")
 block content
 	.e_classroom
 		.content-classroom
@@ -11,7 +12,7 @@ block content
 						.username(id="current_view") #{classroom.teacher.username}
 				.code
 					textarea.editor(type='textarea' cols='130' rows='25')
-					.terminal
+					div#terminal(data-container-id="#{container_id}")
 
 				.footer-window
 					input(type='button' class='form-control btn btn-success' value='Save')
@@ -65,3 +66,4 @@ block content
 	!= renderJs('socket')
 	!= renderJs('chat')
 	!= renderJs('editor_teacher')
+	!= renderJs('terminal')
