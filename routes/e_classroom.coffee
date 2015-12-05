@@ -106,7 +106,8 @@ router.post '/enroll', (req, res) ->
     if !classroom?
       res.send 'wrong password'
     else
-      if req.session.passport.user.in_classroom?
+      # if req.session.passport.user.in_classroom?
+      if false
         res.send 'you have to enroll only 1 class at a time.'
       else
         Container.findOne {classroom_id: classroom.id, owner: null}, (err, container) ->
@@ -195,7 +196,6 @@ chat_room.on 'connection', (socket)->
 Container.find {status: 'streaming'}, (err, containers)->
   for container in containers
     console.log 'streaming', container.container_id
-    console.log container.room
     docker_socket[container.container_id] = pty.spawn 'docker', ['attach', container.container_id], 
       name: 'xterm-color',
       cols: 80,
@@ -204,15 +204,13 @@ Container.find {status: 'streaming'}, (err, containers)->
       env: process.env
     do(container)->
       docker_socket[container.container_id].on 'data', (data)->
-        event_emitter.emit 'text_terminal', container.room, data
+        event_emitter.emit 'text_terminal', container.container_id, data
 
 
 router.get '/test', (req, res)->
   console.log Object.keys docker_socket
 
 event_emitter.on 'text_terminal', (room, data)->
-  # terminal_room.emit('data', data)
-  # console.log room
   terminal_room.to(room).emit('data', data)
 
 terminal_room.on 'connection', (socket)->
@@ -221,7 +219,7 @@ terminal_room.on 'connection', (socket)->
     # session = socket.request.session
     Container.findOne {container_id: container_id}, (err, container)->
       if container?
-        socket.room = container.room
+        socket.room = container.container_id
         socket.join socket.room
 
   socket.on 'data', (container_id, data) ->

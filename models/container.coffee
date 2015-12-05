@@ -10,7 +10,6 @@ container_schema = mongoose.Schema
   owner: type: String, default: null
   status: type: String, default: 'running'
   term: mongoose.Schema.Types.Mixed
-  room: type: String
 ,
   versionKey: false
 
@@ -33,7 +32,7 @@ container_schema.methods.create_stream = (callback)->
           cwd: process.env.HOME,
           env: process.env
         docker_socket[self.container_id].on 'data', (data)->
-          event_emitter.emit 'text_terminal', self.room, data
+          event_emitter.emit 'text_terminal', self.container_id, data
         self.status = 'streaming'
         self.save()
       callback null
