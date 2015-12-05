@@ -22,28 +22,10 @@ push_file = (path_to_file, destination, container_id, callback) ->
     else
       callback()
 
-
 #docker rm $(docker ps -a -q --filter 'exited=0')
 router = express.Router()
 
 global.docker_socket = {}
-
-
-
-router.get '/booking_container/:container_id', helper.check_role('student'),  (req, res)->
-  container_id = req.params.container_id
-  Container.findOne {"container_id":container_id}, (err, container)->
-    username = req.session.passport.user.username
-    if !container?
-      res.send 'This container is not existed.'
-    else if container.owner? and container.owner isnt username
-      res.send 'This container has owner already.'
-    else if container.owner is username
-      res.send 'This container belongs to you.'
-    else
-      container.owner = username
-      container.save()
-      res.send 'Complete booking.'
 
 router.get '/create', helper.check_role('teacher'), (req, res)->
   res.render 'e_classroom_create'
@@ -61,7 +43,6 @@ router.post '/create', helper.check_role('teacher'), (req, res)->
       res.redirect "#{classroom.name}/teacher"
 
 router.get '/:name/teacher', helper.check_role('teacher'), (req, res)->
-  console.log 'second'
   name = req.params.name
   Classroom.findOne {name: name}, (err, classroom)->
     if classroom?
@@ -74,28 +55,12 @@ router.get '/:name/teacher', helper.check_role('teacher'), (req, res)->
               Chat_log.find {classroom_name: classroom.name}, (err, chat_log)->
                 username = req.session.passport.user.username
                 render_data = _.assign username: username, chat: chat_log, classroom: classroom, container_id: container.container_id
-                res.render 'e_classroom_student_test', render_data
+                res.render 'e_classroom_teacher', render_data
         else
-          res.send 'you have to enroll first'
+          res.send 'you not belong here'
     else
       #for 404
       res.sendFile "#{process.cwd()}/public/html/404.html"
-  # name = req.params.name
-  # Classroom.findOne {name: name}, (err, classroom)->
-  #   if classroom?
-  #     Container.findOne {classroom_id: classroom.id, owner: req.session.passport.user.username}, (err, container)->
-  #       if container?
-  #         container.create_stream (err)->
-  #           if err
-  #             res.send err
-  #           else
-  #             Chat_log.find {classroom_name: classroom.name}, (err, chat_log)->
-  #               username = req.session.passport.user.username
-  #               render_data = _.assign username: username, chat: chat_log, classroom: classroom, container_id: container.container_id
-  #               res.render 'e_classroom_teacher', render_data
-  #   else
-  #     #for 404
-  #     res.sendFile "#{process.cwd()}/public/html/404.html"
 
 router.get '/:name/student-test', helper.check_role('student'), (req, res) ->
   name = req.params.name
@@ -130,7 +95,6 @@ router.get '/', (req, res) ->
 
 router.post '/enroll', (req, res) ->
   #TODO: prevent from someone that enrolled
-
   classroom_name = req.body.name
   key = req.body.key
 
@@ -165,11 +129,6 @@ router.post '/student', (req, res) ->
       res.send err if err
       res.send 'ok'
 
-router.get '/session/:id', (req, res)->
-  redis_store.get req.params.id, (err, session)->
-    dev.highlight session
-    res.send req.session
-
 io.use (socket, next)->
   session_middleware(socket.request, socket.request.res, next)
 
@@ -180,7 +139,7 @@ terminal_room = io.of('/terminal')
 editor_room.on 'connection', (socket)->
   socket.on 'request_container', (data)->
     session = socket.request.session
-    Container.findOne {owner: session.passport.user.username, status: 'running'}, (err, container)->
+    Container.findOne {owner: session.passport.user.username}, (err, container)->
       if container?
         socket.verified = true
         socket.room = container.container_id
@@ -189,14 +148,14 @@ editor_room.on 'connection', (socket)->
 
   socket.on 'request_container_teacher', (data)->
     #TODO: AUTH teacher
-    Container.findOne {container_id: data, status: 'running'}, (err, container)->
+    Container.findOne {container_id: data}, (err, container)->
       socket.room = container.container_id
       socket.join socket.room
       editor_room.to(socket.room).emit('type_student', container.text)
 
   socket.on 'type_student', (data)->
     session = socket.request.session
-    Container.findOne {owner: session.passport.user.username, status: 'running'}, (err, container)->
+    Container.findOne {owner: session.passport.user.username}, (err, container)->
       if container?
         container.text = data
         container.save()
@@ -205,7 +164,7 @@ editor_room.on 'connection', (socket)->
   socket.on 'type_teacher', (data)->
     #TODO: AUTH teacher
     session = socket.request.session
-    Container.findOne {container_id: socket.room, status: 'running'}, (err, container)->
+    Container.findOne {container_id: socket.room}, (err, container)->
       if container?
         container.text = data
         container.save()
@@ -213,7 +172,7 @@ editor_room.on 'connection', (socket)->
 
 chat_room.on 'connection', (socket)->
   socket.on 'join_room', (data)->
-    #TODO: AUTH by session
+    #TODO: AUTH
     session = socket.request.session
     if true
       socket.verified = true
@@ -227,18 +186,26 @@ chat_room.on 'connection', (socket)->
       chat.save()
       data = {message: chat.message, sender: chat.sender, timestamp: chat.timestamp}
       chat_room.to(socket.room).emit('message', data)
-    else
-      console.log 'someone try to hack'
-global.count = 0
+
+Container.find {status: 'streaming'}, (err, containers)->
+  for container in containers
+    console.log 'streaming', container.id
+    docker_socket[container.container_id] = pty.spawn 'docker', ["attach", container.container_id], 
+      name: 'xterm-color',
+      cols: 80,
+      rows: 30,
+      cwd: process.env.HOME,
+      env: process.env
+    docker_socket[container.container_id].on 'data', (data)->
+      event_emitter.emit 'text_terminal', container.container_id, data
 
 event_emitter.on 'text_terminal', (container_id, data)->
-  # console.log count++
   terminal_room.to(container_id).emit('data', data)
 
 terminal_room.on 'connection', (socket)->
   socket.on 'request_terminal', (container_id)->
     #TODO: AUTH
-    Container.findOne {container_id: container_id, status: 'running'}, (err, container)->
+    Container.findOne {container_id: container_id}, (err, container)->
       if container?
         socket_id = socket_id
         socket.verified = true
@@ -248,25 +215,10 @@ terminal_room.on 'connection', (socket)->
   socket.on 'data', (container_id, data) ->
     if docker_socket[container_id]?
       docker_socket[container_id].write data
-
-  socket.on 'disconnect', () ->
-    console.log 'first'
+  # socket.on 'disconnect', () ->
   #   #TODO: destroy
   #   dev.highlight 'disconnect'
-  #   session = socket.request.session
-  #   Container.findOne {owner: session.passport.user.username, status: 'running'}, (err, container)->
-  #     if container?
-  #       if docker_socket[container.container_id]?
-  #         docker_socket[container.container_id].removeAllListeners 'data'
-  #       container.status = 'not running'
-  #       container.save()
 
-router.get '/test', (req, res)->
-  Container.findOne {owner: req.session.passport.user.username}, (err, container)->
-    console.log container
-    # if container?
-  # console.log event_emitter.listeners 'text_terminal'
-  # dev.highlight docker_socket['1985e68604f255c7aa85d4d32630fefe8fa00624da472a67d82e4a5bd5fb74aa'].listeners 'data'
-  res.send 'ok'
+
 
 module.exports = router
