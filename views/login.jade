@@ -6,18 +6,9 @@ html
     if message
       h1 #{message}
     form(action='/login' method='post')
-      input(type="radio" name="username" value="Book" checked) 
-      | Book
-      br
-      input(type="radio" name="username" value="Mamieo") 
-      | Mamieo
-      br
-      input(type="radio" name="username" value="Mix") 
-      | Mix
-      br
-      input(type="radio" name="username" value="AjJoob") 
-      | AjJoob
-      input(type="hidden" name="password" value="password")
-      br
-
+      each user in users
+        input(type="radio" name="username" value="#{user.username}") 
+        | #{user.username}
+        br
+      input(type='hidden' value="password" name="password")
       input(type='submit')

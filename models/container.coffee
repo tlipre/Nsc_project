@@ -1,6 +1,7 @@
 pty = require 'pty.js'
 Docker = require 'dockerode'
 docker = new Docker()
+shortid = require 'shortid'
 
 container_schema = mongoose.Schema
   container_id: type: String
@@ -9,6 +10,7 @@ container_schema = mongoose.Schema
   owner: type: String, default: null
   status: type: String, default: 'running'
   term: mongoose.Schema.Types.Mixed
+  room: type: String
 ,
   versionKey: false
 
@@ -31,11 +33,13 @@ container_schema.methods.create_stream = (callback)->
           cwd: process.env.HOME,
           env: process.env
         docker_socket[self.container_id].on 'data', (data)->
-          event_emitter.emit 'text_terminal', self.container_id, data
+          event_emitter.emit 'text_terminal', self.room, data
         self.status = 'streaming'
         self.save()
       callback null
 
-  
+container_schema.methods.update_owner = (owner)->
+  this.owner = owner
+  this.save()
 
 Container = mongoose.model 'Container', container_schema

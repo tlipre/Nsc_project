@@ -6,7 +6,7 @@ docker = new Docker()
 exec = require("child_process").exec
 async = require 'async'
 cookie_parser = require('cookie').parse
-
+User = mongoose.model 'User'
 Chat_log = mongoose.model 'Chat_log'
 Classroom = mongoose.model 'Classroom'
 Container = mongoose.model 'Container'
@@ -86,6 +86,10 @@ router.get '/student', (req, res) ->
   res.render 'e_classroom_student'
 
 router.get '/', (req, res) ->
+  if req.session.passport isnt {}
+    user = req.session.passport.user
+    if user.in_classroom?
+      return res.redirect "/e-classroom/#{user.in_classroom}/student-test"
   Classroom.find {}, (err, classrooms)->
     username = undefined
     if !_.isEmpty req.session.passport
@@ -102,20 +106,21 @@ router.post '/enroll', (req, res) ->
     if !classroom?
       res.send 'wrong password'
     else
-      Container.findOne {classroom_id: classroom.id, owner: null}, (err, container) ->
-        if !container?
-          res.send 'this classroom is full'
-        else
-          container.owner = req.session.passport.user.username
-          container.save()
+      if req.session.passport.user.in_classroom?
+        res.send 'you have to enroll only 1 class at a time.'
+      else
+        Container.findOne {classroom_id: classroom.id, owner: null}, (err, container) ->
+          if !container?
+            res.send 'this classroom is full'
+          else
+            User.findOne {username: req.session.passport.user.username}, (err, user)->
+              container.update_owner user.username
+              user.enroll classroom.name
+              req.session.passport.user.in_classroom = classroom.name
+              user_temp = _.cloneDeep req.session.passport.user
+              classroom.add_student user_temp, container.container_id
 
-          user = _.cloneDeep req.session.passport.user
-          user.container_id = container.container_id
-          classroom.students.push user
-          classroom.student_count++
-          classroom.save()
-
-          res.redirect "#{classroom.name}/student-test"
+              res.redirect "#{classroom.name}/student-test"
 
 router.post '/student', (req, res) ->
   code = req.body.code
@@ -189,28 +194,35 @@ chat_room.on 'connection', (socket)->
 
 Container.find {status: 'streaming'}, (err, containers)->
   for container in containers
-    console.log 'streaming', container.id
-    docker_socket[container.container_id] = pty.spawn 'docker', ["attach", container.container_id], 
+    console.log 'streaming', container.container_id
+    console.log container.room
+    docker_socket[container.container_id] = pty.spawn 'docker', ['attach', container.container_id], 
       name: 'xterm-color',
       cols: 80,
       rows: 30,
       cwd: process.env.HOME,
       env: process.env
-    docker_socket[container.container_id].on 'data', (data)->
-      event_emitter.emit 'text_terminal', container.container_id, data
+    do(container)->
+      docker_socket[container.container_id].on 'data', (data)->
+        event_emitter.emit 'text_terminal', container.room, data
 
-event_emitter.on 'text_terminal', (container_id, data)->
-  terminal_room.to(container_id).emit('data', data)
+
+router.get '/test', (req, res)->
+  console.log Object.keys docker_socket
+
+event_emitter.on 'text_terminal', (room, data)->
+  # terminal_room.emit('data', data)
+  # console.log room
+  terminal_room.to(room).emit('data', data)
 
 terminal_room.on 'connection', (socket)->
   socket.on 'request_terminal', (container_id)->
     #TODO: AUTH
+    # session = socket.request.session
     Container.findOne {container_id: container_id}, (err, container)->
       if container?
-        socket_id = socket_id
-        socket.verified = true
-        socket.room = container.container_id
-        socket.join container.container_id
+        socket.room = container.room
+        socket.join socket.room
 
   socket.on 'data', (container_id, data) ->
     if docker_socket[container_id]?

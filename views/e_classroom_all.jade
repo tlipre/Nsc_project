@@ -27,9 +27,10 @@ block content
 							p
 								img.circle.img-teacher(src='/images/mamieo.jpg')
 								span #{classroom.teacher.username}
+							
 							button.btn(type="button" data-toggle="modal" data-target="##{classroom.name}") เข้าห้องเรียน
 							
-							
+					
 					.modal.fade(id="#{classroom.name}" tabindex="-1")
 						.modal-dialog(role="document")
 							.modal-content

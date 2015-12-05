@@ -1,15 +1,13 @@
 router = express.Router()
 User = mongoose.model 'User'
-Container = mongoose.model 'Container'
-Chat_log = mongoose.model 'Chat_log'
-Classroom = mongoose.model 'Classroom'
-fs = require 'fs'
+
 router.get '/login', (req, res) ->
-  flash = req.flash()
-  if _.isEmpty flash
-    res.render 'login'
-  else
-    res.render 'login', { message: flash.error[0] }
+  User.find {}, (err, users)->
+    flash = req.flash()
+    if _.isEmpty flash
+      res.render 'login', {users: users}
+    else
+      res.render 'login', {users: users, message: flash.error[0] }
 
 router.post '/login', passport.authenticate('local',{successRedirect: '/', failureRedirect: '/login', failureFlash: true})
 
@@ -26,14 +24,15 @@ router.get '/',(req, res) ->
 
 #dev zone
 router.get '/check', (req, res)->
+  console.log req.session
   res.json req.session
 
 router.get '/remove', (req, res)->
   #TODO: remove data from db
   res.json 'success'
   
-router.get '/create/:role', (req, res)->
-  user = new User(username: 'Mix', password: 'password', role: req.params.role)
+router.get '/create/:role/:name', (req, res)->
+  user = new User(username: req.params.name, password: 'password', role: req.params.role)
   user.save()
   res.json user
 #end dev zone
