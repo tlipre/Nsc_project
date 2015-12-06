@@ -39,8 +39,12 @@ router.post '/create', helper.check_role('teacher'), (req, res)->
     if err
       res.send err.message
     else
-      classroom.save()
-      res.redirect "#{classroom.name}/teacher"
+      username = req.session.passport.user.username
+      User.findOne {username: username}, (err, user)->
+        user.in_classroom = classroom.name
+        user.save()
+        classroom.save()
+        res.redirect "#{classroom.name}/teacher"
 
 router.get '/:name/teacher', helper.check_role('teacher'), (req, res)->
   name = req.params.name
@@ -87,7 +91,7 @@ router.get '/', (req, res) ->
     username = req.session.passport.user.username
     User.findOne {username: username}, (err, user)->
       if user.in_classroom?
-        res.redirect "/e-classroom/#{user.in_classroom}/student-test"
+          res.redirect "/e-classroom/#{user.in_classroom}/#{user.role}"
       else
         Classroom.find {}, (err, classrooms)->
           render_data = _.assign username: username, classrooms: classrooms
@@ -118,7 +122,7 @@ router.post '/enroll', (req, res) ->
                 user.enroll classroom.name
                 user_temp = _.cloneDeep req.session.passport.user
                 classroom.add_student user_temp, container.container_id
-                res.redirect "#{classroom.name}/student-test"
+                res.redirect "#{classroom.name}/student"
 
 router.post '/editor', (req, res) ->
   code = req.body.code

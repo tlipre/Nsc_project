@@ -8,8 +8,8 @@ block content
 			.window.classroom-teacher
 				.header-window
 					.name-active
-						img.circle(src='/images/mamieo.jpg')
-						.username(id="current_view") #{classroom.teacher.username}
+						img.circle(id="current-profile-picture" src='/uploads/profile_picture/#{classroom.teacher.username}.jpg')
+						.username(id="current-view") #{classroom.teacher.username}
 				.code
 					textarea.editor(id='editor' type='textarea' cols='123' rows='24')
 					div#terminal(data-container-id="#{container_id}")

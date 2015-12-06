@@ -23,7 +23,7 @@ block content
 							p.sub-topic มีผู้เรียนในห้องนี้ 
 								span.amount #{classroom.student_count}/#{classroom.max_student} 
 								span คน
-							p.duration สร้างห้องเมื่อ 20 นาทีที่แล้ว
+							p.duration Key: #{classroom.key} (Only admin see this.)
 							p
 								img.circle.img-teacher(src='/images/mamieo.jpg')
 								span #{classroom.teacher.username}
