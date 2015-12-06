@@ -31,8 +31,6 @@ router.get '/create', helper.check_role('teacher'), (req, res)->
   username = req.session.passport.user.username
   res.render 'e_classroom_create', {username: username}
 
-router.get '/home', (req, res) ->
-  res.render 'index'
 
 router.post '/create', helper.check_role('teacher'), (req, res)->
   classroom = new Classroom()

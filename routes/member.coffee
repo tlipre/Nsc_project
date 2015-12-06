@@ -11,16 +11,19 @@ router.get '/login', (req, res) ->
 
 router.post '/login', passport.authenticate('local',{successRedirect: '/', failureRedirect: '/login', failureFlash: true})
 
-router.get '/',(req, res) ->
-  if _.isEmpty req.session.passport
-    res.send '<a href="/login">login</a>'
-  else
-    prev_url = req.session.prev_url
-    if prev_url
-      delete req.session.prev_url
-      res.redirect prev_url
-    else
-      res.json req.session
+router.get '/', (req, res) ->
+  res.render 'index'
+
+# router.get '/',(req, res) ->
+#   if _.isEmpty req.session.passport
+#     res.send '<a href="/login">login</a>'
+#   else
+#     prev_url = req.session.prev_url
+#     if prev_url
+#       delete req.session.prev_url
+#       res.redirect prev_url
+#     else
+#       res.json req.session
 
 #dev zone
 router.get '/check', (req, res)->
