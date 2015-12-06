@@ -13,6 +13,9 @@ block content
 						option(value="byname") ค้นหาห้องเรียนจากชื่อห้อง
 					input.form-control(type="text" placeholder="กรอกชื่อห้อง" disabled="disabled")
 					button.btn(type="submit") ค้นหา
+					if user.role == 'teacher'
+						a(href="/e-classroom/create")
+							button.btn(type="button") สร้างห้องเรียน
 			hr
 			.list-class
 				each classroom in classrooms

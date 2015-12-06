@@ -28,7 +28,8 @@ router = express.Router()
 global.docker_socket = {}
 
 router.get '/create', helper.check_role('teacher'), (req, res)->
-  res.render 'e_classroom_create'
+  username = req.session.passport.user.username
+  res.render 'e_classroom_create', {username: username}
 
 router.get '/home', (req, res) ->
   res.render 'index'
@@ -102,7 +103,7 @@ router.get '/', (req, res) ->
           res.redirect "/e-classroom/#{user.in_classroom}/#{user.role}"
       else
         Classroom.find {}, (err, classrooms)->
-          render_data = _.assign username: username, classrooms: classrooms
+          render_data = _.assign user: user, username: username, classrooms: classrooms
           res.render 'e_classroom_all', render_data
   else
     Classroom.find {}, (err, classrooms)->
