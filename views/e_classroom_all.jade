@@ -23,13 +23,14 @@ block content
 							p.sub-topic มีผู้เรียนในห้องนี้ 
 								span.amount #{classroom.student_count}/#{classroom.max_student} 
 								span คน
-							p.duration สร้างห้องเมื่อ 20 นาทีที่แล้ว
+							p.duration Key: #{classroom.key} (Only admin see this.)
 							p
 								img.circle.img-teacher(src='/images/mamieo.jpg')
 								span #{classroom.teacher.username}
+							
 							button.btn(type="button" data-toggle="modal" data-target="##{classroom.name}") เข้าห้องเรียน
 							
-							
+					
 					.modal.fade(id="#{classroom.name}" tabindex="-1")
 						.modal-dialog(role="document")
 							.modal-content

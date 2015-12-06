@@ -1,12 +1,52 @@
-html
-  head
-    != renderStyles()
-    script(src="../term.js")
-  body
-    != renderJs()
-    != renderJs('terminal')
-    != renderJs('socket')
-    textarea(id="editor" cols="100" rows="20")
-    button(id="save") Save
-    div(id='result')
-      
+extends layout_e_classroom
+block title
+	title e_classroom_teacher
+	script(src="../../term.js")
+block content
+	.e_classroom
+		.content-classroom
+			.window.classroom-student 
+				.header-window
+					.class-name
+						p Name: #{classroom.raw_name}
+							span  |
+							a(href="") ออกจากคลาส
+					.name-teacher
+						span อาจารย์ผู้สอน :
+						.name-active
+							img.circle(src='/uploads/profile_picture/#{classroom.teacher.username}.jpg')
+							.username #{classroom.teacher.username}
+							
+					//- .time
+						//- p อยู่ในระบบเป็นเวลา 20 นาที 20 วินาที
+				.code
+					textarea.editor(id='editor' type='textarea' cols='154' rows='24')
+					div#terminal(data-container-id="#{container_id}")
+
+				.footer-window
+					input(type='button' class='form-control btn btn-success' value='Save' id='save')
+					.techer-window
+						.window-teacher
+						a ดูหน้าต่างผู้สอน
+					.chat
+						.textbox
+							.type
+								.input-group
+									input(class="form-control" id="typing-box" placeholder="Message")
+									.input-group-addon hide
+						.content
+							.header 
+								p ห้องสนทนา
+							.chat-box
+								.story
+								each val in chat
+									p
+										span.name #{val.sender}: 
+										span #{val.message}
+	!= renderJs()
+	!= renderJs('socket')
+	!= renderJs('chat')
+	!= renderJs('editor')
+	!= renderJs('e_classroom')
+	!= renderStyles('e_classroom')
+	!= renderJs('terminal')

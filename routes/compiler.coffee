@@ -2,8 +2,8 @@ docker_stream = null
 
 fs = require 'fs'
 Docker = require 'dockerode'
-shortid = require 'shortid'
 docker = new Docker()
+shortid = require 'shortid'
 exec = require("child_process").exec
 router = express.Router()
 timeout = require 'connect-timeout'

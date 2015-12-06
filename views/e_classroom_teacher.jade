@@ -1,20 +1,21 @@
 extends layout_e_classroom
 block title
 	title e_classroom_teacher
+	script(src="../../term.js")
 block content
 	.e_classroom
 		.content-classroom
 			.window.classroom-teacher
 				.header-window
 					.name-active
-						img.circle(src='/images/mamieo.jpg')
-						.username(id="current_view") #{classroom.teacher.username}
+						img.circle(id="current-profile-picture" src='/uploads/profile_picture/#{classroom.teacher.username}.jpg')
+						.username(id="current-view") #{classroom.teacher.username}
 				.code
-					textarea.editor(type='textarea' cols='130' rows='25')
-					.terminal
+					textarea.editor(id='editor' type='textarea' cols='123' rows='24')
+					div#terminal(data-container-id="#{container_id}")
 
 				.footer-window
-					input(type='button' class='form-control btn btn-success' value='Save')
+					input(type='button' class='form-control btn btn-success' value='Save' id='save')
 					.chat
 						.textbox
 							.type
@@ -65,3 +66,4 @@ block content
 	!= renderJs('socket')
 	!= renderJs('chat')
 	!= renderJs('editor_teacher')
+	!= renderJs('terminal')
