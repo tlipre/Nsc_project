@@ -25,7 +25,7 @@ block content
 								span คน
 							p.duration Key: #{classroom.key} (Only admin see this.)
 							p
-								img.circle.img-teacher(src='/images/mamieo.jpg')
+								img.circle.img-teacher(src='/uploads/profile_picture/#{classroom.teacher.username}.jpg')
 								span #{classroom.teacher.username}
 							
 							button.btn(type="button" data-toggle="modal" data-target="##{classroom.name}") เข้าห้องเรียน

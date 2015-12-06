@@ -69,6 +69,11 @@ router.get '/:name/teacher', helper.check_role('teacher'), (req, res)->
       #for 404
       res.sendFile "#{process.cwd()}/public/html/404.html"
 
+router.get '/:name/teacher/student', (req, res)->
+  name = req.params.name
+  Classroom.findOne {name: name}, (err, classroom)->
+    res.render 'e_classroom_teacher_student', {classroom: classroom}
+
 router.get '/:name/student', helper.check_role('student'), (req, res) ->
   name = req.params.name
   Classroom.findOne {name: name}, (err, classroom)->
@@ -104,7 +109,7 @@ router.get '/', (req, res) ->
       render_data = _.assign classrooms: classrooms
       res.render 'e_classroom_all', render_data
 
-router.post '/enroll', (req, res) ->
+router.post '/enroll', helper.check_role('student'), (req, res) ->
   #TODO: prevent from someone that enrolled
   classroom_name = req.body.name
   key = req.body.key
@@ -149,6 +154,7 @@ terminal_room = io.of('/terminal')
 
 editor_room.on 'connection', (socket)->
   socket.on 'request_container', (data)->
+    #for student or teacher request his own container
     session = socket.request.session
     Container.findOne {owner: session.passport.user.username}, (err, container)->
       if container?
@@ -157,9 +163,23 @@ editor_room.on 'connection', (socket)->
         socket.join socket.room
         editor_room.to(socket.room).emit('init', container.text)
 
+  socket.on 'request_container_student', (data)->
+    #for student watch teacher
+    session = socket.request.session
+    User.findOne {username: session.passport.user.username}, (err, user)->
+      Classroom.findOne {name: user.in_classroom}, (err, classroom)->
+        container_id = classroom.teacher.container_id
+        Container.findOne {container_id: container_id}, (err, container)->
+          socket.room = container_id
+          socket.join socket.room
+          editor_room.to(socket.room).emit('init', container.text)
+
+
   socket.on 'request_container_teacher', (data)->
+    #for teacher watch student
     #TODO: AUTH teacher
     Container.findOne {container_id: data}, (err, container)->
+      socket.leave socket.room
       socket.room = container.container_id
       socket.join socket.room
       editor_room.to(socket.room).emit('type_student', container.text)
@@ -225,6 +245,8 @@ terminal_room.on 'connection', (socket)->
     #TODO: AUTH
     Container.findOne {container_id: container_id}, (err, container)->
       if container?
+        if socket.room?
+          socket.leave socket.room
         socket.room = container.container_id
         socket.join socket.room
 

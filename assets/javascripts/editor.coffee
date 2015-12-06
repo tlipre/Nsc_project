@@ -13,3 +13,4 @@ $ ->
     
   socket.on 'init', (data)->
     editor.val data
+

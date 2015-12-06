@@ -7,6 +7,7 @@ $ ->
 
   socket.on 'connect', ()->
     socket.emit 'request_container'
+
   docker.click ()->
     #MTODO: loading animation
     container_id = $(this).data('id')
