@@ -106,22 +106,19 @@ router.post '/enroll', (req, res) ->
     if !classroom?
       res.send 'wrong password'
     else
-      # if req.session.passport.user.in_classroom?
-      if false
-        res.send 'you have to enroll only 1 class at a time.'
-      else
-        Container.findOne {classroom_id: classroom.id, owner: null}, (err, container) ->
-          if !container?
-            res.send 'this classroom is full'
-          else
-            User.findOne {username: req.session.passport.user.username}, (err, user)->
-              container.update_owner user.username
-              user.enroll classroom.name
-              req.session.passport.user.in_classroom = classroom.name
-              user_temp = _.cloneDeep req.session.passport.user
-              classroom.add_student user_temp, container.container_id
-
-              res.redirect "#{classroom.name}/student-test"
+      User.findOne {username: req.session.passport.user.username}, (err, user)->
+        if user.in_classroom
+          res.send 'you can only enroll only 1 class at the time.'
+        else
+          Container.findOne {classroom_id: classroom.id, owner: null}, (err, container) ->
+            if !container?
+              res.send 'this classroom is full'
+            else
+                container.update_owner user.username
+                user.enroll classroom.name
+                user_temp = _.cloneDeep req.session.passport.user
+                classroom.add_student user_temp, container.container_id
+                res.redirect "#{classroom.name}/student-test"
 
 router.post '/student', (req, res) ->
   code = req.body.code
