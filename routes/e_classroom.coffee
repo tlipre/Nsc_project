@@ -86,16 +86,19 @@ router.get '/student', (req, res) ->
   res.render 'e_classroom_student'
 
 router.get '/', (req, res) ->
-  if req.session.passport isnt {}
-    user = req.session.passport.user
-    if user.in_classroom?
-      return res.redirect "/e-classroom/#{user.in_classroom}/student-test"
-  Classroom.find {}, (err, classrooms)->
-    username = undefined
-    if !_.isEmpty req.session.passport
-      username = req.session.passport.user.username
-    render_data = _.assign username: username, classrooms: classrooms
-    res.render 'e_classroom_all', render_data
+  if !_.isEmpty req.session.passport
+    username = req.session.passport.user.username
+    User.findOne {username: username}, (err, user)->
+      if user.in_classroom?
+        res.redirect "/e-classroom/#{user.in_classroom}/student-test"
+      else
+        Classroom.find {}, (err, classrooms)->
+          render_data = _.assign username: username, classrooms: classrooms
+          res.render 'e_classroom_all', render_data
+  else
+    Classroom.find {}, (err, classrooms)->
+      render_data = _.assign classrooms: classrooms
+      res.render 'e_classroom_all', render_data
 
 router.post '/enroll', (req, res) ->
   #TODO: prevent from someone that enrolled
@@ -192,16 +195,18 @@ chat_room.on 'connection', (socket)->
 
 Container.find {status: 'streaming'}, (err, containers)->
   for container in containers
-    console.log 'streaming', container.container_id
-    docker_socket[container.container_id] = pty.spawn 'docker', ['attach', container.container_id], 
-      name: 'xterm-color',
-      cols: 80,
-      rows: 30,
-      cwd: process.env.HOME,
-      env: process.env
     do(container)->
-      docker_socket[container.container_id].on 'data', (data)->
-        event_emitter.emit 'text_terminal', container.container_id, data
+      docker_container = docker.getContainer(container.container_id)
+      docker_container.start (err, data)->
+        console.log 'streaming', container.container_id
+        docker_socket[container.container_id] = pty.spawn 'docker', ['attach', container.container_id], 
+          name: 'xterm-color',
+          cols: 80,
+          rows: 30,
+          cwd: process.env.HOME,
+          env: process.env        
+        docker_socket[container.container_id].on 'data', (data)->
+          event_emitter.emit 'text_terminal', container.container_id, data
 
 
 router.get '/test', (req, res)->
@@ -213,7 +218,6 @@ event_emitter.on 'text_terminal', (room, data)->
 terminal_room.on 'connection', (socket)->
   socket.on 'request_terminal', (container_id)->
     #TODO: AUTH
-    # session = socket.request.session
     Container.findOne {container_id: container_id}, (err, container)->
       if container?
         socket.room = container.container_id
