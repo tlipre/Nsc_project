@@ -1,33 +1,78 @@
-html
-  head
-  body
-    form(action='/e-classroom/create' method='post')
-      h1 CREATE E-CLASSROOM
-      |Name: 
-      input(id="raw_name" name="raw_name")
-      br
-      |Genarated Name
-      input(id="name" disabled)
-      br
-      |Langauge: 
-      select(name='langauge')
-        option python
-        option node.js
-      br
-      |Number of students(between 1 and 50): 
-      input(type="number" name="max_student" min="1" max="50")
-      br
-      input(type="radio" name="aaa")
-      |Use existing docker.
-      select(name='bbb')
-        option docker A
-        option docker B
-      br
-      input(type="radio" name="aaa") 
-      |Upload your Dockerfile 
-      input(type="file")
-      br
-      br
-      input(type='submit')
+extends layout
+block title
+  title e_classroom creat
+block content
+  .create
+    img.banner(src="/images/banner1.png")
+    .container
+      .row-center
+        p.topic Create E-Classroom
+
+      hr
+      .row-center
+        form(action='/e-classroom/create' method='post')
+          .col-md-6
+            p Name of E-Classrooom
+            p Genarated Name
+            p Langauge
+            p Number of students(between 1 and 50)
+            p Docker image
+
+          .col-md-6.inbox
+            input.form-control(id="raw_name" name="raw_name")
+            input.form-control(id="name" disabled)
+            select.form-control(name='langauge')
+              option python
+              option node.js
+            input.form-control(type="number" name="max_student" min="1" max="50")
+            p 
+              input(type="radio" name="aaa")
+              Use Existing docker
+              select.form-control.sub-form(name='bbb')
+                option docker A
+                option docker B
+            p
+              input(type="radio" name="aaa")
+              Upload Your Docker file
+              input.sub-form(type="file")
+          .clear
+          input.btn.submit(type='submit' value="SUBMIT")
+
+      
   != renderJs()
   != renderJs('e_classroom_create')
+  != renderStyles('e_classroom')
+
+//- html
+//-   head
+//-   body
+//-     form(action='/e-classroom/create' method='post')
+//-       h1 CREATE E-CLASSROOM
+//-       |Name: 
+//-       input(id="raw_name" name="raw_name")
+//-       br
+//-       |Genarated Name
+//-       input(id="name" disabled)
+//-       br
+//-       |Langauge: 
+//-       select(name='langauge')
+//-         option python
+//-         option node.js
+//-       br
+//-       |Number of students(between 1 and 50): 
+//-       input(type="number" name="max_student" min="1" max="50")
+//-       br
+//-       input(type="radio" name="aaa")
+//-       |Use existing docker.
+//-       select(name='bbb')
+//-         option docker A
+//-         option docker B
+//-       br
+//-       input(type="radio" name="aaa") 
+//-       |Upload your Dockerfile 
+//-       input(type="file")
+//-       br
+//-       br
+//-       input(type='submit')
+//-   != renderJs()
+//-   != renderJs('e_classroom_create')

@@ -8,6 +8,7 @@ module.exports = (assets) ->
   assets.addJs '/public/javascripts/socket.io-1.2.0.js', 'socket'
   assets.addJs '/assets/javascripts/chat.coffee', 'chat'
   assets.addJs '/assets/javascripts/style.coffee', 'style'
+  assets.addJs '/assets/javascripts/style.js', 'style_test'
   assets.addJs '/assets/javascripts/editor.coffee', 'editor'
   assets.addJs '/assets/javascripts/editor_teacher.coffee', 'editor_teacher'
   assets.addJs '/assets/javascripts/e_classroom_create.coffee', 'e_classroom_create'

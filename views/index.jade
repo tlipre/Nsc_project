@@ -11,20 +11,19 @@ block content
 					p เพื่อให้คนไทยที่ต้องการเรียนรู้สามารถ 
 						span เข้าใจได้ง่าย ใช้ได้จริง
 					article
-						video(poster="/images/inside_out2.png" width="400" controls="controls")
+						video(poster="/images/inside_out2.png" width="420" controls="controls")
 							source(src="/images/inside_out.mp4" type="video/mp4")
 
-					button.btn.start START COURSE
-
+					button.btn.start LEARN MORE
 				.intro-login
 					.box
 						ul.nav.nav-tabs(role="tablist")
-							li.active(role="presentation")
-								a(href="#login" aria-controls="login" data-toggle="tab") Login
 							li(role="presentation")
-								a(href="#register" aria-controls="register" role="tab" data-toggle="tab") Register
+								a.login(href="#login" aria-controls="login" data-toggle="tab") Login
+							li.active(role="presentation")
+								a.regis(href="#register" aria-controls="register" role="tab" data-toggle="tab") Register
 						.tab-content
-							.tab-pane.active(role="tabpanel" id="login") 
+							.tab-pane(role="tabpanel" id="login") 
 								form(action="home.html" method="post")
 									input(type="text" class="form-control" placeholder="Email")
 									input(type="text" class="form-control" placeholder="Password")
@@ -33,28 +32,144 @@ block content
 									จดจำฉันในระบบ
 
 									button.btn Login
-									p Or Login with
+									p - Or -
 
 									a(href="home.html")
 										img.face(src="/images/button_facebook.png" width="50%")
 									a(href="home.html")
 										img(src="/images/button_google.png" width="50%")
 
-							.tab-pane(role="tabpanel" id="register")
+							.tab-pane.active(role="tabpanel" id="register")
 								form(action="home.html" method="post")
 									input(type="text" class="form-control" placeholder="Email")
 									input(type="text" class="form-control" placeholder="Password")
 									input(type="text" class="form-control" placeholder="Repassword")
 
 									button.btn Register
-									p Or register with
+									p - Or -
 
 									a(href="home.html")
 										img.face(src="/images/button_facebook.png" width="50%")
 									a(href="home.html")
 										img(src="/images/button_google.png" width="50%")
-
 				.clear
 
+		section.goal
+			.container
+				.row
+					.col-md-3
+						img(src='/images/i_time.png')
+						p.topic Online Interactive
+						p มีระบบ E-Classroom ให้ผู้สอนทำการสอนได้มีประสิทธิภาพมากขึ้น ติดต่อกับผู้เรียนได้โดยตรง
+					.col-md-3
+						img(src='/images/i_edit.png')
+						p.topic Lean it yourself
+						p ผู้เรียนสามารถเรียนคอร์สที่สนใจด้วยตัวเองได้ รูปแบบการสอนขึ้นอยู่กับผู้เชี่ยวชาญที่เเบ่งปันความรู้นั้น
+					.col-md-3
+						img(src='/images/i_flat.png')
+						p.topic Share your Knowledge
+						p ผู้เชี่ยวชาญสามารถแบ่งปันความรู้ให้กับผู้ที่สนใจได้ สามารถจัดรูปแบบการสอนของตัวเองได้
+					.col-md-3
+						img(src='/images/i_pptkey.png')
+						p.topic Thai Language
+						p ระบบเป็นภาษาไทย รวมถึงผู้เชี่ยวชาญเป็นคนไทย ทำให้คนไทยเรียนรู้ได้รวดเร็ว และเข้าใจง่าย
+
+		section.e-classroom
+			.container
+				//- p.topic E-Classroom
+				.box-map 
+					.box-content 
+						.content Create E-Classroom
+					.box-content 
+						.content Generate key
+					.box-content 
+						.content Share Ky to Students
+					.box-content 
+						.content Student got a Key
+					.box-content 
+						.content Put the Key
+					.box-content 
+						.content Entry E-Classroom
+					.clear
+				.clear  
+
+				.row
+					.col-md-4
+						.col-md-2
+							img(src='/images/i_edit.png')
+						.col-md-10
+							p มีระบบ E-Classroom ให้ผู้สอนทำการสอนได้มีประสิทธิภาพมากขึ้น ติดต่อกับผู้เรียนได้โดยตรง
+					.col-md-4
+						.col-md-2
+							img(src='/images/i_edit.png')
+						.col-md-10
+							p มีระบบ E-Classroom ให้ผู้สอนทำการสอนได้มีประสิทธิภาพมากขึ้น ติดต่อกับผู้เรียนได้โดยตรง
+					.col-md-4
+						.col-md-2
+							img(src='/images/i_edit.png')
+						.col-md-10
+							p มีระบบ E-Classroom ให้ผู้สอนทำการสอนได้มีประสิทธิภาพมากขึ้น ติดต่อกับผู้เรียนได้โดยตรง
+					.col-md-4
+						.col-md-2
+							img(src='/images/i_edit.png')
+						.col-md-10
+							p มีระบบ E-Classroom ให้ผู้สอนทำการสอนได้มีประสิทธิภาพมากขึ้น ติดต่อกับผู้เรียนได้โดยตรง
+					.col-md-4
+						.col-md-2
+							img(src='/images/i_edit.png')
+						.col-md-10
+							p มีระบบ E-Classroom ให้ผู้สอนทำการสอนได้มีประสิทธิภาพมากขึ้น ติดต่อกับผู้เรียนได้โดยตรง
+					.col-md-4
+						.col-md-2
+							img(src='/images/i_edit.png')
+						.col-md-10
+							p มีระบบ E-Classroom ให้ผู้สอนทำการสอนได้มีประสิทธิภาพมากขึ้น ติดต่อกับผู้เรียนได้โดยตรง
+				.clear 
+		section.course.course
+			.container
+				.row-course
+					article
+						.content
+							img(src='/images/i_pptkey.png')
+							p.topic HTML/CSS
+							p สอนเขียนเว็บไซต์ด้วยภาษา HTML/CSS เบื้องต้น และสอนการวางโครงร่างเว็บไซต์
+							button.btn Start Course
+					article
+						.content
+							img(src='/images/i_pptkey.png')
+							p.topic HTML/CSS
+							p สอนเขียนเว็บไซต์ด้วยภาษา HTML/CSS เบื้องต้น และสอนการวางโครงร่างเว็บไซต์
+							button.btn Start Course
+					article
+						.content
+							img(src='/images/i_pptkey.png')
+							p.topic HTML/CSS
+							p สอนเขียนเว็บไซต์ด้วยภาษา HTML/CSS เบื้องต้น และสอนการวางโครงร่างเว็บไซต์
+							button.btn Start Course
+					article
+						.content
+							img(src='/images/i_pptkey.png')
+							p.topic HTML/CSS
+							p สอนเขียนเว็บไซต์ด้วยภาษา HTML/CSS เบื้องต้น และสอนการวางโครงร่างเว็บไซต์
+							button.btn Start Course
+					article
+						.content
+							img(src='/images/i_pptkey.png')
+							p.topic HTML/CSS
+							p สอนเขียนเว็บไซต์ด้วยภาษา HTML/CSS เบื้องต้น และสอนการวางโครงร่างเว็บไซต์
+							button.btn Start Course
+					article
+						.content
+							img(src='/images/i_pptkey.png')
+							p.topic HTML/CSS
+							p สอนเขียนเว็บไซต์ด้วยภาษา HTML/CSS เบื้องต้น และสอนการวางโครงร่างเว็บไซต์
+							button.btn Start Course
+					
+
+
+
+
+
 	!= renderJs()
+	!= renderJs('style_test')
 	!= renderStyles('style')
