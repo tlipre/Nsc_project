@@ -13,6 +13,8 @@ classroom_schema = mongoose.Schema
   student_count: type: Number, default: 0
   students: type: Array, default: []
   teacher: mongoose.Schema.Types.Mixed
+  teacher_name: String
+  status: type:String, default: 'allowed'
   # check_result : mongoose.Schema.Types.Mixed
 ,
   versionKey: false
@@ -55,4 +57,12 @@ classroom_schema.methods.add_student = (student, container_id)->
   this.students.push student
   this.student_count++
   this.save()
+
+classroom_schema.methods.toggle_status = ()->
+  if this.status is 'allowed'
+    this.status = 'disallowed'
+  else
+    this.status = 'allowed'
+  this.save()
+
 Classroom = mongoose.model 'Classroom', classroom_schema

@@ -20,7 +20,9 @@ $ ->
     term.destroy()
 
   socket_editor = io('/editor')
-
+  socket_editor.on 'error', (data)->
+    alert(data)
+    window.close()
   socket_editor.on 'connect', ()->
     socket_editor.emit 'request_container_student'
   

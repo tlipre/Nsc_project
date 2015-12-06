@@ -2,11 +2,22 @@ $ ->
   socket = io('/editor')
   docker = $('.docker')
   editor = $('.editor')
+  status_changer = $('#status-changer')
+
   current_view = $("#current-view")
   current_profile_picture = $("#current-profile-picture")
 
   socket.on 'connect', ()->
     socket.emit 'request_container'
+
+  status_changer.click ()->
+    if status_changer.hasClass('red')
+      status_changer.removeClass('red')
+      status_changer.val("Allowed")
+    else
+      status_changer.addClass('red')
+      status_changer.val("Disallowed")
+    socket.emit 'toggle'
 
   docker.click ()->
     #MTODO: loading animation

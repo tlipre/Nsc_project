@@ -39,6 +39,7 @@ router.post '/create', helper.check_role('teacher'), (req, res)->
   classroom.max_student = req.body.max_student
   classroom.raw_name = req.body.raw_name
   classroom.teacher = req.session.passport.user
+  classroom.teacher_name = req.session.passport.user.username
   classroom.create_container (err)->
     if err
       res.send err.message
@@ -95,7 +96,7 @@ router.get '/:name/student', helper.check_role('student'), (req, res) ->
       #for 404
       res.sendFile "#{process.cwd()}/public/html/404.html"
 
-router.get '/', (req, res) ->
+router.get '/', helper.check_auth, (req, res) ->
   if !_.isEmpty req.session.passport
     username = req.session.passport.user.username
     User.findOne {username: username}, (err, user)->
@@ -164,16 +165,24 @@ editor_room.on 'connection', (socket)->
         socket.join socket.room
         editor_room.to(socket.room).emit('init', container.text)
 
+  socket.on 'toggle', ()->
+    session = socket.request.session
+    Classroom.findOne {teacher_name: session.passport.user.username}, (err, classroom)->
+      classroom.toggle_status()
+
   socket.on 'request_container_student', (data)->
     #for student watch teacher
     session = socket.request.session
     User.findOne {username: session.passport.user.username}, (err, user)->
       Classroom.findOne {name: user.in_classroom}, (err, classroom)->
-        container_id = classroom.teacher.container_id
-        Container.findOne {container_id: container_id}, (err, container)->
-          socket.room = container_id
-          socket.join socket.room
-          editor_room.to(socket.room).emit('init', container.text)
+        if classroom.status == 'allowed'
+          container_id = classroom.teacher.container_id
+          Container.findOne {container_id: container_id}, (err, container)->
+            socket.room = container_id
+            socket.join socket.room
+            editor_room.to(socket.room).emit('init', container.text)
+        else
+          editor_room.emit 'error', 'disallowed'
 
 
   socket.on 'request_container_teacher', (data)->

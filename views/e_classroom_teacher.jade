@@ -16,6 +16,10 @@ block content
 
 				.footer-window
 					input(type='button' class='form-control btn btn-success' value='Save' id='save')
+					if classroom.status == 'allowed'
+						input(type='button' class='form-control btn btn-success' value="Allowed" id='status-changer')
+					else
+						input(type='button' class='red form-control btn btn-success' value="Disallowed" id='status-changer')
 					.chat
 						.textbox
 							.type
