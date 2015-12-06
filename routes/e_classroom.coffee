@@ -169,6 +169,8 @@ editor_room.on 'connection', (socket)->
     session = socket.request.session
     Classroom.findOne {teacher_name: session.passport.user.username}, (err, classroom)->
       classroom.toggle_status()
+      if classroom.status != 'allowed'
+        editor_room.to(socket.room).emit 'error', 'disallowed'
 
   socket.on 'request_container_student', (data)->
     #for student watch teacher

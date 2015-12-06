@@ -21,7 +21,9 @@ $ ->
 
   socket_editor = io('/editor')
   socket_editor.on 'error', (data)->
-    alert(data)
+    socket_editor.destroy()
+    socket_terminal.destroy()
+    alert("Teacher disallowed to watch.")
     window.close()
   socket_editor.on 'connect', ()->
     socket_editor.emit 'request_container_student'
