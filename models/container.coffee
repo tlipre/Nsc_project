@@ -27,8 +27,8 @@ container_schema.methods.create_stream = (callback)->
       if self.status isnt 'streaming'
         docker_socket[self.container_id] = pty.spawn 'docker', ["attach", self.container_id], 
           name: 'xterm-color',
-          cols: 80,
-          rows: 30,
+          cols: 60,
+          rows: 15,
           cwd: process.env.HOME,
           env: process.env
         docker_socket[self.container_id].on 'data', (data)->

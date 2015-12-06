@@ -7,8 +7,8 @@ $ ->
     socket.emit 'request_terminal', container_id
     socket.emit 'data', container_id, "\n"
   term = new Terminal {
-    cols: 80,
-    rows: 24,
+    cols: 60,
+    rows: 15,
     useStyle: true,
     screenKeys: true,
     cursorBlink: true
@@ -28,6 +28,6 @@ $ ->
     file_name = prompt 'Enter file name.', 'untitled'
     while file_name == ''
       file_name = prompt 'Enter file name again.', 'untitled'
-    $.post  "/e-classroom/student", { code: editor.val(), file_name: file_name}
+    $.post  "/e-classroom/editor", { code: editor.val(), file_name: file_name, container_id: container_id}
 
     

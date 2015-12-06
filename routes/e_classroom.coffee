@@ -62,7 +62,7 @@ router.get '/:name/teacher', helper.check_role('teacher'), (req, res)->
       #for 404
       res.sendFile "#{process.cwd()}/public/html/404.html"
 
-router.get '/:name/student-test', helper.check_role('student'), (req, res) ->
+router.get '/:name/student', helper.check_role('student'), (req, res) ->
   name = req.params.name
   Classroom.findOne {name: name}, (err, classroom)->
     if classroom?
@@ -75,15 +75,12 @@ router.get '/:name/student-test', helper.check_role('student'), (req, res) ->
               Chat_log.find {classroom_name: classroom.name}, (err, chat_log)->
                 username = req.session.passport.user.username
                 render_data = _.assign username: username, chat: chat_log, classroom: classroom, container_id: container.container_id
-                res.render 'e_classroom_student_test', render_data
+                res.render 'e_classroom_student', render_data
         else
           res.send 'you have to enroll first'
     else
       #for 404
       res.sendFile "#{process.cwd()}/public/html/404.html"
-
-router.get '/student', (req, res) ->
-  res.render 'e_classroom_student'
 
 router.get '/', (req, res) ->
   if !_.isEmpty req.session.passport
@@ -123,16 +120,17 @@ router.post '/enroll', (req, res) ->
                 classroom.add_student user_temp, container.container_id
                 res.redirect "#{classroom.name}/student-test"
 
-router.post '/student', (req, res) ->
+router.post '/editor', (req, res) ->
   code = req.body.code
   file_name = req.body.file_name
-  file_type = 'py'
-  destination = '/home'
-  path = "#{process.cwd()}/public/uploads/#{file_name}.#{file_type}"
-  fs.writeFile path, code, (err)->
-    res.send err if err
-    push_file path, destination, config.container_id, (err)->
-      res.send err if err
+  container_id = req.body.container_id
+  destination = '/'
+  path = "#{process.cwd()}/public/uploads/docker/#{container_id}"
+  fs.existsSync(path) || fs.mkdirSync(path);
+  fs.writeFile "#{path}/#{file_name}", code, (err)->
+    return res.send err if err
+    push_file "#{path}/#{file_name}", destination, container_id, (err)->
+      return res.send err if err
       res.send 'ok'
 
 io.use (socket, next)->
@@ -201,8 +199,8 @@ Container.find {status: 'streaming'}, (err, containers)->
         console.log 'streaming', container.container_id
         docker_socket[container.container_id] = pty.spawn 'docker', ['attach', container.container_id], 
           name: 'xterm-color',
-          cols: 80,
-          rows: 30,
+          cols: 60,
+          rows: 15,
           cwd: process.env.HOME,
           env: process.env        
         docker_socket[container.container_id].on 'data', (data)->
