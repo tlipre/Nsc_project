@@ -32,9 +32,14 @@ block content
 							.chat-box
 								.story
 								each val in chat
-									p
-										span.name #{val.sender}: 
-										span #{val.message}
+									if val.is_teacher
+										p
+											span.name #{val.sender}: 
+											span #{val.message}
+									else
+										p
+											span.name.black-font #{val.sender}: 
+											span #{val.message}
 			.sidebar
 				.topic
 					p ระบบ E-Classroom	

@@ -223,9 +223,13 @@ chat_room.on 'connection', (socket)->
   socket.on 'message', (data)->
     if socket.verified
       data.classroom_name = socket.room
+      if data.sender.indexOf('Aj') == 0
+        data.is_teacher = true
+      else
+        data.is_teacher = false
       chat = new Chat_log(data)
       chat.save()
-      data = {message: chat.message, sender: chat.sender, timestamp: chat.timestamp}
+      data = {is_teacher: chat.is_teacher, message: chat.message, sender: chat.sender, timestamp: chat.timestamp}
       chat_room.to(socket.room).emit('message', data)
 
 Container.find {status: 'streaming'}, (err, containers)->

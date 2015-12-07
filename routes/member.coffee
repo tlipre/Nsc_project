@@ -12,7 +12,10 @@ router.get '/login', (req, res) ->
 router.post '/login', passport.authenticate('local',{successRedirect: '/', failureRedirect: '/login', failureFlash: true})
 
 router.get '/', (req, res) ->
-  res.render 'index'
+  username = undefined
+  if !_.isEmpty req.session.passport
+    username = req.session.passport.user.username
+  res.render 'index', {username: username}
 
 # router.get '/',(req, res) ->
 #   if _.isEmpty req.session.passport
