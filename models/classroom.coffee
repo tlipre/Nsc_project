@@ -39,7 +39,7 @@ classroom_schema.methods.create_container = (callback)->
       for i in [1..self.max_student+1]
         items.push {image: 'ubuntu'}
       q.push items, (err, container_id)->
-        container = new Container({container_id: container_id, classroom_id: self._id, room: shortid.generate()})
+        # container = new Container({container_id: container_id, classroom_id: self._id, room: shortid.generate()})
         container.save()
         console.log "Finish create: " + container_id.green
       q.drain = ()->
