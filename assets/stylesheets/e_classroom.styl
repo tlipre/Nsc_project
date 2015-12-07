@@ -2,11 +2,9 @@
 // ตัวอักษรเข้ม  header #4A4A4A
 // background topic #e2e2e2
 // font color green #31B989
-	
-@font-face {
-    font-family: gotham
-    src: url('static/bootstrap/fonts/supermarket.ttf')
-}
+@font-face 
+  font-family gotham
+  src url('/fonts/supermarket.ttf')
 
 
 .container 
@@ -29,6 +27,26 @@ img.circle
 	background-color #272722
 	padding 0
 	height 100%
+
+.full-window
+	background-color #272722
+
+
+.full-window .code .editor
+	background-color transparent
+	color white
+
+
+.full-window .code .terminal
+	width 400px
+	height 235px
+	background-color black
+	border 1px solid #848484
+	position fixed
+	right 1%
+	top 120px
+	padding-left 8px
+	line-height 1.42857143
 
 .window.classroom-student
 	width 100%
@@ -233,6 +251,14 @@ img.circle
 	padding auto 1%
 	margin 10px 0 0 2%
 	background-color #31B989
+
+.red
+	background-color red !important
+
+
+.black-font
+	color #4a4a4a !important
+
 
 .footer-window .chat .content,
 .footer-window .chat .textbox

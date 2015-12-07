@@ -9,16 +9,17 @@ html
       nav.container
         ul.logo
           li.img-logo
-            a < ! > LOGO
+            a(href="/") < ! > LOGO
         ul.menu
           li
             a Course
           li
-            a(href="/e-classroom") E-Classroom
+            a(href="/e-classroom/") E-Classroom
           li.line
             a Support
           if !username
-            li.please Please Login
+            a(href="/login")
+              li.please Please Login
           else
             li.please(id="username") #{username}
 

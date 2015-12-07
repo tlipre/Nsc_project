@@ -1,7 +1,14 @@
 extends layout_e_classroom
 block title
-	title e_classroom_teacher
-	script(src="../../term.js")
+	title CoderPlanet - E-Classroom Student
+	script(src="/term.js")
+	script.
+		function popup(url){
+		  new_window = window.open(url,'name','height=650,width=1073');
+		  if(window.focus){
+			  new_window.focus() 
+		  }
+		}
 block content
 	.e_classroom
 		.content-classroom
@@ -27,7 +34,7 @@ block content
 					input(type='button' class='form-control btn btn-success' value='Save' id='save')
 					.techer-window
 						.window-teacher
-						a ดูหน้าต่างผู้สอน
+						a(onclick="popup('/e-classroom/#{classroom.name}/teacher/student')") ดูหน้าต่างผู้สอน
 					.chat
 						.textbox
 							.type
@@ -40,9 +47,14 @@ block content
 							.chat-box
 								.story
 								each val in chat
-									p
-										span.name #{val.sender}: 
-										span #{val.message}
+									if val.is_teacher
+										p
+											span.name #{val.sender}: 
+											span #{val.message}
+									else
+										p
+											span.name.black-font #{val.sender}: 
+											span #{val.message}
 	!= renderJs()
 	!= renderJs('socket')
 	!= renderJs('chat')

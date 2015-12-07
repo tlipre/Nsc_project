@@ -1,4 +1,11 @@
 module.exports = 
+  check_auth: (req, res, next)->
+    req.session.prev_url = req.originalUrl
+    if _.isEmpty req.session.passport
+      req.flash 'error', 'You need to login first'
+      res.redirect '/login'
+    else
+      next()
   check_role: (role)->
     return (req, res, next)->
       if _.isEmpty req.session.passport
@@ -27,10 +34,3 @@ module.exports =
   #     else
   #       #logged in as a teacher
   #       next()
-  # check_auth: (req, res, next)->
-  #   req.session.prev_url = req.originalUrl
-  #   if _.isEmpty req.session.passport
-  #     req.flash 'error', 'You need to login first'
-  #     res.redirect '/login'
-  #   else
-  #     next()

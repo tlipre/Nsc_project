@@ -28,16 +28,16 @@ router = express.Router()
 global.docker_socket = {}
 
 router.get '/create', helper.check_role('teacher'), (req, res)->
-  res.render 'e_classroom_create'
+  username = req.session.passport.user.username
+  res.render 'e_classroom_create', {username: username}
 
-router.get '/home', (req, res) ->
-  res.render 'index'
 
 router.post '/create', helper.check_role('teacher'), (req, res)->
   classroom = new Classroom()
   classroom.max_student = req.body.max_student
   classroom.raw_name = req.body.raw_name
   classroom.teacher = req.session.passport.user
+  classroom.teacher_name = req.session.passport.user.username
   classroom.create_container (err)->
     if err
       res.send err.message
@@ -69,6 +69,11 @@ router.get '/:name/teacher', helper.check_role('teacher'), (req, res)->
       #for 404
       res.sendFile "#{process.cwd()}/public/html/404.html"
 
+router.get '/:name/teacher/student', (req, res)->
+  name = req.params.name
+  Classroom.findOne {name: name}, (err, classroom)->
+    res.render 'e_classroom_teacher_student', {classroom: classroom}
+
 router.get '/:name/student', helper.check_role('student'), (req, res) ->
   name = req.params.name
   Classroom.findOne {name: name}, (err, classroom)->
@@ -89,7 +94,7 @@ router.get '/:name/student', helper.check_role('student'), (req, res) ->
       #for 404
       res.sendFile "#{process.cwd()}/public/html/404.html"
 
-router.get '/', (req, res) ->
+router.get '/', helper.check_auth, (req, res) ->
   if !_.isEmpty req.session.passport
     username = req.session.passport.user.username
     User.findOne {username: username}, (err, user)->
@@ -97,14 +102,14 @@ router.get '/', (req, res) ->
           res.redirect "/e-classroom/#{user.in_classroom}/#{user.role}"
       else
         Classroom.find {}, (err, classrooms)->
-          render_data = _.assign username: username, classrooms: classrooms
+          render_data = _.assign user: user, username: username, classrooms: classrooms
           res.render 'e_classroom_all', render_data
   else
     Classroom.find {}, (err, classrooms)->
       render_data = _.assign classrooms: classrooms
       res.render 'e_classroom_all', render_data
 
-router.post '/enroll', (req, res) ->
+router.post '/enroll', helper.check_role('student'), (req, res) ->
   #TODO: prevent from someone that enrolled
   classroom_name = req.body.name
   key = req.body.key
@@ -149,6 +154,7 @@ terminal_room = io.of('/terminal')
 
 editor_room.on 'connection', (socket)->
   socket.on 'request_container', (data)->
+    #for student or teacher request his own container
     session = socket.request.session
     Container.findOne {owner: session.passport.user.username}, (err, container)->
       if container?
@@ -157,9 +163,33 @@ editor_room.on 'connection', (socket)->
         socket.join socket.room
         editor_room.to(socket.room).emit('init', container.text)
 
+  socket.on 'toggle', ()->
+    session = socket.request.session
+    Classroom.findOne {teacher_name: session.passport.user.username}, (err, classroom)->
+      classroom.toggle_status()
+      if classroom.status != 'allowed'
+        editor_room.to(socket.room).emit 'error', 'disallowed'
+
+  socket.on 'request_container_student', (data)->
+    #for student watch teacher
+    session = socket.request.session
+    User.findOne {username: session.passport.user.username}, (err, user)->
+      Classroom.findOne {name: user.in_classroom}, (err, classroom)->
+        if classroom.status == 'allowed'
+          container_id = classroom.teacher.container_id
+          Container.findOne {container_id: container_id}, (err, container)->
+            socket.room = container_id
+            socket.join socket.room
+            editor_room.to(socket.room).emit('init', container.text)
+        else
+          editor_room.emit 'error', 'disallowed'
+
+
   socket.on 'request_container_teacher', (data)->
+    #for teacher watch student
     #TODO: AUTH teacher
     Container.findOne {container_id: data}, (err, container)->
+      socket.leave socket.room
       socket.room = container.container_id
       socket.join socket.room
       editor_room.to(socket.room).emit('type_student', container.text)
@@ -193,9 +223,13 @@ chat_room.on 'connection', (socket)->
   socket.on 'message', (data)->
     if socket.verified
       data.classroom_name = socket.room
+      if data.sender.indexOf('Aj') == 0
+        data.is_teacher = true
+      else
+        data.is_teacher = false
       chat = new Chat_log(data)
       chat.save()
-      data = {message: chat.message, sender: chat.sender, timestamp: chat.timestamp}
+      data = {is_teacher: chat.is_teacher, message: chat.message, sender: chat.sender, timestamp: chat.timestamp}
       chat_room.to(socket.room).emit('message', data)
 
 Container.find {status: 'streaming'}, (err, containers)->
@@ -225,6 +259,8 @@ terminal_room.on 'connection', (socket)->
     #TODO: AUTH
     Container.findOne {container_id: container_id}, (err, container)->
       if container?
+        if socket.room?
+          socket.leave socket.room
         socket.room = container.container_id
         socket.join socket.room
 

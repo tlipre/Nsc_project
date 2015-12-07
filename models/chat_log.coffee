@@ -3,6 +3,7 @@ chat_log_schema = mongoose.Schema
   message: type: String
   sender: type: String, default: null
   timestamp: type: String, default: moment()
+  is_teacher: Boolean
 ,
   versionKey: false
 

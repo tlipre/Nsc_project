@@ -1,6 +1,6 @@
 extends layout
 block title
-	title e_classroom overall
+	title CoderPlanet - E-Classroom
 block content
 	.overall
 		img.banner(src="/images/banner1.png")
@@ -13,6 +13,9 @@ block content
 						option(value="byname") ค้นหาห้องเรียนจากชื่อห้อง
 					input.form-control(type="text" placeholder="กรอกชื่อห้อง" disabled="disabled")
 					button.btn(type="submit") ค้นหา
+					if user.role == 'teacher'
+						a(href="/e-classroom/create")
+							button.btn(type="button") สร้างห้องเรียน
 			hr
 			.list-class
 				each classroom in classrooms
@@ -25,7 +28,7 @@ block content
 								span คน
 							p.duration Key: #{classroom.key} (Only admin see this.)
 							p
-								img.circle.img-teacher(src='/images/mamieo.jpg')
+								img.circle.img-teacher(src='/uploads/profile_picture/#{classroom.teacher.username}.jpg')
 								span #{classroom.teacher.username}
 							
 							button.btn(type="button" data-toggle="modal" data-target="##{classroom.name}") เข้าห้องเรียน

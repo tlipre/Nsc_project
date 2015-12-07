@@ -22,4 +22,7 @@ $ ->
       typing_box.val('')
   
   socket.on 'message', (data)->
-    chat_box.append "<p><span class='name'>#{data.sender}: </span><span>#{data.message}</span></p>"
+    if data.is_teacher
+      chat_box.append "<p><span class='name'>#{data.sender}: </span><span>#{data.message}</span></p>"
+    else
+      chat_box.append "<p><span class='name black-font'>#{data.sender}: </span><span>#{data.message}</span></p>"

@@ -16,5 +16,6 @@ module.exports = (assets) ->
   assets.addCss '/assets/stylesheets/layout.styl'
   assets.addCss '/assets/stylesheets/e_classroom.styl', 'e_classroom'
   assets.addCss '/assets/stylesheets/style.styl', 'style'
+  assets.addJs '/assets/javascripts/student_view.coffee', 'student_view'
   
 

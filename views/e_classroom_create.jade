@@ -1,6 +1,6 @@
 extends layout
 block title
-  title e_classroom creat
+  title CoderPlanet - E-Classroom Create
 block content
   .create
     img.banner(src="/images/banner1.png")
@@ -16,25 +16,26 @@ block content
             p Genarated Name
             p Langauge
             p Number of students(between 1 and 50)
-            p Docker image
+            //- p Docker image
 
           .col-md-6.inbox
             input.form-control(id="raw_name" name="raw_name")
             input.form-control(id="name" disabled)
             select.form-control(name='langauge')
-              option python
-              option node.js
+              option Python
+              option Node.js
+              option Java
             input.form-control(type="number" name="max_student" min="1" max="50")
-            p 
-              input(type="radio" name="aaa")
-              Use Existing docker
-              select.form-control.sub-form(name='bbb')
-                option docker A
-                option docker B
-            p
-              input(type="radio" name="aaa")
-              Upload Your Docker file
-              input.sub-form(type="file")
+            //- p 
+            //-   input(type="radio" name="aaa" checked)
+            //-   Use Existing docker
+            //-   select.form-control.sub-form(name='bbb')
+            //-     option docker A
+            //-     option docker B
+            //- p
+            //-   input(type="radio" name="aaa")
+            //-   Upload Your Docker file
+            //-   input.sub-form(type="file")
           .clear
           input.btn.submit(type='submit' value="SUBMIT")
 

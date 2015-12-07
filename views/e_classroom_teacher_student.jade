@@ -1,0 +1,10 @@
+script(src="/term.js")
+div.full-window
+  div.code
+    textarea.editor(disabled id='editor' type='textarea' cols='130' rows='42')
+    div#terminal(data-container-id="#{classroom.teacher.container_id}")
+
+!= renderStyles('e_classroom')
+!= renderJs()
+!= renderJs('socket')
+!= renderJs('student_view')

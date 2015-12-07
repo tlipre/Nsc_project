@@ -11,16 +11,22 @@ router.get '/login', (req, res) ->
 
 router.post '/login', passport.authenticate('local',{successRedirect: '/', failureRedirect: '/login', failureFlash: true})
 
-router.get '/',(req, res) ->
-  if _.isEmpty req.session.passport
-    res.send '<a href="/login">login</a>'
-  else
-    prev_url = req.session.prev_url
-    if prev_url
-      delete req.session.prev_url
-      res.redirect prev_url
-    else
-      res.json req.session
+router.get '/', (req, res) ->
+  username = undefined
+  if !_.isEmpty req.session.passport
+    username = req.session.passport.user.username
+  res.render 'index', {username: username}
+
+# router.get '/',(req, res) ->
+#   if _.isEmpty req.session.passport
+#     res.send '<a href="/login">login</a>'
+#   else
+#     prev_url = req.session.prev_url
+#     if prev_url
+#       delete req.session.prev_url
+#       res.redirect prev_url
+#     else
+#       res.json req.session
 
 #dev zone
 router.get '/check', (req, res)->
@@ -35,6 +41,17 @@ router.get '/create/:role/:name', (req, res)->
   user = new User(username: req.params.name, password: 'password', role: req.params.role)
   user.save()
   res.json user
+  
+router.get '/create_all_user', (req, res)->
+  teachers = ['AjThanisa', 'AjManop', 'AjSrinual', 'AjAnuntapat']
+  students = ['Book', 'Mamieo']
+  for student in students
+    user = new User(username: student, password: 'password', role: 'student')
+    user.save()
+  for teacher in teachers
+    user = new User(username: teacher, password: 'password', role: 'teacher')
+    user.save()
+  res.send 'ok'
 #end dev zone
 
 

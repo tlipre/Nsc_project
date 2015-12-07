@@ -1,7 +1,7 @@
 extends layout_e_classroom
 block title
-	title e_classroom_teacher
-	script(src="../../term.js")
+	title CoderPlanet - E-Classroom Teacher
+	script(src="/term.js")
 block content
 	.e_classroom
 		.content-classroom
@@ -16,6 +16,10 @@ block content
 
 				.footer-window
 					input(type='button' class='form-control btn btn-success' value='Save' id='save')
+					if classroom.status == 'allowed'
+						input(type='button' class='form-control btn btn-success' value="Allowed" id='status-changer')
+					else
+						input(type='button' class='red form-control btn btn-success' value="Disallowed" id='status-changer')
 					.chat
 						.textbox
 							.type
@@ -28,9 +32,14 @@ block content
 							.chat-box
 								.story
 								each val in chat
-									p
-										span.name #{val.sender}: 
-										span #{val.message}
+									if val.is_teacher
+										p
+											span.name #{val.sender}: 
+											span #{val.message}
+									else
+										p
+											span.name.black-font #{val.sender}: 
+											span #{val.message}
 			.sidebar
 				.topic
 					p ระบบ E-Classroom	
