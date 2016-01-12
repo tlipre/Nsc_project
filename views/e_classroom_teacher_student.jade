@@ -1,7 +1,7 @@
 script(src="/term.js")
 div.full-window
   div.code
-    textarea.editor(disabled id='editor' type='textarea' cols='130' rows='42')
+    div#editor-student-view
     div#terminal(data-container-id="#{classroom.teacher.container_id}")
 
 != renderStyles('e_classroom')

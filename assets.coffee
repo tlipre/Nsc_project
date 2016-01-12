@@ -18,4 +18,7 @@ module.exports = (assets) ->
   assets.addCss '/assets/stylesheets/style.styl', 'style'
   assets.addJs '/assets/javascripts/student_view.coffee', 'student_view'
   
+  assets.addJs '/public/javascripts/ace-editor/ace.js', 'editor'
+  assets.addJs '/public/javascripts/ace-editor/ace.js', 'editor_teacher'
+  assets.addJs '/public/javascripts/ace-editor/ace.js', 'student_view'
 

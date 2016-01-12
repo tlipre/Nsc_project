@@ -1,8 +1,15 @@
 $ ->
   socket = io('/editor')
   docker = $('.docker')
-  editor = $('.editor')
   status_changer = $('#status-changer')
+  editor = ace.edit("editor-teacher")
+
+  ace.config.set 'basePath', '/javascripts/ace-editor/'
+  editor.setTheme "ace/theme/monokai"
+  editor.getSession().setMode "ace/mode/javascript"
+  editor.setFontSize 18
+  editor.setHighlightActiveLine false
+  editor.setShowPrintMargin false
 
   current_view = $("#current-view")
   current_profile_picture = $("#current-profile-picture")
@@ -27,12 +34,14 @@ $ ->
     current_view.text container_owner
     current_profile_picture.attr 'src', "/uploads/profile_picture/#{container_owner}.jpg"
 
-  editor.keyup ()->
-    socket.emit 'type_teacher', editor.val()
-  
+
+  editor.on "change", (e)->
+    if (editor.curOp && editor.curOp.command.name) 
+      socket.emit 'type_teacher', editor.getValue()
+
   socket.on 'type_student', (data)->
-    editor.val(data)
+    editor.setValue(data)
 
   socket.on 'init', (data)->
-    editor.val data
+    editor.setValue data
 

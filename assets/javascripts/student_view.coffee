@@ -1,7 +1,12 @@
 $ ->
-  editor = $('#editor')
-  editor.focus()
   socket_terminal = io('/terminal');
+  editor = ace.edit("editor-student-view")
+  ace.config.set 'basePath', '/javascripts/ace-editor/'
+  editor.setTheme "ace/theme/monokai"
+  editor.getSession().setMode "ace/mode/javascript"
+  editor.setFontSize 18
+  editor.setHighlightActiveLine false
+  editor.setShowPrintMargin false
 
   container_id = $("#terminal").data("container-id")
   socket_terminal.on 'connect', ()->
@@ -29,10 +34,10 @@ $ ->
     socket_editor.emit 'request_container_student'
   
   socket_editor.on 'type_teacher', (data)->
-    editor.val data
+    editor.setValue data
 
   socket_editor.on 'init', (data)->
-    editor.val data
+    editor.setValue data
 
 
     

@@ -11,7 +11,8 @@ block content
 						img.circle(id="current-profile-picture" src='/uploads/profile_picture/#{classroom.teacher.username}.jpg')
 						.username(id="current-view") #{classroom.teacher.username}
 				.code
-					textarea.editor(id='editor' type='textarea' cols='123' rows='24')
+					div#editor-teacher
+					//- textarea.editor(id='editor' type='textarea' cols='123' rows='24')
 					div#terminal(data-container-id="#{container_id}")
 
 				.footer-window

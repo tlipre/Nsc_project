@@ -23,11 +23,9 @@ block content
 						.name-active
 							img.circle(src='/uploads/profile_picture/#{classroom.teacher.username}.jpg')
 							.username #{classroom.teacher.username}
-							
-					//- .time
-						//- p อยู่ในระบบเป็นเวลา 20 นาที 20 วินาที
 				.code
-					textarea.editor(id='editor' type='textarea' cols='154' rows='24')
+					div#editor
+					//- textarea.editor(id='editor' type='textarea' cols='154' rows='24')
 					div#terminal(data-container-id="#{container_id}")
 
 				.footer-window

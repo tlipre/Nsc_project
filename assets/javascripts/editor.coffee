@@ -1,16 +1,26 @@
 $ ->
   socket = io('/editor')
-  editor = $('.editor')
+
+  editor = ace.edit("editor");
+  ace.config.set 'basePath', '/javascripts/ace-editor/'
+  editor.setTheme "ace/theme/monokai"
+  editor.getSession().setMode "ace/mode/javascript"
+  editor.setFontSize 18
+  editor.setHighlightActiveLine false
+  editor.setShowPrintMargin false
 
   socket.on 'connect', ()->
     socket.emit 'request_container'
 
-  editor.keyup ()->
-    socket.emit 'type_student', editor.val()
+  editor.on "change", (e)->
+    if (editor.curOp && editor.curOp.command.name) 
+      socket.emit 'type_student', editor.getValue()
 
   socket.on 'type_teacher', (data)->
-    editor.val data
+    editor.setValue data
     
   socket.on 'init', (data)->
-    editor.val data
+    editor.setValue data
+
+
 
