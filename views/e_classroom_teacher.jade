@@ -16,7 +16,8 @@ block content
 					div#terminal(data-container-id="#{container_id}")
 
 				.footer-window
-					input(type='button' class='form-control btn btn-success' value='Save' id='save')
+					input(type='button' class='form-control btn btn-success' value='Save as..' id='save-as')
+					input(type='button' class='form-control btn btn-success' value='Save' id='save' disabled="disabled")
 					if classroom.status == 'allowed'
 						input(type='button' class='form-control btn btn-success' value="Allowed" id='status-changer')
 					else
