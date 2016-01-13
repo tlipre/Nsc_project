@@ -25,12 +25,12 @@ block content
 							.username #{classroom.teacher.username}
 				.code
 					div#editor
-					//- textarea.editor(id='editor' type='textarea' cols='154' rows='24')
 					div#terminal(data-container-id="#{container_id}")
 
 				.footer-window
 					input(type='button' class='form-control btn btn-success' value='Save as..' id='save-as')
 					input(type='button' class='form-control btn btn-success' value='Save' id='save' disabled="disabled")
+					input(type='button' class='form-control btn btn-success' value='Ask for help' id='ask-for-help')
 					.techer-window
 						.window-teacher
 						a(onclick="popup('/e-classroom/#{classroom.name}/teacher/student')") ดูหน้าต่างผู้สอน

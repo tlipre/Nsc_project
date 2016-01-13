@@ -26,3 +26,10 @@ $ ->
       chat_box.append "<p><span class='name'>#{data.sender}: </span><span>#{data.message}</span></p>"
     else
       chat_box.append "<p><span class='name black-font'>#{data.sender}: </span><span>#{data.message}</span></p>"
+
+  $('#ask-for-help').click ()->
+    socket.emit 'ask_for_help', $('#username').text()
+
+  socket.on 'ask_for_help', (user)->
+    if user != $('#username').text()
+      alert("#{user} need help.")

@@ -211,6 +211,7 @@ editor_room.on 'connection', (socket)->
         container.save()
       editor_room.to(socket.room).emit('type_teacher', data)
 
+
 chat_room.on 'connection', (socket)->
   socket.on 'join_room', (data)->
     #TODO: AUTH
@@ -231,6 +232,9 @@ chat_room.on 'connection', (socket)->
       chat.save()
       data = {is_teacher: chat.is_teacher, message: chat.message, sender: chat.sender, timestamp: chat.timestamp}
       chat_room.to(socket.room).emit('message', data)
+    
+  socket.on 'ask_for_help', (user)->
+    chat_room.to(socket.room).emit('ask_for_help', user)
 
 Container.find {status: 'streaming'}, (err, containers)->
   for container in containers

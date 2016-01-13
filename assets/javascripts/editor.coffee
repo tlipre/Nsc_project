@@ -1,6 +1,7 @@
 $ ->
   socket = io('/editor')
 
+
   editor = ace.edit("editor");
   ace.config.set 'basePath', '/javascripts/ace-editor/'
   editor.setTheme "ace/theme/monokai"
@@ -13,7 +14,8 @@ $ ->
     socket.emit 'request_container'
 
   editor.on "change", (e)->
-    if (editor.curOp && editor.curOp.command.name) 
+    if (editor.curOp && editor.curOp.command.name)
+      #if change by user not programmatically
       socket.emit 'type_student', editor.getValue()
 
   socket.on 'type_teacher', (data)->
