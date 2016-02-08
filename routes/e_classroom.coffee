@@ -27,6 +27,10 @@ router = express.Router()
 
 global.docker_socket = {}
 
+router.get '/quiz', helper.check_role('teacher'), (req, res)->
+  username = req.session.passport.user.username
+  res.render 'quiz', {username: username}
+
 router.get '/create', helper.check_role('teacher'), (req, res)->
   username = req.session.passport.user.username
   res.render 'e_classroom_create', {username: username}

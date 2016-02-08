@@ -1,0 +1,67 @@
+extends layout
+block title
+	title CoderPlanet - E-Classroom Teacher
+
+block content
+	.container
+		ul.nav.nav-tabs
+			li
+				a(href="#editor" data-toggle="tab") Editor
+			li.active
+				a(href="#quiz" data-toggle="tab") Quiz
+
+		.tab-content
+			.tab-pane(role="tabpanel" id="editor")
+				h1 Editor
+			.tab-pane.active(role="tabpanel" id="quiz")
+				button.btn-primary.btn.btn-large สร้างแบบทดสอบ
+				form(action="")
+					span ชื่อแบบทดสอบ
+					input.form-control(type="text")
+
+					input(type="checkbox") 
+					span กำหนดเวลาทุกข้อในระยะเวลา
+
+					select.form-control(name="all-minute" id="")
+						option(value="1") 1
+						option(value="2") 2
+						option(value="3") 3
+					span นาที
+
+					select.form-control(name="all-sec"  id="")
+						option(value="1") 1
+						option(value="2") 2
+						option(value="3") 3
+					span วินาที
+
+				article
+					span คำถามที่ 1  
+					input.form-control(type="text")
+
+					span กำหนดเวลาตอบคำถาม
+					select.form-control(name="each-minute" id="")
+							option(value="1") 1
+							option(value="2") 2
+							option(value="3") 3
+						span นาที
+
+					select.form-control(name="each-sec" id="")
+						option(value="1") 1
+						option(value="2") 2
+						option(value="3") 3
+					span วินาที
+
+					p A. 
+					input.form-control(type="text")
+					p B. 
+					input.form-control(type="text")
+					p C. 
+					input.form-control(type="text")
+					p D. 
+					input.form-control(type="text")
+
+
+
+!= renderJs()
+!= renderStyles('style')
+!= renderStyles('e_classroom')
