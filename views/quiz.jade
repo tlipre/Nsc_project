@@ -14,51 +14,59 @@ block content
 			.tab-pane(role="tabpanel" id="editor")
 				h1 Editor
 			.tab-pane.active(role="tabpanel" id="quiz")
+				br
 				button.btn-primary.btn.btn-large สร้างแบบทดสอบ
 				form(action="")
-					span ชื่อแบบทดสอบ
+					br
+					h4 ชื่อแบบทดสอบ
 					input.form-control(type="text")
-
+					br
 					input(type="checkbox") 
 					span กำหนดเวลาทุกข้อในระยะเวลา
 
-					select.form-control(name="all-minute" id="")
+					select(name="all-minute" id="")
 						option(value="1") 1
 						option(value="2") 2
 						option(value="3") 3
 					span นาที
 
-					select.form-control(name="all-sec"  id="")
+					select(name="all-sec"  id="")
 						option(value="1") 1
 						option(value="2") 2
 						option(value="3") 3
 					span วินาที
-
+					
 				article
-					span คำถามที่ 1  
+					h4 คำถามที่ 1  
 					input.form-control(type="text")
-
+					br
 					span กำหนดเวลาตอบคำถาม
-					select.form-control(name="each-minute" id="")
+					select(name="each-minute" id="")
 							option(value="1") 1
 							option(value="2") 2
 							option(value="3") 3
 						span นาที
 
-					select.form-control(name="each-sec" id="")
+					select(name="each-sec" id="")
 						option(value="1") 1
 						option(value="2") 2
 						option(value="3") 3
 					span วินาที
-
-					p A. 
-					input.form-control(type="text")
-					p B. 
-					input.form-control(type="text")
-					p C. 
-					input.form-control(type="text")
-					p D. 
-					input.form-control(type="text")
+					br
+					br
+					p
+						span A. 
+						input(type="text")
+					p
+						span B. 
+						input(type="text")
+					p
+						span C. 
+						input(type="text")
+					p
+						span D. 
+						input(type="text")
+					br
 
 
 
