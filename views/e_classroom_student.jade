@@ -23,15 +23,14 @@ block content
 						.name-active
 							img.circle(src='/uploads/profile_picture/#{classroom.teacher.username}.jpg')
 							.username #{classroom.teacher.username}
-							
-					//- .time
-						//- p อยู่ในระบบเป็นเวลา 20 นาที 20 วินาที
 				.code
-					textarea.editor(id='editor' type='textarea' cols='154' rows='24')
+					div#editor
+					//- textarea.editor(id='editor' type='textarea' cols='154' rows='24')
 					div#terminal(data-container-id="#{container_id}")
 
 				.footer-window
-					input(type='button' class='form-control btn btn-success' value='Save' id='save')
+					input(type='button' class='form-control btn btn-success' value='Save as..' id='save-as')
+					input(type='button' class='form-control btn btn-success' value='Save' id='save' disabled="disabled")
 					.techer-window
 						.window-teacher
 						a(onclick="popup('/e-classroom/#{classroom.name}/teacher/student')") ดูหน้าต่างผู้สอน

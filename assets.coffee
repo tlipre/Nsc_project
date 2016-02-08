@@ -8,7 +8,6 @@ module.exports = (assets) ->
   assets.addJs '/public/javascripts/socket.io-1.2.0.js', 'socket'
   assets.addJs '/assets/javascripts/chat.coffee', 'chat'
   assets.addJs '/assets/javascripts/style.coffee', 'style'
-  assets.addJs '/assets/javascripts/style.js', 'style_test'
   assets.addJs '/assets/javascripts/editor.coffee', 'editor'
   assets.addJs '/assets/javascripts/editor_teacher.coffee', 'editor_teacher'
   assets.addJs '/assets/javascripts/e_classroom_create.coffee', 'e_classroom_create'
@@ -18,4 +17,7 @@ module.exports = (assets) ->
   assets.addCss '/assets/stylesheets/style.styl', 'style'
   assets.addJs '/assets/javascripts/student_view.coffee', 'student_view'
   
+  assets.addJs '/public/javascripts/ace-editor/ace.js', 'editor'
+  assets.addJs '/public/javascripts/ace-editor/ace.js', 'editor_teacher'
+  assets.addJs '/public/javascripts/ace-editor/ace.js', 'student_view'
 
