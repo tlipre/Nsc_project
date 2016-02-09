@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Quiz</title>
+	<link rel="stylesheet" href="bootstrap/css/bootstrap.css">
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
+	<script src="bootstrap/js/bootstrap.js"></script>
+	<style>
+		input[type='text'] {
+			width: 400px;
+		}
+	</style>
+</head>
+<body>
+	<div class="container">
+
+	  <!-- Nav tabs -->
+	  <ul class="nav nav-tabs">
+	    <li class="active"><a href="#home" data-toggle="tab">Editor</a></li>
+	    <li><a href="#profile" data-toggle="tab">Quiz</a></li>
+	  </ul>
+
+	  <!-- Tab panes -->
+	  <div class="tab-content">
+	    <div role="tabpanel" class="tab-pane active" id="home">
+	    	<br><br>
+	    	<h1>Editor</h1>
+	    </div>
+	    <div role="tabpanel" class="tab-pane" id="profile">
+	    	<br><br>
+	    	<button class="btn-primary btn btn-large ">สร้างแบบสอบถาม</button><br><br>
+				<form action="">
+					ชื่อแบบทดสอบ <input type="text">
+					<input type="checkbox"> กำหนดเวลาทุกข้อ ในระยะเวลา 
+					<select name="all-minute" id="">
+						<option value="1">1</option>
+						<option value="2">2</option>
+						<option value="3">3</option>
+					</select>
+					<span>นาที</span>
+					<select name="all-sec" id="">
+						<option value="1">1</option>
+						<option value="2">2</option>
+						<option value="3">3</option>
+					</select>
+					<span>วินาที</span><br><br>
+
+					<article>
+						คำถามที่ 1  <input type="text">
+						กำหนดเวลาตอบคำถาม
+						<select name="all-minute" id="">
+							<option value="1">1</option>
+							<option value="2">2</option>
+							<option value="3">3</option>
+						</select>
+						<span>นาที</span>
+						<select name="all-sec" id="">
+							<option value="1">1</option>
+							<option value="2">2</option>
+							<option value="3">3</option>
+						</select>
+
+						<br><br>
+						<p> A. <input type="text"></p>
+						<p> B. <input type="text"></p>
+						<p> C. <input type="text"></p>
+						<p> D. <input type="text"></p>
+					</article>
+
+					<article>
+						คำถามที่ 2  <input type="text">
+						กำหนดเวลาตอบคำถาม
+						<select name="all-minute" id="">
+							<option value="1">1</option>
+							<option value="2">2</option>
+							<option value="3">3</option>
+						</select>
+						<span>นาที</span>
+						<select name="all-sec" id="">
+							<option value="1">1</option>
+							<option value="2">2</option>
+							<option value="3">3</option>
+						</select>
+
+						<br><br>
+						<p> A. <input type="text"></p>
+						<p> B. <input type="text"></p>
+						<p> C. <input type="text"></p>
+						<p> D. <input type="text"></p>
+					</article>
+					<button class="btn-primary btn btn-large ">ส่งแบบทดสอบ</button><br><br>
+				</form>
+	    </div>
+	  </div>
+
+	</div>
+  
+</body>
+</html>
+
+!= renderJs()
