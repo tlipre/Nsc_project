@@ -2,15 +2,8 @@ $ ->
   typing_box = $('#typing-box')
   chat_box = $('.chat-box')
   socket = io('/chat');
-  current_url = window.location.href
-  # http://localhost:3000/e-classroom/soa-for-programmer/teacher
 
-  path = "e-classroom"
-  start_index = current_url.indexOf(path)+path.length+1
-  end_index = current_url.lastIndexOf('/')
-
-  # 'soa-for-programmer'
-  room_name = current_url.slice(start_index, end_index)
+  room_name = get_room_name()
 
   socket.on 'connect', ()->
     socket.emit 'join_room', room_name
@@ -33,3 +26,15 @@ $ ->
   socket.on 'ask_for_help', (user)->
     if user != $('#username').text()
       alert("#{user} need help.")
+
+get_room_name = ()->
+  # http://localhost:3000/e-classroom/soa-for-programmer/teacher
+  current_url = window.location.href
+  
+  path = "e-classroom"
+  start_index = current_url.indexOf(path)+path.length+1
+  end_index = current_url.lastIndexOf('/')
+  
+  # 'soa-for-programmer'
+  room_name = current_url.slice(start_index, end_index)
+  return room_name

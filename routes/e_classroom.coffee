@@ -4,12 +4,12 @@ pty = require 'pty.js'
 Docker = require 'dockerode'
 docker = new Docker()
 exec = require("child_process").exec
-async = require 'async'
 cookie_parser = require('cookie').parse
 User = mongoose.model 'User'
 Chat_log = mongoose.model 'Chat_log'
 Classroom = mongoose.model 'Classroom'
 Container = mongoose.model 'Container'
+Quiz = mongoose.model 'Quiz'
 
 app.use term.middleware()
 
@@ -27,9 +27,11 @@ router = express.Router()
 
 global.docker_socket = {}
 
-router.get '/quiz', helper.check_role('teacher'), (req, res)->
-  username = req.session.passport.user.username
-  res.render 'quiz', {username: username}
+router.post '/quiz', helper.check_role('teacher'), (req, res)->
+  quiz = new Quiz(req.body)
+  quiz.save (err)->
+    return res.send err if err 
+    res.send 'ok'
 
 router.get '/create', helper.check_role('teacher'), (req, res)->
   username = req.session.passport.user.username

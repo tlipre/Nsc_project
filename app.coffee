@@ -11,7 +11,7 @@ flash = require 'connect-flash'
 path = require 'path'
 events = require 'events'
 
-bundle_up = require 'bundle-up3'
+bundle_up = require 'bundle-up2'
 fs = require 'fs'
 body_parser = require 'body-parser'
 cookie_parser = require 'cookie-parser'
@@ -31,6 +31,7 @@ require './models/chat_log.coffee'
 require './models/container.coffee'
 require './models/user.coffee'
 require './models/classroom.coffee'
+require './models/quiz.coffee'
 # for file in fs.readdirSync './models'
 #   continue if file.search(/\.bak|\.disabled|^\./) > -1
 #   if file.search(/\.coffee/) < 0
@@ -86,7 +87,7 @@ app.use '/api', require './routes/api'
 app.use '/e-classroom', require './routes/e_classroom'
 
 # dev zone
-app.use '/mamieo', require './routes/mamieo'
+
 # end dev zone
 
 #this must be the last one

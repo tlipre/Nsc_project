@@ -6,42 +6,94 @@ block content
 	.e_classroom
 		.content-classroom
 			.window.classroom-teacher
-				.header-window
-					.name-active
-						img.circle(id="current-profile-picture" src='/uploads/profile_picture/#{classroom.teacher.username}.jpg')
-						.username(id="current-view") #{classroom.teacher.username}
-				.code
-					div#editor-teacher
-					//- textarea.editor(id='editor' type='textarea' cols='123' rows='24')
-					div#terminal(data-container-id="#{container_id}")
+				ul.nav.nav-tabs
+					li.active
+						a(href="#editor-view" data-toggle="tab") Editor
+					li
+						a(href="#quiz" data-toggle="tab") Quiz
+				.tab-content
+					.tab-pane.active(role="tabpanel" id="editor-view")
+						.header-window
+							.name-active
+								img.circle(id="current-profile-picture" src='/uploads/profile_picture/#{classroom.teacher.username}.jpg')
+								.username(id="current-view") #{classroom.teacher.username}
+						.code
+							div#editor-teacher
+							//- textarea.editor(id='editor' type='textarea' cols='123' rows='24')
+							div#terminal(data-container-id="#{container_id}")
 
-				.footer-window
-					input(type='button' class='form-control btn btn-success' value='Save as..' id='save-as')
-					input(type='button' class='form-control btn btn-success' value='Save' id='save' disabled="disabled")
-					if classroom.status == 'allowed'
-						input(type='button' class='form-control btn btn-success' value="Allowed" id='status-changer')
-					else
-						input(type='button' class='red form-control btn btn-success' value="Disallowed" id='status-changer')
-					.chat
-						.textbox
-							.type
-								.input-group
-									input(type="text" class="form-control" id="typing-box" placeholder="Message")
-									.input-group-addon hide
-						.content
-							.header 
-								p ห้องสนทนา
-							.chat-box
-								.story
-								each val in chat
-									if val.is_teacher
-										p
-											span.name #{val.sender}: 
-											span #{val.message}
-									else
-										p
-											span.name.black-font #{val.sender}: 
-											span #{val.message}
+						.footer-window
+							input(type='button' class='form-control btn btn-success' value='Save as..' id='save-as')
+							input(type='button' class='form-control btn btn-success' value='Save' id='save' disabled="disabled")
+							if classroom.status == 'allowed'
+								input(type='button' class='form-control btn btn-success' value="Allowed" id='status-changer')
+							else
+								input(type='button' class='red form-control btn btn-success' value="Disallowed" id='status-changer')
+							.chat
+								.textbox
+									.type
+										.input-group
+											input(type="text" class="form-control" id="typing-box" placeholder="Message")
+											.input-group-addon hide
+								.content
+									.header 
+										p ห้องสนทนา
+									.chat-box
+										.story
+										each val in chat
+											if val.is_teacher
+												p
+													span.name #{val.sender}: 
+													span #{val.message}
+											else
+												p
+													span.name.black-font #{val.sender}: 
+													span #{val.message}
+					.tab-pane(role="tabpanel" id="quiz")
+						.window-quiz
+							h4 ชื่อแบบทดสอบ
+							input.form-control(id="quiz-name" type="text")
+							//- input(type="checkbox") 
+							//- span กำหนดเวลาทุกข้อในระยะเวลา
+							//- select(name="all-minute" id="")
+							//- 	option(value="1") 1
+							//- 	option(value="2") 2
+							//- 	option(value="3") 3
+							//- span นาที
+							//- select(name="all-sec"  id="")
+							//- 	option(value="1") 1
+							//- 	option(value="2") 2
+							//- 	option(value="3") 3
+							//- span วินาที
+							article
+								h4 คำถามที่ 1  
+								input.form-control(id="item1" type="text")
+								br
+								//- span กำหนดเวลาตอบคำถาม
+								//- select(name="each-minute" id="")
+								//- 		option(value="1") 1
+								//- 		option(value="2") 2
+								//- 		option(value="3") 3
+								//- 	span นาที
+								//- select(name="each-sec" id="")
+								//- 	option(value="1") 1
+								//- 	option(value="2") 2
+								//- 	option(value="3") 3
+								//- span วินาที
+								p
+									span A. 
+									input.form-control(id="choice1" type="text")
+								p
+									span B. 
+									input.form-control(id="choice2" type="text")
+								p
+									span C. 
+									input.form-control(id="choice3" type="text")
+								p
+									span D. 
+									input.form-control(id="choice4" type="text")
+								br
+							button.btn-primary.btn.btn-large(id="quiz-creator") สร้างแบบทดสอบ
 			.sidebar
 				.topic
 					p ระบบ E-Classroom	
@@ -72,7 +124,7 @@ block content
 							.clear
 				.footer-side
 					a.see See all students
-			.clear
+		.clear
 	!= renderJs()
 	!= renderJs('socket')
 	!= renderJs('chat')
