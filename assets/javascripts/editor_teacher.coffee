@@ -19,15 +19,17 @@ $ ->
   quiz_creator.click ()->
     quiz_name = $('#quiz-name').val()
     room_name = get_room_name()
-    choice1 = $('#choice1').val()
-    choice2 = $('#choice2').val() 
-    choice3 = $('#choice3').val()
-    choice4 = $('#choice4').val()
+    item_count = $('#item-count').val()
+    console.log item_count
+    choices = []
+    for i in [1..item_count]
+      choices.push [$('#choice1_'+i).val(), $('#choice2_'+i).val(), $('#choice3_'+i).val(), $('#choice4_'+i).val()]
     $.post "../quiz",
       room_name: room_name, 
       quiz_name: quiz_name, 
-      item_count: 1,
-      items: { 1: [choice1, choice2, choice3, choice4]}, 
+      item_count: item_count,
+      corrected_choice: []
+      items: choices
       (data)->
         alert data
 

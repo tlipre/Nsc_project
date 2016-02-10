@@ -28,10 +28,26 @@ router = express.Router()
 global.docker_socket = {}
 
 router.post '/quiz', helper.check_role('teacher'), (req, res)->
+  console.log req.body
+
   quiz = new Quiz(req.body)
-  quiz.save (err)->
-    return res.send err if err 
-    res.send 'ok'
+  dev.highlight quiz
+  # quiz.save (err)->
+  #   return res.send err if err 
+  #   res.send 'ok'
+
+router.post '/quiz/item', (req, res)->
+  quiz_name = req.body.quiz_name
+  classroom_name = req.body.classroom_name
+  item = req.body.item
+  selected_choice = req.body.selected_choice
+  Quiz.findOne {classroom_name: classroom_name, quiz_name: quiz_name}, (err, quiz)->
+    if quiz?
+      if quiz.corrected_choice[item] == selected_choice
+        #point ++
+        res.send 'ok'
+      #send another item
+
 
 router.get '/create', helper.check_role('teacher'), (req, res)->
   username = req.session.passport.user.username

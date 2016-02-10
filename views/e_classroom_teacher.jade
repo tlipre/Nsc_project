@@ -53,6 +53,7 @@ block content
 						.window-quiz
 							h4 ชื่อแบบทดสอบ
 							input.form-control(id="quiz-name" type="text")
+							input(type="hidden" id="item-count" value="1")
 							//- input(type="checkbox") 
 							//- span กำหนดเวลาทุกข้อในระยะเวลา
 							//- select(name="all-minute" id="")
@@ -82,16 +83,16 @@ block content
 								//- span วินาที
 								p
 									span A. 
-									input.form-control(id="choice1" type="text")
+									input.form-control(id="choice1_1" type="text")
 								p
 									span B. 
-									input.form-control(id="choice2" type="text")
+									input.form-control(id="choice2_1" type="text")
 								p
 									span C. 
-									input.form-control(id="choice3" type="text")
+									input.form-control(id="choice3_1" type="text")
 								p
 									span D. 
-									input.form-control(id="choice4" type="text")
+									input.form-control(id="choice4_1" type="text")
 								br
 							button.btn-primary.btn.btn-large(id="quiz-creator") สร้างแบบทดสอบ
 			.sidebar
