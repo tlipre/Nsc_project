@@ -21,12 +21,15 @@ classroom_schema = mongoose.Schema
 
 
 q = async.queue ((task, callback) ->
-  docker.createContainer {OpenStdin:true,Tty:true, Cmd: ['/bin/bash'], Image: task.image}, (err, container)->
-    container.start (err, data) ->
-      if err
-        callback err 
-      else
-        callback null, container.id
+  if config.have_docker
+    docker.createContainer {OpenStdin:true,Tty:true, Cmd: ['/bin/bash'], Image: task.image}, (err, container)->
+      container.start (err, data) ->
+        if err
+          callback err 
+        else
+          callback null, container.id
+  else 
+    callback null, 'has_no_docker'
 ), 2
   
 classroom_schema.methods.create_container = (callback)->

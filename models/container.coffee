@@ -18,24 +18,27 @@ container_schema.methods.create_stream = (callback)->
   success = true
   self = this
   container = docker.getContainer(self.container_id)
-  container.start (err, data)->
-    if err? 
-      if err.reason isnt "container already started"
-        success = false
-        callback err
-    if success
-      if self.status isnt 'streaming'
-        docker_socket[self.container_id] = pty.spawn 'docker', ["attach", self.container_id], 
-          name: 'xterm-color',
-          cols: 60,
-          rows: 15,
-          cwd: process.env.HOME,
-          env: process.env
-        docker_socket[self.container_id].on 'data', (data)->
-          event_emitter.emit 'text_terminal', self.container_id, data
-        self.status = 'streaming'
-        self.save()
-      callback null
+  if config.have_docker
+    container.start (err, data)->
+      if err? 
+        if err.reason isnt "container already started"
+          success = false
+          callback err
+      if success
+        if self.status isnt 'streaming'
+          docker_socket[self.container_id] = pty.spawn 'docker', ["attach", self.container_id], 
+            name: 'xterm-color',
+            cols: 60,
+            rows: 15,
+            cwd: process.env.HOME,
+            env: process.env
+          docker_socket[self.container_id].on 'data', (data)->
+            event_emitter.emit 'text_terminal', self.container_id, data
+          self.status = 'streaming'
+          self.save()
+        callback null
+  else
+    callback null
 
 container_schema.methods.update_owner = (owner)->
   this.owner = owner

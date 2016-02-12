@@ -11,16 +11,12 @@ html
           li.img-logo
             a(href="/") < ! > LOGO
         ul.menu
-          li
-            a Course
-          li
-            a(href="/e-classroom/") E-Classroom
-          li.line
-            a Support
           if !username
             a(href="/login")
-              li.please Please Login
+              li.name-login Please Login
           else
-            li.please(id="username") #{username}
+            li.name-login(id="username") #{username}
+          li.line
+            a(href="/e-classroom/") Logout
 
     block content
