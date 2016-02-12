@@ -36,6 +36,12 @@ router.post '/quiz', helper.check_role('teacher'), (req, res)->
   #   return res.send err if err 
   #   res.send 'ok'
 
+router.get '/quiz', helper.check_role('teacher'), (req, res)->
+  Quiz.find {classroom_name: req.params.classroom_name}, (err, quizzes)->
+    if quizzes?
+      res.json quizzes
+
+
 router.post '/quiz/item', (req, res)->
   quiz_name = req.body.quiz_name
   classroom_name = req.body.classroom_name
