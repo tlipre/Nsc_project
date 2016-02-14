@@ -1,4 +1,4 @@
 node_modules/*
 .DS_Store
 public/min/*
-public/uploads/*
+public/uploads/docker/*
