@@ -18,12 +18,13 @@
 	width 100%
 	margin auto
 
-.window
+.window.classroom-teacher
 	width 78%
 	float right
 	background-color white
 	padding 0
 	// height 100%
+
 
 /* ------------------ teacher --------------------*/
 	
@@ -152,23 +153,28 @@
 /* ------------------ student --------------------*/
 .window.classroom-student
 	width 100%
-
-.window.classroom-student .header-window
-	background-color #f2f2f2
-
+	display block
+	
 .window.classroom-student .header-window
 	font-size 14px
 	position relative
 	background-color white
-
-.window.classroom-student .header-window .class-name p a
+	background-color #f2f2f2
+	height 55px
+.window.classroom-student .header-window .btn
+	margin-left 10px
+.window.classroom-student .header-window label
+	font-size 16px
+	color #4A4A4A
+	font-weight 400
+	
+.window.classroom-student .header-window .class-name span
 	color #31B989
-	text-decoration underline
-	padding-left 5px
+	font-weight 600
 
 .window.classroom-student .header-window .class-name,
 .window.classroom-student .name-teacher
-	padding-top 20px
+	padding-top 10px
 	margin-left 4%
 	float left
 
@@ -202,6 +208,7 @@
 .window .code
 	width 100%
 	padding 10px
+	height 100%
 	background-color #272722
 
 .window .code .terminal
@@ -216,13 +223,14 @@
 	z-index 999
 	
 #editor 
-	position absolute
-	top 0
+	position relative
 	right 0
 	bottom 0
 	left 0
-	height 72%
+	height 78%
+	width 72%
 	
+
 #editor-teacher
 	position relative
 	top 0
@@ -238,6 +246,10 @@
 	bottom 0
 	left 0
 	height 100%
+
+.window.classroom-student .code .terminal
+	top 105px
+	
 
 .footer-window .window-teacher
 	width 120px

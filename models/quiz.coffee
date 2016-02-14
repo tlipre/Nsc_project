@@ -6,6 +6,7 @@ quiz_schema = mongoose.Schema
   items: mongoose.Schema.Types.Mixed
   timestamp: type: String, default: moment()
   corrected_choice: type: Array
+  time: type: Number
 ,
   versionKey: false
 

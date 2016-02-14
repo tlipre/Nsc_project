@@ -32,12 +32,12 @@ router.post '/quiz', helper.check_role('teacher'), (req, res)->
 
   quiz = new Quiz(req.body)
   dev.highlight quiz
-  # quiz.save (err)->
-  #   return res.send err if err 
-  #   res.send 'ok'
+  quiz.save (err)->
+    return res.send err if err 
+    res.send 'ok'
 
 router.get '/quiz', helper.check_role('teacher'), (req, res)->
-  Quiz.find {classroom_name: req.params.classroom_name}, (err, quizzes)->
+  Quiz.find {classroom_name: req.query.classroom_name}, (err, quizzes)->
     if quizzes?
       res.json quizzes
 

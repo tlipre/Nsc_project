@@ -16,7 +16,7 @@ block content
 					li
 						a(href="#editor-view" data-toggle="tab") Editor
 					li.active
-						a(href="#quiz" data-toggle="tab") Quiz
+						a(href="#quiz" id="quiz-tab" data-toggle="tab") Quiz
 				.tab-content
 					.tab-pane(role="tabpanel" id="editor-view")
 						.code
@@ -51,112 +51,110 @@ block content
 												p
 													span.name.black-font #{val.sender}: 
 													span #{val.message}
-					.tab-pane.active(role="tabpanel" id="quiz")
+					.tab-pane.active(role="tabpanel")
 						.window-quiz
-							//- .create-quiz
-							//- 	.form-group.intro
-							//- 		button.btn-danger.btn  ยกเลิกแบบทดสอบ
+							.create-quiz(id="create-quiz-page" style="display:none;")
+								.form-group.intro
+									button.btn-danger.btn  ยกเลิกแบบทดสอบ
 
-							//- 	.form-inline
-							//- 		.form-group
-							//- 			label ชื่อแบบทดสอบ
-							//- 			input.form-control(id="quiz-name" type="text")
-							//- 			input(type="hidden" id="item-count" value="1")
+								.form-inline
+									.form-group
+										label ชื่อแบบทดสอบ
+										input.form-control(id="quiz-name" type="text")
+										input(type="hidden" id="item-count" value="1")
 
-							//- 		.form-group
-							//- 			input(type="checkbox") 
-							//- 			span กำหนดเวลาทุกข้อในระยะเวลา
-							//- 			select.form-control(name="all-minute" id="")
-							//- 				option(value="1") 1
-							//- 				option(value="2") 2
-							//- 				option(value="3") 3
-							//- 			span นาที
-							//- 			select.form-control(name="all-sec"  id="")
-							//- 				option(value="1") 1
-							//- 				option(value="2") 2
-							//- 				option(value="3") 3
-							//- 			span วินาที
-							//- 	article
-							//- 		.row
-							//- 			.col-md-2
-							//- 				p คำถามที่ 1
-							//- 			.col-md-10
-							//- 				input.form-control(id="item1" type="text")
-							//- 		.row.choice
-							//- 			.col-md-2
-							//- 				p A.
-							//- 			.col-md-10
-							//- 				input.form-control(id="choice1_1" type="text")
-							//- 		.row.choice
-							//- 			.col-md-2
-							//- 				p B.
-							//- 			.col-md-10
-							//- 				input.form-control(id="choice2_1" type="text")
-							//- 		.row.choice
-							//- 			.col-md-2
-							//- 				p C.
-							//- 			.col-md-10
-							//- 				input.form-control(id="choice3_1" type="text")
-							//- 		.row.choice
-							//- 			.col-md-2
-							//- 				p D.
-							//- 			.col-md-10
-							//- 				input.form-control(id="choice4_1" type="text")
-							//- 	article
-							//- 		.row
-							//- 			.col-md-2
-							//- 				p คำถามที่ 2
-							//- 			.col-md-10
-							//- 				input.form-control(id="item1" type="text")
-							//- 		.row.choice
-							//- 			.col-md-2
-							//- 				p A.
-							//- 			.col-md-10
-							//- 				input.form-control(id="choice1_1" type="text")
-							//- 		.row.choice
-							//- 			.col-md-2
-							//- 				p B.
-							//- 			.col-md-10
-							//- 				input.form-control(id="choice2_1" type="text")
-							//- 		.row.choice
-							//- 			.col-md-2
-							//- 				p C.
-							//- 			.col-md-10
-							//- 				input.form-control(id="choice3_1" type="text")
-							//- 		.row.choice
-							//- 			.col-md-2
-							//- 				p D.
-							//- 			.col-md-10
-							//- 				input.form-control(id="choice4_1" type="text")
-							//- 	article
-							//- 		.row
-							//- 			.col-md-2
-							//- 				p คำถามที่ 3
-							//- 			.col-md-10
-							//- 				input.form-control(id="item1" type="text")
-							//- 		.row.choice
-							//- 			.col-md-2
-							//- 				p A.
-							//- 			.col-md-10
-							//- 				input.form-control(id="choice1_1" type="text")
-							//- 		.row.choice
-							//- 			.col-md-2
-							//- 				p B.
-							//- 			.col-md-10
-							//- 				input.form-control(id="choice2_1" type="text")
-							//- 		.row.choice
-							//- 			.col-md-2
-							//- 				p C.
-							//- 			.col-md-10
-							//- 				input.form-control(id="choice3_1" type="text")
-							//- 		.row.choice
-							//- 			.col-md-2
-							//- 				p D.
-							//- 			.col-md-10
-							//- 				input.form-control(id="choice4_1" type="text")
-							//- 	button.btn-success.btn(id="quiz-creator") สร้างแบบทดสอบ
-							
-							.home-quiz
+									.form-group
+										span ให้เวลาข้อละ
+										select.form-control(name="all-minute" id="time-minute")
+											option(value="1") 1
+											option(value="2") 2
+											option(value="3") 3
+										span นาที
+										select.form-control(name="all-sec"  id="time-second")
+											option(value="1") 1
+											option(value="2") 2
+											option(value="3") 3
+										span วินาที
+								article
+									.row
+										.col-md-2
+											p คำถามที่ 1
+										.col-md-10
+											input.form-control(id="item1" type="text")
+									.row.choice
+										.col-md-2
+											p A.
+										.col-md-10
+											input.form-control(id="choice1_1" type="text")
+									.row.choice
+										.col-md-2
+											p B.
+										.col-md-10
+											input.form-control(id="choice2_1" type="text")
+									.row.choice
+										.col-md-2
+											p C.
+										.col-md-10
+											input.form-control(id="choice3_1" type="text")
+									.row.choice
+										.col-md-2
+											p D.
+										.col-md-10
+											input.form-control(id="choice4_1" type="text")
+								//- article
+								//- 	.row
+								//- 		.col-md-2
+								//- 			p คำถามที่ 2
+								//- 		.col-md-10
+								//- 			input.form-control(id="item1" type="text")
+								//- 	.row.choice
+								//- 		.col-md-2
+								//- 			p A.
+								//- 		.col-md-10
+								//- 			input.form-control(id="choice1_1" type="text")
+								//- 	.row.choice
+								//- 		.col-md-2
+								//- 			p B.
+								//- 		.col-md-10
+								//- 			input.form-control(id="choice2_1" type="text")
+								//- 	.row.choice
+								//- 		.col-md-2
+								//- 			p C.
+								//- 		.col-md-10
+								//- 			input.form-control(id="choice3_1" type="text")
+								//- 	.row.choice
+								//- 		.col-md-2
+								//- 			p D.
+								//- 		.col-md-10
+								//- 			input.form-control(id="choice4_1" type="text")
+								//- article
+								//- 	.row
+								//- 		.col-md-2
+								//- 			p คำถามที่ 3
+								//- 		.col-md-10
+								//- 			input.form-control(id="item1" type="text")
+								//- 	.row.choice
+								//- 		.col-md-2
+								//- 			p A.
+								//- 		.col-md-10
+								//- 			input.form-control(id="choice1_1" type="text")
+								//- 	.row.choice
+								//- 		.col-md-2
+								//- 			p B.
+								//- 		.col-md-10
+								//- 			input.form-control(id="choice2_1" type="text")
+								//- 	.row.choice
+								//- 		.col-md-2
+								//- 			p C.
+								//- 		.col-md-10
+								//- 			input.form-control(id="choice3_1" type="text")
+								//- 	.row.choice
+								//- 		.col-md-2
+								//- 			p D.
+								//- 		.col-md-10
+								//- 			input.form-control(id="choice4_1" type="text")
+								button.btn-success.btn(id="quiz-creator") สร้างแบบทดสอบ
+							.home-quiz(id="home-quiz-page")
 								p แบบทดสอบทั้งหมด
 								table
 									tr.head-table
@@ -177,12 +175,7 @@ block content
 											button.btn-warning.btn Edit
 											button.btn-primary.btn Launch
 											button.btn-success.btn See result
-								
-								button.btn-success.btn.btn-lg New Quiz
-
-
-
-								
+								button.btn-success.btn.btn-lg(id="new-quiz") New Quiz
 			.sidebar
 				.topic
 					p Your view

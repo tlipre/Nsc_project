@@ -5,6 +5,9 @@ $ ->
   editor = ace.edit("editor-teacher")
   quiz_creator = $('#quiz-creator')
   quiz_tab = $('#quiz-tab')
+  new_quiz = $('#new-quiz')
+  create_quiz_page = $('#create-quiz-page')
+  home_quiz_page = $('#home-quiz-page')
 
   ace.config.set 'basePath', '/javascripts/ace-editor/'
   editor.setTheme "ace/theme/monokai"
@@ -18,23 +21,29 @@ $ ->
   current_profile_picture = $("#current-profile-picture")
   classroom_name = get_room_name()
 
+  new_quiz.click ()->
+    #new quiz
+    create_quiz_page.show()
+    home_quiz_page.hide()
+
   quiz_tab.click ()->
-    $.get "../quiz",
-      classroom_name: classroom_name, 
+    #get all quiz
+    $.get "../quiz?classroom_name="+classroom_name,
       (data)->
-        alert data
+        console.log data
 
 
   quiz_creator.click ()->
     quiz_name = $('#quiz-name').val()
     item_count = $('#item-count').val()
-    console.log item_count
+    time = $('#time-minute').val()*60+parseInt($('#time-second').val())
     choices = []
     for i in [1..item_count]
       choices.push [$('#choice1_'+i).val(), $('#choice2_'+i).val(), $('#choice3_'+i).val(), $('#choice4_'+i).val()]
     $.post "../quiz",
       classroom_name: classroom_name, 
       quiz_name: quiz_name, 
+      time: time,
       item_count: item_count,
       corrected_choice: []
       items: choices

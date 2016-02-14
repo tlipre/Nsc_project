@@ -15,9 +15,11 @@ block content
 			.window.classroom-student 
 				.header-window
 					.class-name
-						p Name: #{classroom.raw_name}
-							span  |
-							a(href="") ออกจากคลาส
+						.form-group
+							label Name : 
+							span  #{classroom.raw_name}
+							button.btn.btn-danger(type="button") ยกเลิกคลาส
+
 					.name-teacher
 						span อาจารย์ผู้สอน :
 						.name-active
@@ -32,7 +34,7 @@ block content
 					input(type='button' class='form-control btn btn-success' value='Save' id='save' disabled="disabled")
 					input(type='button' class='form-control btn btn-success' value='Ask for help' id='ask-for-help')
 					.techer-window
-						.window-teacher
+						//- .window-teacher
 						a(onclick="popup('/e-classroom/#{classroom.name}/teacher/student')") ดูหน้าต่างผู้สอน
 					.chat
 						.textbox
