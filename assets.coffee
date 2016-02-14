@@ -16,6 +16,7 @@ module.exports = (assets) ->
   assets.addJs '/assets/javascripts/editor_teacher.coffee', 'editor_teacher'
   assets.addJs '/assets/javascripts/e_classroom_create.coffee', 'e_classroom_create'
   assets.addJs '/assets/javascripts/student_view.coffee', 'student_view'
+  assets.addJs '/assets/javascripts/e_classroom.coffee', 'e_classroom'
   assets.addJs '/public/javascripts/ace-editor/ace.js', 'editor'
   assets.addJs '/public/javascripts/ace-editor/ace.js', 'editor_teacher'
   assets.addJs '/public/javascripts/ace-editor/ace.js', 'student_view'

@@ -18,7 +18,7 @@ block content
 						.form-group
 							label Name : 
 							span  #{classroom.raw_name}
-							button.btn.btn-danger(type="button") ยกเลิกคลาส
+							button.btn.btn-danger(type="button" data-toggle="modal" data-target="#myModal") ยกเลิกคลาส
 
 					.name-teacher
 						.form-group
@@ -60,6 +60,36 @@ block content
 										p
 											span.name.black-font #{val.sender}: 
 											span #{val.message}
+
+			.modal.fade(tabindex="-1" role="dialog" id="myModal")
+				.modal-dialog
+					.modal-content
+						.modal-header
+							button.close(type="button" data-dismiss="modal" aria-label="Close")
+								span(aria-hidden="true") &times;
+							h4.modal-title แบบทดสอบ
+						.modal-body
+							.box-1
+								p.time 0 : 15 sec
+								.aa 
+									span.cycle 1
+									span.question Which method must be implemented by all threads?
+								.ans
+									input(type="radio" name="ans" value="")
+									span wait()
+								.ans
+									input(type="radio" name="ans" value="")
+									span stop()
+								.ans
+									input(type="radio" name="ans" value="")
+									span start()
+								.ans
+									input(type="radio" name="ans" value="")
+									span run()
+
+						.modal-footer
+							button.btn.btn-primary(type="button") Next
+
 	!= renderJs()
 	!= renderJs('socket')
 	!= renderJs('chat')
