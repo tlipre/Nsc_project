@@ -67,28 +67,27 @@ block content
 						.modal-header
 							button.close(type="button" data-dismiss="modal" aria-label="Close")
 								span(aria-hidden="true") &times;
-							h4.modal-title แบบทดสอบ
+							h4.modal-title#quiz-name แบบทดสอบ
 						.modal-body
-							.box-1
-								p.time 0 : 15 sec
+							.box-1#item-box
 								.aa 
-									span.cycle 1
-									span.question Which method must be implemented by all threads?
+									span.cycle#item 
+									span.question#question 
 								.ans
-									input(type="radio" name="ans" value="")
-									span wait()
+									input(type="radio" name="ans" value="0")
+									span#ans-1
 								.ans
-									input(type="radio" name="ans" value="")
-									span stop()
+									input(type="radio" name="ans" value="1")
+									span#ans-2 
 								.ans
-									input(type="radio" name="ans" value="")
-									span start()
+									input(type="radio" name="ans" value="2")
+									span#ans-3 
 								.ans
-									input(type="radio" name="ans" value="")
-									span run()
+									input(type="radio" name="ans" value="3")
+									span#ans-4 
 
 						.modal-footer
-							button.btn.btn-primary(type="button") Next
+							button.btn.btn-primary#item-sender Submit
 
 	!= renderJs()
 	!= renderJs('socket')

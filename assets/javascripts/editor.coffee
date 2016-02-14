@@ -10,6 +10,10 @@ $ ->
   editor.setShowPrintMargin false
   classroom_name = get_room_name()
 
+  item_sender = $("#item-sender")
+  # $('#myModal').modal('show')
+  # $('#myModal').modal('hide') 
+
   socket.on 'connect', ()->
     socket.emit 'request_container'
 
@@ -26,9 +30,35 @@ $ ->
 
   $.get "../quiz?classroom_name="+classroom_name,
     (data)->
+      if data.status is 'ok'
+        console.log data
+        $("#quiz-name").text(data.quiz_name)
+        render_item data.item, $("#item-box")
+      else
+        alert(data.message)
+  selected_choice = 0
+  $("input:radio[name=ans]").click ()->
+    selected_choice = $(this).val()
+
+  item_sender.click (e)->
+    e.preventDefault()
+    $.post "../quiz/item", 
+      "classroom_name": classroom_name, 
+      "quiz_name": $("#quiz-name").text(),
+      "item": $("#item").text(),
+      "selected_choice": selected_choice
+    , (data)->
       console.log data
 
 
+
+render_item = (item, item_box)->
+  item_box.find("#item").text(item.item)
+  item_box.find("#question").text(item.question)
+  item_box.find("#ans-1").text(item.choices[0])
+  item_box.find("#ans-2").text(item.choices[1])
+  item_box.find("#ans-3").text(item.choices[2])
+  item_box.find("#ans-4").text(item.choices[3])
 
 get_room_name = ()->
   # http://localhost:3000/e-classroom/soa-for-programmer/teacher

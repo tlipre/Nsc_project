@@ -37,16 +37,18 @@ $ ->
     quiz_name = $('#quiz-name').val()
     item_count = $('#item-count').val()
     time = $('#time-minute').val()*60+parseInt($('#time-second').val())
-    choices = []
+    items = {}
     for i in [1..item_count]
-      choices.push [$('#choice1_'+i).val(), $('#choice2_'+i).val(), $('#choice3_'+i).val(), $('#choice4_'+i).val()]
+      choices = [$('#choice1_'+i).val(), $('#choice2_'+i).val(), $('#choice3_'+i).val(), $('#choice4_'+i).val()]
+      items[i] = {item: i, question: $('#item'+i).val(), choices: choices}
     $.post "../quiz",
-      classroom_name: classroom_name, 
-      quiz_name: quiz_name, 
-      time: time,
-      item_count: item_count,
-      corrected_choice: []
-      items: choices
+      data: JSON.stringify
+        classroom_name: classroom_name, 
+        quiz_name: quiz_name, 
+        time: time,
+        item_count: item_count,
+        corrected_choice: []
+        items: items
       (data)->
         alert data
 

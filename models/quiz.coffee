@@ -2,8 +2,9 @@ quiz_schema = mongoose.Schema
   classroom_name: type: String
   quiz_name: type: String
   item_count: type: Number
-  students: type: Object, default: {}
-  items: mongoose.Schema.Types.Mixed
+  students: type:mongoose.Schema.Types.Mixed, default: {}
+
+  items: type: Object, default: {}
   timestamp: type: String, default: moment()
   corrected_choice: type: Array
   time: type: Number
@@ -12,3 +13,5 @@ quiz_schema = mongoose.Schema
 
 
 Quiz = mongoose.model 'Quiz', quiz_schema
+
+

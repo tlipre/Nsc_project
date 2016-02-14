@@ -10,6 +10,7 @@ Chat_log = mongoose.model 'Chat_log'
 Classroom = mongoose.model 'Classroom'
 Container = mongoose.model 'Container'
 Quiz = mongoose.model 'Quiz'
+Quiz_log = mongoose.model 'Quiz_log'
 
 app.use term.middleware()
 
@@ -28,7 +29,7 @@ router = express.Router()
 global.docker_socket = {}
 
 router.post '/quiz', helper.check_role('teacher'), (req, res)->
-  quiz = new Quiz(req.body)
+  quiz = new Quiz JSON.parse req.body.data
   # dev.highlight quiz
   quiz.save (err)->
     return res.send err if err 
@@ -45,29 +46,37 @@ router.get '/quiz', (req, res)->
     Quiz.findOne {classroom_name: req.query.classroom_name}, (err, quiz)->
       if quiz?
         if !quiz.students[user.username]?
+          dev.highlight "no record"
+          #No record
           quiz.students[user.username] = {done_item_count: 0, point: 0}
           quiz.save()
-        if quiz.students[user.username].done_item_count < quiz.item_count
-          res.json quiz
+        quiz_student = quiz.students[user.username]
+        if quiz_student.done_item_count < quiz.item_count
+          #Not done quiz yet
+          res.json {'status': 'ok','quiz_name': quiz.quiz_name, 'item': quiz.items[quiz_student.done_item_count+1]}
         else
-          res.send 'no quiz for u'
+          res.send {'status': 'error', 'message': 'You have done all quiz.'}
       else
-        res.send 'no quiz for u'
+        res.send {'status': 'error', 'message': 'No quiz for you.'}
 
 router.post '/quiz/item', (req, res)->
-  user = req.session.passport.user
+  username = req.session.passport.user.username
   quiz_name = req.body.quiz_name
   classroom_name = req.body.classroom_name
   item = req.body.item
   selected_choice = req.body.selected_choice
-  Quiz.findOne {classroom_name: classroom_name, quiz_name: quiz_name}, (err, quiz)->
+  condition = {classroom_name: classroom_name, quiz_name: quiz_name}
+  Quiz.findOne condition, (err, quiz)->
     if quiz?
-      quiz_log = new Quiz_log({item: item, selected_choice: selected_choice, classroom_name: classroom_name, student: user.username})
+      quiz_log = new Quiz_log({item: item, selected_choice: selected_choice, classroom_name: classroom_name, student: username})
       quiz_log.save()
+      quiz.markModified 'students'
+      quiz.students[username].done_item_count += 1
       if quiz.corrected_choice[item] is selected_choice
-        quiz.students[user.username].point++
-      res.send 'ok'
-      #send another item
+        quiz.students[username].point += 1
+      quiz.save()
+      res.send 'done'
+
 
 
 router.get '/create', helper.check_role('teacher'), (req, res)->
