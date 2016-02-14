@@ -28,30 +28,45 @@ router = express.Router()
 global.docker_socket = {}
 
 router.post '/quiz', helper.check_role('teacher'), (req, res)->
-  console.log req.body
-
   quiz = new Quiz(req.body)
-  dev.highlight quiz
+  # dev.highlight quiz
   quiz.save (err)->
     return res.send err if err 
     res.send 'ok'
 
-router.get '/quiz', helper.check_role('teacher'), (req, res)->
-  Quiz.find {classroom_name: req.query.classroom_name}, (err, quizzes)->
-    if quizzes?
-      res.json quizzes
-
+router.get '/quiz', (req, res)->
+  user = req.session.passport.user
+  if user.role is 'teacher'
+    Quiz.find {classroom_name: req.query.classroom_name}, (err, quizzes)->
+      if quizzes?
+        res.json quizzes
+  else
+    #TODO: query for match date
+    Quiz.findOne {classroom_name: req.query.classroom_name}, (err, quiz)->
+      if quiz?
+        if !quiz.students[user.username]?
+          quiz.students[user.username] = {done_item_count: 0, point: 0}
+          quiz.save()
+        if quiz.students[user.username].done_item_count < quiz.item_count
+          res.json quiz
+        else
+          res.send 'no quiz for u'
+      else
+        res.send 'no quiz for u'
 
 router.post '/quiz/item', (req, res)->
+  user = req.session.passport.user
   quiz_name = req.body.quiz_name
   classroom_name = req.body.classroom_name
   item = req.body.item
   selected_choice = req.body.selected_choice
   Quiz.findOne {classroom_name: classroom_name, quiz_name: quiz_name}, (err, quiz)->
     if quiz?
-      if quiz.corrected_choice[item] == selected_choice
-        #point ++
-        res.send 'ok'
+      quiz_log = new Quiz_log({item: item, selected_choice: selected_choice, classroom_name: classroom_name, student: user.username})
+      quiz_log.save()
+      if quiz.corrected_choice[item] is selected_choice
+        quiz.students[user.username].point++
+      res.send 'ok'
       #send another item
 
 

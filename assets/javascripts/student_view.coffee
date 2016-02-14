@@ -7,6 +7,7 @@ $ ->
   editor.setFontSize 18
   editor.setHighlightActiveLine false
   editor.setShowPrintMargin false
+  editor.setReadOnly(true)
 
   container_id = $("#terminal").data("container-id")
   socket_terminal.on 'connect', ()->

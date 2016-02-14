@@ -7,7 +7,7 @@ config =
       bundle: true
       minify_css: false
       minify_js: false
-    have_docker: false
+    have_docker: true
   production:
     container_id: "6c57d3d50745"
     mongodb: "mongodb://localhost/senior_project"

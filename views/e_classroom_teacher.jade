@@ -16,12 +16,11 @@ block content
 					li
 						a(href="#editor-view" data-toggle="tab") Editor
 					li.active
-						a(href="#quiz" id="quiz-tab" data-toggle="tab") Quiz
+						a(href="#quiz-view" id="quiz-tab" data-toggle="tab") Quiz
 				.tab-content
 					.tab-pane(role="tabpanel" id="editor-view")
 						.code
 							div#editor-teacher
-							//- textarea.editor(id='editor' type='textarea' cols='123' rows='24')
 							div#terminal(data-container-id="#{container_id}")
 
 						.footer-window
@@ -51,7 +50,7 @@ block content
 												p
 													span.name.black-font #{val.sender}: 
 													span #{val.message}
-					.tab-pane.active(role="tabpanel")
+					.tab-pane.active(role="tabpanel" id="quiz-view")
 						.window-quiz
 							.create-quiz(id="create-quiz-page" style="display:none;")
 								.form-group.intro

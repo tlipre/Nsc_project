@@ -2,3 +2,4 @@ node_modules/*
 .DS_Store
 public/min/*
 public/uploads/docker/*
+config.coffee

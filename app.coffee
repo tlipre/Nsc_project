@@ -32,6 +32,7 @@ require './models/container.coffee'
 require './models/user.coffee'
 require './models/classroom.coffee'
 require './models/quiz.coffee'
+require './models/quiz_log.coffee'
 # for file in fs.readdirSync './models'
 #   continue if file.search(/\.bak|\.disabled|^\./) > -1
 #   if file.search(/\.coffee/) < 0
