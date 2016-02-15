@@ -8,6 +8,7 @@ $ ->
   new_quiz = $('#new-quiz')
   create_quiz_page = $('#create-quiz-page')
   home_quiz_page = $('#home-quiz-page')
+  item_appender = $('#item-appender')
 
   ace.config.set 'basePath', '/javascripts/ace-editor/'
   editor.setTheme "ace/theme/monokai"
@@ -26,6 +27,56 @@ $ ->
     create_quiz_page.show()
     home_quiz_page.hide()
 
+  item_appender.click ()->
+    $('#item-count').val(parseInt($('#item-count').val())+1)
+    item_count = $('#item-count').val()
+    $('.quiz-question').append("<article>
+      <div class='row'>
+        <div class='col-md-2'>
+          <p>คำถามที่ #{item_count}</p>
+        </div>
+        <div class='col-md-10'>
+          <input id='item#{item_count}' type='text' class='form-control'>
+        </div>
+      </div>
+      <div class='row choice'>
+        <div class='col-md-2'>
+          <input checked value='1' name='corrected_choice#{item_count}' type='radio' style='margin-right:10px;'>
+          <span>A.</span>
+        </div>
+        <div class='col-md-10'>
+          <input id='choice1_#{item_count}' type='text' class='form-control'>
+        </div>   
+      </div>
+      <div class='row choice'>
+        <div class='col-md-2'>
+          <input value='2' name='corrected_choice#{item_count}' type='radio' style='margin-right:10px;'>
+          <span>B.</span>
+        </div>
+        <div class='col-md-10'>
+          <input id='choice2_#{item_count}' type='text' class='form-control'>
+        </div>   
+      </div>
+      <div class='row choice'>
+        <div class='col-md-2'>
+          <input value='3' name='corrected_choice#{item_count}' type='radio' style='margin-right:10px;'>
+          <span>C.</span>
+        </div>
+        <div class='col-md-10'>
+          <input id='choice3_#{item_count}' type='text' class='form-control'>
+        </div>   
+      </div>
+      <div class='row choice'>
+        <div class='col-md-2'>
+          <input value='4' name='corrected_choice#{item_count}' type='radio' style='margin-right:10px;'>
+          <span>D.</span>
+        </div>
+        <div class='col-md-10'>
+          <input id='choice4_#{item_count}' type='text' class='form-control'>
+        </div>   
+      </div>
+    </article>")
+
   quiz_tab.click ()->
     #get all quiz
     $.get "../quiz?classroom_name="+classroom_name,
@@ -38,7 +89,9 @@ $ ->
     item_count = $('#item-count').val()
     time = $('#time-minute').val()*60+parseInt($('#time-second').val())
     items = {}
+    corrected_choice = []
     for i in [1..item_count]
+      corrected_choice.push $("input[name=corrected_choice#{i}]:checked").val()
       choices = [$('#choice1_'+i).val(), $('#choice2_'+i).val(), $('#choice3_'+i).val(), $('#choice4_'+i).val()]
       items[i] = {item: i, question: $('#item'+i).val(), choices: choices}
     $.post "../quiz",
@@ -47,7 +100,7 @@ $ ->
         quiz_name: quiz_name, 
         time: time,
         item_count: item_count,
-        corrected_choice: []
+        corrected_choice: corrected_choice
         items: items
       (data)->
         alert data

@@ -74,32 +74,41 @@ block content
 											option(value="2") 2
 											option(value="3") 3
 										span วินาที
-								article
-									.row
-										.col-md-2
-											p คำถามที่ 1
-										.col-md-10
-											input.form-control(id="item1" type="text")
-									.row.choice
-										.col-md-2
-											p A.
-										.col-md-10
-											input.form-control(id="choice1_1" type="text")
-									.row.choice
-										.col-md-2
-											p B.
-										.col-md-10
-											input.form-control(id="choice2_1" type="text")
-									.row.choice
-										.col-md-2
-											p C.
-										.col-md-10
-											input.form-control(id="choice3_1" type="text")
-									.row.choice
-										.col-md-2
-											p D.
-										.col-md-10
-											input.form-control(id="choice4_1" type="text")
+								.quiz-question
+									article
+										.row
+											.col-md-2
+												p คำถามที่ 1
+											.col-md-10
+												input.form-control(id="item1" type="text")
+										.row.choice
+											.col-md-2
+												input(type="radio" checked value="1" name="corrected_choice1" style="margin-right:10px;") 
+												span A.
+											.col-md-10
+												input.form-control(id="choice1_1" type="text")
+										.row.choice
+											.col-md-2
+												input(type="radio" value="2" name="corrected_choice1" style="margin-right:10px;") 
+												span B.
+											.col-md-10
+												input.form-control(id="choice2_1" type="text")
+										.row.choice
+											.col-md-2
+												input(type="radio" value="3" name="corrected_choice1" style="margin-right:10px;") 
+												span C.
+											.col-md-10
+												input.form-control(id="choice3_1" type="text")
+										.row.choice
+											.col-md-2
+												input(type="radio" value="4" name="corrected_choice1" style="margin-right:10px;") 
+												span D.
+											.col-md-10
+												input.form-control(id="choice4_1" type="text")
+								.append
+									span#item-appender append
+
+							
 								//- article
 								//- 	.row
 								//- 		.col-md-2

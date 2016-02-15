@@ -31,24 +31,33 @@ $ ->
   $.get "../quiz?classroom_name="+classroom_name,
     (data)->
       if data.status is 'ok'
-        console.log data
         $("#quiz-name").text(data.quiz_name)
         render_item data.item, $("#item-box")
-      else
-        alert(data.message)
+        $('#myModal').modal('show')
+      # else
+        # alert(data.message)
+
   selected_choice = 0
   $("input:radio[name=ans]").click ()->
     selected_choice = $(this).val()
 
   item_sender.click (e)->
-    e.preventDefault()
+    $('#myModal').modal('hide')
+    $('body').removeClass('modal-open');
+    $('.modal-backdrop').remove();
     $.post "../quiz/item", 
       "classroom_name": classroom_name, 
       "quiz_name": $("#quiz-name").text(),
       "item": $("#item").text(),
       "selected_choice": selected_choice
     , (data)->
-      console.log data
+      if data['status'] is 'ok'
+          $.get "../quiz?classroom_name="+classroom_name,
+            (data)->
+              if data.status is 'ok'
+                $("#quiz-name").text(data.quiz_name)
+                render_item data.item, $("#item-box")
+                $('#myModal').modal('show')
 
 
 

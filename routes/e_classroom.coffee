@@ -48,6 +48,7 @@ router.get '/quiz', (req, res)->
         if !quiz.students[user.username]?
           dev.highlight "no record"
           #No record
+          quiz.markModified 'students'
           quiz.students[user.username] = {done_item_count: 0, point: 0}
           quiz.save()
         quiz_student = quiz.students[user.username]
@@ -72,10 +73,11 @@ router.post '/quiz/item', (req, res)->
       quiz_log.save()
       quiz.markModified 'students'
       quiz.students[username].done_item_count += 1
-      if quiz.corrected_choice[item] is selected_choice
+      dev.highlight quiz
+      if quiz.corrected_choice[item-1] is selected_choice
         quiz.students[username].point += 1
       quiz.save()
-      res.send 'done'
+      res.json {status:'ok'}
 
 
 

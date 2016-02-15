@@ -3,7 +3,6 @@ quiz_schema = mongoose.Schema
   quiz_name: type: String
   item_count: type: Number
   students: type:mongoose.Schema.Types.Mixed, default: {}
-
   items: type: Object, default: {}
   timestamp: type: String, default: moment()
   corrected_choice: type: Array
