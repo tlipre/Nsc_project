@@ -11,6 +11,8 @@ router.get '/login', (req, res) ->
 
 router.post '/login', passport.authenticate('local',{successRedirect: '/', failureRedirect: '/login', failureFlash: true})
 
+router.get '/disclaimer', (req, res)->
+  res.render 'disclaimer'
 router.get '/', (req, res) ->
   username = undefined
   if !_.isEmpty req.session.passport
