@@ -37,10 +37,6 @@ $ ->
       # else
         # alert(data.message)
 
-  selected_choice = 0
-  $("input:radio[name=ans]").click ()->
-    selected_choice = $(this).val()
-
   item_sender.click (e)->
     $('#myModal').modal('hide')
     $('body').removeClass('modal-open');
@@ -49,15 +45,17 @@ $ ->
       "classroom_name": classroom_name, 
       "quiz_name": $("#quiz-name").text(),
       "item": $("#item").text(),
-      "selected_choice": selected_choice
+      "selected_choice": $("input[name=ans]:checked").val()
     , (data)->
-      if data['status'] is 'ok'
+      if data['status'] is 'next'
           $.get "../quiz?classroom_name="+classroom_name,
             (data)->
               if data.status is 'ok'
                 $("#quiz-name").text(data.quiz_name)
                 render_item data.item, $("#item-box")
                 $('#myModal').modal('show')
+      else
+        alert(data['status'])
 
 
 

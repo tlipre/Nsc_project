@@ -73,11 +73,22 @@ router.post '/quiz/item', (req, res)->
       quiz_log.save()
       quiz.markModified 'students'
       quiz.students[username].done_item_count += 1
-      dev.highlight quiz
       if quiz.corrected_choice[item-1] is selected_choice
         quiz.students[username].point += 1
       quiz.save()
-      res.json {status:'ok'}
+      if item is quiz.item_count
+        res.json {status: 'done'}
+      else
+        console.log 'next'
+        res.json {status: 'next'}
+
+router.get '/quiz/item', (req, res)->
+  Quiz.findOne {classroom_name: "java-oop"}, (err, quiz)->
+    quiz.markModified 'students'
+    quiz.students.Book.done_item_count = 1
+    quiz.save()
+    res.send 'ok'
+
 
 
 

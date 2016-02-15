@@ -1,7 +1,7 @@
 quiz_schema = mongoose.Schema
   classroom_name: type: String
   quiz_name: type: String
-  item_count: type: Number
+  item_count: type: String
   students: type:mongoose.Schema.Types.Mixed, default: {}
   items: type: Object, default: {}
   timestamp: type: String, default: moment()
